@@ -1,0 +1,82 @@
+# ============================
+# Required metadata
+# ============================
+slug: experiment-minimal          # MUST match the directory name (exp-*)
+title: Example Experiment Title
+status: idea               # one of: idea | planned | in-progress | paused | completed | archived
+
+owner:
+  name: Your Name
+
+# ============================
+# Timeline
+# ============================
+created_at: 2025-11-12     # ISO date
+target_start: 2025-11-20   # optional
+target_end: 2025-12-20     # optional
+
+# ============================
+# Classification
+# ============================
+themes:
+  # e.g. geospatial-intelligence, cost-performance-carbon, factuality-grounding, tech-scouting
+  - cost-performance-carbon
+
+tags:
+  - prototype
+  - internal
+  - eval
+
+priority: medium           # low | medium | high
+
+# ============================
+# Experiment framing
+# ============================
+problem_statement: >
+  One or two sentences on the problem or opportunity this experiment addresses.
+
+summary: >
+  A short, non-technical summary of what this experiment is and why it matters.
+
+hypotheses:
+  - id: H1
+    statement: >
+      If we do X with Y, then we will see Z outcome for users / workflows / metrics.
+    signals:
+      - What would you see if H1 is supported?
+      - What would you see if H1 is falsified?
+
+
+success_metrics:
+  - name: Example metric
+    description: >
+      How we'll measure success for this experiment.
+    type: quantitative        # quantitative | qualitative
+    target: ">= 0.8 accuracy" # free-form
+
+# ============================
+# Artifacts & links
+# ============================
+
+external_links:
+  # Optional: supporting docs, dashboards, tickets, etc.
+  - label: "Design doc"
+    url: https://…
+
+# ============================
+# Implementation details
+# ============================
+has_code: false            # true if there is runnable code in this experiment directory
+language: none             # e.g. python | javascript | typescript | mixed
+
+entrypoint: null           # e.g. src/main.py or app.py
+dependencies:
+  # Free-form, for humans + tooling
+  - "python>=3.11"
+  - "openai>=1.0.0"
+
+# ============================
+# Free-form notes
+# ============================
+notes: >
+  Any extra context that doesn't fit neatly elsewhere.
