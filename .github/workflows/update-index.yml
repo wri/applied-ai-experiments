@@ -39,7 +39,7 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet experiment-index.json README.md; then
+          if git diff --quiet README.md; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -50,6 +50,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add experiment-index.json README.md
+          git add README.md
           git commit -m "chore: update experiment index [skip ci]"
           git push
