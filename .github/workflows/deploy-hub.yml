@@ -74,9 +74,6 @@ jobs:
       - name: Validate experiments
         run: uv run python .github/scripts/validate-experiments.py
 
-      - name: Generate experiment index
-        run: uv run python .github/scripts/generate-index.py
-
       - name: Get pnpm store directory
         shell: bash
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
@@ -99,6 +96,9 @@ jobs:
           key: ${{ runner.os }}-demo-builds-${{ hashFiles('experiments/*/demo/src/**', 'experiments/*/demo/package.json', 'experiments/*/demo/svelte.config.js') }}
           restore-keys: |
             ${{ runner.os }}-demo-builds-
+
+      - name: Generate experiment index
+        run: uv run python .github/scripts/generate-index.py
 
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
