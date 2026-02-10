@@ -1,0 +1,3 @@
+# HTML exports of marimo notebooks go here
+# Generate static HTML: marimo export html notebooks/exploration.py > exports/index.html
+# Generate interactive WASM: marimo export html-wasm notebooks/exploration.py -o exports/

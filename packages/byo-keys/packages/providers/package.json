@@ -1,0 +1,58 @@
+{
+  "name": "@byo-keys/providers",
+  "version": "0.1.0",
+  "description": "LLM provider implementations for BYOK",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./anthropic": {
+      "types": "./dist/anthropic.d.ts",
+      "import": "./dist/anthropic.js"
+    },
+    "./openai": {
+      "types": "./dist/openai.d.ts",
+      "import": "./dist/openai.js"
+    },
+    "./ollama": {
+      "types": "./dist/ollama.d.ts",
+      "import": "./dist/ollama.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/anthropic.ts src/openai.ts src/ollama.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts src/anthropic.ts src/openai.ts src/ollama.ts --format esm --dts --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "llm",
+    "ai",
+    "anthropic",
+    "openai",
+    "ollama",
+    "gemini",
+    "provider"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@byo-keys/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^3.0.0"
+  },
+  "sideEffects": false
+}

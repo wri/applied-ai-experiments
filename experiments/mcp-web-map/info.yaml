@@ -1,0 +1,39 @@
+# ---- Required ----
+slug: mcp-web-map
+title: "MCP Web Map"
+type: prototype
+status: paused
+description: >
+  Chat interface for MapLibre GL JS maps, built to test whether MCP running
+  in a web worker is a viable architecture for browser-based LLM tool calling.
+
+# ---- Recommended ----
+owner: "@kovaca"
+created_at: 2026-01-06
+updated_at: 2026-01-12
+
+# ---- Classification ----
+themes:
+  - prototyping
+  - geospatial
+  - patterns
+tags:
+  - mcp
+  - tool-calling
+  - web-worker
+
+# ---- Demo ----
+demo:
+  enabled: true
+  type: sveltekit
+  build_command: "pnpm build"
+  output_dir: "demo/dist"
+
+# ---- Results ----
+results:
+  summary: null
+  lessons: []
+
+# ---- Links ----
+related_experiments: []
+external_links: []

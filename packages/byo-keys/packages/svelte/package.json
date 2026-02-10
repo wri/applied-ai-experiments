@@ -1,0 +1,51 @@
+{
+  "name": "@byo-keys/svelte",
+  "version": "0.1.0",
+  "description": "Svelte/SvelteKit integration for byo-keys",
+  "type": "module",
+  "svelte": "./dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean --external svelte",
+    "dev": "tsup src/index.ts --format esm --dts --watch --external svelte",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "llm",
+    "ai",
+    "byok",
+    "stores"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@byo-keys/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "svelte": "^4.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^3.0.0"
+  },
+  "sideEffects": false
+}

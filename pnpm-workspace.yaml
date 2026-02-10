@@ -1,0 +1,31 @@
+# pnpm workspace configuration
+# See: https://pnpm.io/workspaces
+
+packages:
+  # Shared packages
+  - 'packages/*'
+  - 'packages/byo-keys/packages/*'
+  - 'packages/ui/stories'
+
+  # Hub site
+  - 'hub'
+
+  # Experiment demos (only those with package.json)
+  - 'experiments/*/demo'
+
+catalog:
+  svelte: ^5.46.4
+  '@sveltejs/kit': ^2.49.5
+  '@sveltejs/adapter-static': ^3.0.10
+  '@sveltejs/vite-plugin-svelte': ^6.2.4
+  '@tailwindcss/vite': ^4.1.18
+  tailwindcss: ^4.1.18
+  vite: ^7.3.1
+  typescript: ^5.9.3
+  svelte-check: ^4.3.5
+
+overrides:
+  lodash: '>=4.17.23'
+
+onlyBuiltDependencies:
+  - esbuild

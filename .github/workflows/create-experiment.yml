@@ -1,0 +1,124 @@
+name: Create Experiment from Issue
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  create-experiment:
+    name: Scaffold Experiment
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'new-experiment')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Create experiment from issue
+        id: create
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: uv run python .github/scripts/create-experiment-from-issue.py
+
+      - name: Validate generated metadata
+        run: uv run python .github/scripts/validate-experiments.py
+
+      - name: Create branch, commit, and push
+        env:
+          SLUG: ${{ steps.create.outputs.slug }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b "experiment/${SLUG}"
+          git add "experiments/${SLUG}"
+          git commit -m "feat: scaffold ${SLUG} experiment"
+          git push -u origin "experiment/${SLUG}"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLUG: ${{ steps.create.outputs.slug }}
+          TITLE: ${{ steps.create.outputs.title }}
+          TYPE: ${{ steps.create.outputs.type }}
+          DESCRIPTION: ${{ steps.create.outputs.description }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: |
+          PR_BODY=$(cat <<EOF
+          ## New Experiment: ${TITLE}
+
+          **Type:** ${TYPE}
+          **Slug:** \`${SLUG}\`
+          **Owner:** @${ISSUE_AUTHOR}
+
+          ### Description
+
+          ${DESCRIPTION}
+
+          ---
+
+          Closes #${ISSUE_NUMBER}
+
+          > Auto-generated from issue #${ISSUE_NUMBER} by the create-experiment workflow.
+          EOF
+          )
+
+          gh pr create \
+            --title "feat: add ${TYPE} experiment '${SLUG}'" \
+            --assignee "${ISSUE_AUTHOR}" \
+            --body "${PR_BODY}"
+
+      - name: Comment on issue with PR link
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          SLUG: ${{ steps.create.outputs.slug }}
+        run: |
+          gh issue comment "${ISSUE_NUMBER}" --body "$(cat <<EOF
+          **Experiment scaffolded!**
+
+          A pull request has been created with the template files for \`${SLUG}\`.
+
+          **Next steps:**
+          1. Review and merge the PR linked above
+          2. Clone the branch and start building: \`git checkout experiment/${SLUG}\`
+          3. Update \`brief.md\` with your experiment plan
+          4. Add implementation code and update \`info.yaml\` as you progress
+          EOF
+          )"
+
+      - name: Comment on issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "${ISSUE_NUMBER}" --body "$(cat <<EOF
+          **Experiment creation failed**
+
+          Something went wrong while scaffolding this experiment. This could be due to:
+          - An invalid slug (must be lowercase alphanumeric + hyphens, 3-60 chars)
+          - A slug that already exists
+          - An invalid experiment type
+          - Missing required fields
+
+          Check the [workflow run logs](${RUN_URL}) for details.
+          EOF
+          )"

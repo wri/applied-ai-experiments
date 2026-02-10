@@ -1,0 +1,36 @@
+# Model configurations for evaluation
+# Add/modify models to evaluate here
+
+models:
+  - id: model-a
+    name: "CHANGEME: Model A Name"
+    provider: "anthropic"  # anthropic | openai | google | local
+    model_id: "claude-3-5-sonnet-20241022"
+    params:
+      temperature: 0
+      max_tokens: 1024
+
+  - id: model-b
+    name: "CHANGEME: Model B Name"
+    provider: "openai"
+    model_id: "gpt-4o"
+    params:
+      temperature: 0
+      max_tokens: 1024
+
+# Evaluation settings
+evaluation:
+  # Scoring method
+  scorer: "exact_match"  # exact_match | llm_judge | custom
+
+  # For LLM judge
+  judge_model: "claude-3-5-sonnet-20241022"
+  judge_criteria: "accuracy"
+
+  # Retry settings
+  max_retries: 3
+  retry_delay_seconds: 1
+
+  # Output settings
+  save_individual_scores: true
+  save_model_outputs: true

@@ -1,0 +1,155 @@
+/**
+ * Prototype Design Variant - Base Tokens (Dark Theme Default)
+ *
+ * Source of truth from new_design_resources/css/variants/prototype.css
+ * Dark theme is the default; light/high-contrast override specific tokens.
+ */
+
+[data-variant="prototype"] {
+  /* === Layout Tokens === */
+  --header-height: 56px;
+  --max-width: 1200px;
+  --z-sticky: 100;
+  --z-modal: 1000;
+
+  /* === Radius & Shadows === */
+  --radius-sm: 0.25rem; /** 2px */
+  --radius-md: 0.375rem; /** 6px */
+  --radius-lg: 0.5rem; /** 8px */
+  --radius-full: 9999px; /** Pill/circle shape */
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.15); /** Subtle shadow for small elevations */
+  --shadow-default: 0 1px 3px 0 oklch(0 0 0 / 0.2);
+
+  /* === Typography === */
+  --font-ui: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-heading: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* === Core Colors (Dark Theme Default) === */
+  --bg: #1c1a18; /** Page background */
+  --bg-2: #282523; /** Cards, panels */
+  --bg-3: #36322e; /** Panel headers */
+  --tx: #ece8e4; /** Body text */
+  --tx-2: #a8a29e; /** Secondary text */
+  --tx-3: #706a64; /** Labels */
+  --ui: #433d38; /** Borders */
+  --ui-2: #534d47; /** Hover border */
+  --ui-3: #635d56; /** Active border */
+
+  /* === Brand Colors === */
+  --primary: oklch(0.800 0.170 85); /** Amber */
+  --primary-hover: oklch(0.700 0.150 85); /** Primary hover state */
+  --primary-content: #1c1a18; /** Text on primary background */
+  --secondary: #534d47; /** Neutral gray - secondary action color */
+  --secondary-hover: #635d56; /** Secondary hover state */
+  --secondary-content: #ece8e4; /** Text on secondary background */
+  --accent: oklch(0.800 0.170 85); /** Accent highlight color */
+  --accent-hover: oklch(0.700 0.150 85); /** Accent hover state */
+  --accent-content: #1c1a18; /** Text on accent background */
+
+  /* === Status Colors === */
+  --success: #16a34a; /** Success state */
+  --success-subtle: #1a2e1a; /** Success background */
+  --success-text: #4ade80; /** Success text (AA contrast) */
+  --warning: #d97706; /** Warning state */
+  --warning-subtle: #2e2a1a; /** Warning background */
+  --warning-text: #fbbf24; /** Warning text (AA contrast) */
+  --error: #dc2626; /** Error state */
+  --error-subtle: #2e1a1a; /** Error background */
+  --error-text: #f87171; /** Error text (AA contrast) */
+  --info: #0284c7; /** Info state */
+  --info-subtle: #1a2a2e; /** Info background */
+  --info-text: #38bdf8; /** Info text (AA contrast) */
+
+  /* === Component Tokens === */
+  --component-button-border-radius: 0.25rem; /** Corner radius */
+  --component-button-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --component-button-padding-x: 1rem;
+  --component-button-padding-y: 0.5rem;
+  --component-button-font-weight: 500;
+  --component-button-font-size: 0.8125rem;
+  --component-button-line-height: 1.5;
+  --component-button-border-width: 1px;
+  --component-button-min-height: 2.5rem;
+  --component-button-gap: 0.5rem;
+  --component-input-border-radius: 0.25rem; /** Corner radius */
+  --component-input-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --component-input-padding-x: 0.75rem;
+  --component-input-padding-y: 0.5rem;
+  --component-input-font-size: 1rem;
+  --component-input-line-height: 1.5;
+  --component-input-border-width: 1px;
+  --component-input-min-height: 2.5rem;
+  --component-input-background: #1c1a18;
+  --component-card-padding: 1rem;
+  --component-card-padding-sm: 0.75rem;
+  --component-card-padding-lg: 1.5rem;
+  --component-card-border-radius: 0.375rem;
+  --component-card-border-width: 1px;
+  --component-card-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.15);
+  --component-panel-header-background: #36322e;
+  --component-panel-header-padding: 0.75rem 1rem;
+  --component-panel-body-padding: 1rem;
+  --component-table-header-background: #36322e;
+  --component-table-cell-padding-x: 0.75rem;
+  --component-table-cell-padding-y: 0.5rem;
+  --component-table-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* === Typography Tokens === */
+  --text-body-font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --text-body-font-size: 0.8125rem;
+  --text-body-line-height: 1.5;
+  --text-body-font-weight: 400;
+  --text-label-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-label-font-size: 0.7rem;
+  --text-label-line-height: 1.25;
+  --text-label-font-weight: 500;
+  --text-label-text-transform: uppercase;
+  --text-label-letter-spacing: 0.05em;
+  --text-label-color: #706a64;
+  --text-panel-title-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-panel-title-font-size: 0.875rem;
+  --text-panel-title-font-weight: 500;
+  --text-panel-title-text-transform: uppercase;
+  --text-value-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-value-font-size: 0.8125rem;
+
+  /* === Transition Tokens === */
+  --transition-instant: 0ms;
+  --transition-fast: 100ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+
+  /* === Focus Ring === */
+  --focus-ring: oklch(0.800 0.170 85);
+  --focus-ring-color: oklch(0.800 0.170 85);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-offset-color: #1c1a18;
+
+  /* === Interactive States === */
+  --interactive-primary-default: oklch(0.800 0.170 85);
+  --interactive-primary-hover: oklch(0.700 0.150 85);
+  --interactive-primary-active: oklch(0.650 0.130 85);
+  --interactive-destructive-default: oklch(0.500 0.160 25);
+  --interactive-destructive-hover: oklch(0.420 0.140 25);
+  --interactive-destructive-active: oklch(0.350 0.100 25);
+
+  /* === Surface & Foreground Aliases === */
+  --foreground: #ece8e4;
+  --foreground-muted: #a8a29e;
+  --foreground-faint: #706a64;
+  --background: #1c1a18;
+  --background-alt: #282523;
+  --surface-default: #1c1a18;
+  --surface-raised: #282523;
+  --text-primary: #ece8e4;
+  --text-secondary: #a8a29e;
+  --text-tertiary: #706a64;
+  --card-background: #282523;
+  --card-border-color: #433d38;
+  --divider-color: #433d38;
+  --divider-width: 1px;
+  --divider-style: solid;
+}

@@ -1,0 +1,48 @@
+{
+  "name": "@byo-keys/realtime",
+  "version": "0.1.0",
+  "description": "Real-time voice sessions for BYOK LLM applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "llm",
+    "voice",
+    "realtime",
+    "websocket",
+    "openai",
+    "gemini",
+    "audio",
+    "speech"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "@byo-keys/core": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@byo-keys/core": {
+      "optional": true
+    }
+  }
+}

@@ -1,0 +1,299 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ExperimentCard from '../../components/ExperimentCard.astro';
+import { loadExperimentIndex } from '../../utils/experiments';
+
+const index = await loadExperimentIndex();
+const experiments = index.experiments;
+const types = Object.keys(index.by_type);
+const themes = Object.keys(index.by_theme);
+---
+
+<BaseLayout title="All Experiments">
+  <section class="page-header">
+    <h1>All Experiments</h1>
+    <p class="subtitle">
+      Browse all {index.count} experiment{index.count !== 1 ? 's' : ''} in our collection
+    </p>
+  </section>
+
+  <section class="filters">
+    <div class="search-bar">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search experiments..."
+        class="search-input"
+        aria-label="Search experiments"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Type:</label>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-filter="type" data-value="all">All</button>
+        {types.map(type => (
+          <button class="filter-tag" data-filter="type" data-value={type}>
+            {type} ({index.by_type[type].length})
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Theme:</label>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-filter="theme" data-value="all">All</button>
+        {themes.map(theme => (
+          <button class="filter-tag" data-filter="theme" data-value={theme}>
+            {theme} ({index.by_theme[theme].length})
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="results-count" id="results-count">
+    Showing {experiments.length} experiment{experiments.length !== 1 ? 's' : ''}
+  </div>
+
+  <div class="experiments-grid" id="experiments-grid">
+    {experiments.map(exp => (
+      <div
+        class="experiment-wrapper"
+        data-type={exp.type}
+        data-themes={exp.themes.join(',')}
+        data-title={exp.title.toLowerCase()}
+        data-description={exp.description?.toLowerCase() || ''}
+        data-tags={(exp.tags || []).join(' ').toLowerCase()}
+      >
+        <ExperimentCard experiment={exp} />
+      </div>
+    ))}
+  </div>
+
+  {experiments.length === 0 && (
+    <div class="empty-state">
+      <p>No experiments found.</p>
+    </div>
+  )}
+
+  <div class="empty-state hidden" id="no-results">
+    <p>No experiments match your filters.</p>
+    <button class="btn btn-secondary" id="clear-filters">Clear filters</button>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-6);
+  }
+
+  .filters {
+    margin-bottom: var(--space-4);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .search-bar {
+    padding: var(--padding-panel-body);
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+  }
+
+  .search-input {
+    width: 100%;
+    padding: var(--padding-input);
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--tx);
+    transition: border-color var(--transition-fast) ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .search-input::placeholder {
+    color: var(--tx-3);
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--padding-panel-header);
+    border-bottom: 1px solid var(--ui);
+  }
+
+  .filter-group:last-child {
+    border-bottom: none;
+  }
+
+  .filter-group label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    min-width: 4rem;
+    padding-top: var(--space-1);
+  }
+
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1-5);
+  }
+
+  .filter-tag {
+    padding: var(--padding-filter-tag);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    cursor: pointer;
+    text-transform: capitalize;
+    transition: all var(--transition-fast) ease;
+    color: var(--tx-2);
+  }
+
+  .filter-tag:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .filter-tag.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-content);
+  }
+
+  .results-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .experiment-wrapper {
+    transition: opacity var(--transition-fast) ease;
+  }
+
+  .experiment-wrapper.hidden {
+    display: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--tx-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+  }
+
+  .empty-state.hidden {
+    display: none;
+  }
+
+  .empty-state p {
+    margin-bottom: var(--space-4);
+  }
+</style>
+
+<script>
+  // Enhanced client-side filtering with search
+  const grid = document.getElementById('experiments-grid');
+  const filterButtons = document.querySelectorAll('.filter-tag');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+  const clearFiltersBtn = document.getElementById('clear-filters');
+
+  let activeFilters = {
+    type: 'all',
+    theme: 'all',
+    search: ''
+  };
+
+  function updateResults() {
+    let visibleCount = 0;
+
+    document.querySelectorAll('.experiment-wrapper').forEach(wrapper => {
+      const el = wrapper as HTMLElement;
+      const type = el.getAttribute('data-type');
+      const themes = el.getAttribute('data-themes')?.split(',') || [];
+      const title = el.getAttribute('data-title') || '';
+      const description = el.getAttribute('data-description') || '';
+      const tags = el.getAttribute('data-tags') || '';
+
+      const matchesType = activeFilters.type === 'all' || type === activeFilters.type;
+      const matchesTheme = activeFilters.theme === 'all' || themes.includes(activeFilters.theme);
+      const matchesSearch = activeFilters.search === '' ||
+        title.includes(activeFilters.search) ||
+        description.includes(activeFilters.search) ||
+        tags.includes(activeFilters.search);
+
+      if (matchesType && matchesTheme && matchesSearch) {
+        el.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+
+    // Update results count
+    if (resultsCount) {
+      resultsCount.textContent = `Showing ${visibleCount} experiment${visibleCount !== 1 ? 's' : ''}`;
+    }
+
+    // Show/hide no results message
+    if (noResults) {
+      noResults.classList.toggle('hidden', visibleCount > 0);
+    }
+  }
+
+  // Filter button handlers
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filterType = btn.getAttribute('data-filter') as 'type' | 'theme';
+      const value = btn.getAttribute('data-value') || 'all';
+
+      // Update active state
+      document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      activeFilters[filterType] = value;
+      updateResults();
+    });
+  });
+
+  // Search input handler
+  searchInput?.addEventListener('input', () => {
+    activeFilters.search = searchInput.value.toLowerCase();
+    updateResults();
+  });
+
+  // Clear filters handler
+  clearFiltersBtn?.addEventListener('click', () => {
+    activeFilters = { type: 'all', theme: 'all', search: '' };
+
+    filterButtons.forEach(btn => {
+      const isAll = btn.getAttribute('data-value') === 'all';
+      btn.classList.toggle('active', isAll);
+    });
+
+    if (searchInput) searchInput.value = '';
+    updateResults();
+  });
+</script>

@@ -1,0 +1,28 @@
+# Test cases for evaluation
+# Each test case should have: id, input, expected, and optional metadata
+
+test_cases:
+  - id: case-001
+    input: "CHANGEME: Input for test case 1"
+    expected: "CHANGEME: Expected output"
+    category: "basic"
+    difficulty: "easy"
+
+  - id: case-002
+    input: "CHANGEME: Input for test case 2"
+    expected: "CHANGEME: Expected output"
+    category: "basic"
+    difficulty: "medium"
+
+  # Add more test cases...
+
+# Metadata about the test set
+metadata:
+  name: "CHANGEME: Test Set Name"
+  version: "1.0"
+  description: "CHANGEME: What this test set covers"
+  created_at: "YYYY-MM-DD"
+  categories:
+    - basic
+    - advanced
+    - edge-cases

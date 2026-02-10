@@ -1,0 +1,197 @@
+---
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const navLinks = [
+  { href: base, label: 'Home' },
+  { href: `${base}experiments/`, label: 'Experiments' },
+  { href: 'https://github.com/wri/applied-ai-experiments', label: 'GitHub', external: true },
+];
+---
+
+<header class="header">
+  <div class="header-content">
+    <a href={base} class="logo">
+      Applied AI Experiments
+    </a>
+    <nav class="nav">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="nav-link"
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+        >
+          {link.label}
+          {link.external && <span class="external-icon">&#8599;</span>}
+        </a>
+      ))}
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="contrast-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2v20" fill="currentColor"></path>
+          <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor"></path>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--ui);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+  }
+
+  .header-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--font-mono);
+    font-size: var(--text-title-md);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wider);
+    color: var(--tx);
+  }
+
+  .logo:hover {
+    text-decoration: none;
+    color: var(--primary);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-ui);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    transition: color var(--transition-fast) ease;
+  }
+
+  .nav-link:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .external-icon {
+    font-size: var(--text-badge);
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-avatar-sm);
+    height: var(--size-avatar-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ui);
+    background: var(--bg);
+    color: var(--tx-2);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--ui-2);
+    color: var(--tx);
+  }
+
+  /* Default (dark): show sun */
+  .sun-icon {
+    display: block;
+  }
+  .moon-icon {
+    display: none;
+  }
+  .contrast-icon {
+    display: none;
+  }
+
+  /* Light mode: show moon */
+  :global([data-theme="light"]) .sun-icon {
+    display: none;
+  }
+  :global([data-theme="light"]) .moon-icon {
+    display: block;
+  }
+  :global([data-theme="light"]) .contrast-icon {
+    display: none;
+  }
+
+  /* High-contrast: show contrast icon */
+  :global([data-theme="high-contrast"]) .sun-icon {
+    display: none;
+  }
+  :global([data-theme="high-contrast"]) .moon-icon {
+    display: none;
+  }
+  :global([data-theme="high-contrast"]) .contrast-icon {
+    display: block;
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+
+  toggle?.addEventListener('click', (e) => {
+    const current = document.documentElement.getAttribute('data-theme');
+
+    if (e.altKey) {
+      // Option+click: Toggle high-contrast mode
+      if (current === 'high-contrast') {
+        // Exit high-contrast → return to dark (default)
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        // Enter high-contrast
+        document.documentElement.setAttribute('data-theme', 'high-contrast');
+        localStorage.setItem('theme', 'high-contrast');
+      }
+    } else {
+      // Regular click: Cycle light ↔ dark
+      if (current === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        // From dark OR high-contrast → light
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+  });
+</script>

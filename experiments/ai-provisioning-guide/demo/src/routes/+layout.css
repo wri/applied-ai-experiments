@@ -1,0 +1,87 @@
+@import 'tailwindcss';
+
+/*
+ * AI Provisioning Guide — Layout Overrides
+ * Base styles from @wri-datalab/ui/styles
+ */
+
+:root {
+	--text-label: 0.7rem;
+	--text-body: 0.8125rem;
+	--text-ui: 0.75rem;
+	--text-badge: 0.65rem;
+	--text-title-sm: 0.8rem;
+	--text-title-md: 0.875rem;
+
+	--padding-panel-header: 0.75rem 1rem;
+	--padding-panel-body: 1rem;
+	--padding-badge: 0.125rem 0.5rem;
+	--padding-btn: 0.5rem 1rem;
+	--padding-btn-sm: 0.375rem 0.75rem;
+	--padding-input: 0.5rem 0.75rem;
+}
+
+/* Tailwind theme mapping to Prototype tokens */
+@theme inline {
+	--color-surface-default: var(--bg);
+	--color-surface-raised: var(--bg-2);
+	--color-surface-sunken: var(--bg-3);
+
+	--color-text-primary: var(--tx);
+	--color-text-secondary: var(--tx-2);
+	--color-text-tertiary: var(--tx-3);
+
+	--color-border-default: var(--ui);
+	--color-border-hover: var(--ui-2);
+	--color-border-active: var(--ui-3);
+
+	--color-interactive-primary-default: var(--primary);
+	--color-interactive-primary-hover: var(--primary-hover);
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-mono);
+	color: var(--tx);
+	font-weight: 500;
+	line-height: 1.25;
+	margin: 0;
+}
+
+h1 {
+	font-size: var(--font-size-lg);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+h2 {
+	font-size: var(--text-title-md);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+h3 {
+	font-size: var(--text-body);
+}
+
+a {
+	color: var(--primary);
+	text-decoration: none;
+	transition: color 150ms ease;
+}
+
+a:hover {
+	color: var(--primary-hover);
+}

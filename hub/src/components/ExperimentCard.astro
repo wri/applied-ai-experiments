@@ -1,0 +1,158 @@
+---
+import type { Experiment } from '../utils/experiments';
+
+interface Props {
+  experiment: Experiment;
+}
+
+const { experiment } = Astro.props;
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+---
+
+<article class="card">
+  <header class="card-header">
+    <div class="badges">
+      <span class={`badge badge-type-${experiment.type}`}>
+        {experiment.type}
+      </span>
+    </div>
+    {experiment._has_demo && (
+      <span class="badge badge-success">Live</span>
+    )}
+  </header>
+
+  <div class="card-body">
+    <h3 class="card-title">
+      <a href={`${base}experiments/${experiment.slug}/`}>
+        {experiment.title}
+      </a>
+    </h3>
+    <p class="card-description">{experiment.description}</p>
+  </div>
+
+  <footer class="card-footer">
+    <div class="themes">
+      {experiment.themes.map(theme => (
+        <span class="theme-tag">{theme}</span>
+      ))}
+    </div>
+    <div class="actions">
+      <a href={`${base}experiments/${experiment.slug}/`} class="btn btn-sm btn-secondary">
+        Details
+      </a>
+      {experiment._has_demo && !experiment._is_notebook && (
+        <a href={`${base}${experiment.slug}/`} class="btn btn-sm btn-primary">
+          Demo
+        </a>
+      )}
+      {experiment._is_notebook && (
+        <a href={`${base}notebook/${experiment.slug}/`} class="btn btn-sm btn-primary">
+          Notebook
+        </a>
+      )}
+    </div>
+  </footer>
+</article>
+
+<style>
+  .card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow var(--transition-fast) ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--padding-panel-header);
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+  }
+
+  .badges {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .card-body {
+    flex: 1;
+    padding: var(--padding-panel-body);
+  }
+
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-title-md);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .card-title a {
+    color: var(--tx);
+    transition: color var(--transition-fast) ease;
+  }
+
+  .card-title a:hover {
+    color: var(--tx);
+  }
+
+  .card-description {
+    font-family: var(--font-body);
+    color: var(--tx-2);
+    font-size: var(--text-body);
+    line-height: var(--font-lineHeight-normal);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--padding-panel-header);
+    border-top: 1px solid var(--ui);
+  }
+
+  .themes {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .theme-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    background: var(--bg);
+    padding: var(--padding-badge);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ui);
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+</style>
