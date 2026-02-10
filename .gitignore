@@ -232,6 +232,9 @@ experiment-index.json
 # pnpm
 .pnpm-store/
 
+# byo-keys built outputs (needed for workspace resolution in CI)
+!packages/byo-keys/packages/*/dist/
+
 # Astro cache
 hub/.astro/
 

@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'packages/**'
       - 'hub/**'
       - 'experiments/**/demo/**'
       - 'experiments/**/info.yaml'
