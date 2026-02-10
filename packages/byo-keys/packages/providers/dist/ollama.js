@@ -1,7 +1,7 @@
 import {
   OllamaProvider,
   ollama
-} from "./chunk-2DU5YRF2.js";
+} from "./chunk-WNYOJ3QB.js";
 export {
   OllamaProvider,
   ollama

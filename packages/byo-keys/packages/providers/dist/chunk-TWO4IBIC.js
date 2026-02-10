@@ -1,5 +1,5 @@
 // src/anthropic.ts
-import { BaseProvider, parseSSE } from "@byok-llm/core";
+import { BaseProvider, parseSSE } from "@byo-keys/core";
 var AnthropicProvider = class extends BaseProvider {
   config = {
     id: "anthropic",

@@ -1,4 +1,4 @@
-import { BaseProviderOptions, BaseProvider, ProviderConfig, ProviderCapabilities, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk } from '@byok-llm/core';
+import { BaseProviderOptions, BaseProvider, ProviderConfig, ProviderCapabilities, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk } from '@byo-keys/core';
 
 interface AnthropicProviderOptions extends BaseProviderOptions {
     /**

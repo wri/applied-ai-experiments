@@ -179,7 +179,7 @@ async function* parseSSE(stream) {
 }
 
 // src/storage.ts
-var DEFAULT_PREFIX = "byok-llm:keys:";
+var DEFAULT_PREFIX = "byo-keys:keys:";
 function isBrowser() {
   return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 }

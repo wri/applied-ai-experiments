@@ -132,7 +132,7 @@ function createBYOKStores(client) {
     refreshModels
   };
 }
-var BYOK_CONTEXT_KEY = /* @__PURE__ */ Symbol("byok-llm");
+var BYOK_CONTEXT_KEY = /* @__PURE__ */ Symbol("byo-keys");
 function setBYOKContext(stores) {
   setContext(BYOK_CONTEXT_KEY, stores);
 }

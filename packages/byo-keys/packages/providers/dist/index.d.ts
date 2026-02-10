@@ -1,5 +1,5 @@
-import { BaseProvider, ProviderConfig, ProviderCapabilities, BaseProviderOptions, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk, ContentPart, FinishReason } from '@byok-llm/core';
-export { BaseProvider, BaseProviderOptions, parseSSE } from '@byok-llm/core';
+import { BaseProvider, ProviderConfig, ProviderCapabilities, BaseProviderOptions, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk, ContentPart, FinishReason } from '@byo-keys/core';
+export { BaseProvider, BaseProviderOptions, parseSSE } from '@byo-keys/core';
 export { AnthropicProvider, AnthropicProviderOptions, anthropic } from './anthropic.js';
 export { OpenAIProvider, OpenAIProviderOptions, openai } from './openai.js';
 export { OllamaProvider, OllamaProviderOptions, ollama } from './ollama.js';

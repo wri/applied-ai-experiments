@@ -1,5 +1,5 @@
 // src/openai.ts
-import { BaseProvider, parseSSE } from "@byok-llm/core";
+import { BaseProvider, parseSSE } from "@byo-keys/core";
 var OpenAIProvider = class extends BaseProvider {
   config = {
     id: "openai",

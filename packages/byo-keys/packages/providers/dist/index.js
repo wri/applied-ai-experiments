@@ -1,21 +1,21 @@
 import {
   AnthropicProvider,
   anthropic
-} from "./chunk-RQBKIMCS.js";
+} from "./chunk-TWO4IBIC.js";
 import {
   OllamaProvider,
   ollama
-} from "./chunk-2DU5YRF2.js";
+} from "./chunk-WNYOJ3QB.js";
 import {
   OpenAIProvider,
   openai
-} from "./chunk-R6CNNYAC.js";
+} from "./chunk-KEC2GXNG.js";
 
 // src/index.ts
-import { BaseProvider as BaseProvider3, parseSSE as parseSSE3 } from "@byok-llm/core";
+import { BaseProvider as BaseProvider3, parseSSE as parseSSE3 } from "@byo-keys/core";
 
 // src/openai-compat.ts
-import { BaseProvider, parseSSE } from "@byok-llm/core";
+import { BaseProvider, parseSSE } from "@byo-keys/core";
 var OpenAICompatProvider = class extends BaseProvider {
   compatOptions;
   constructor(options = {}) {
@@ -200,7 +200,7 @@ var OpenAICompatProvider = class extends BaseProvider {
 };
 
 // src/gemini.ts
-import { BaseProvider as BaseProvider2, parseSSE as parseSSE2 } from "@byok-llm/core";
+import { BaseProvider as BaseProvider2, parseSSE as parseSSE2 } from "@byo-keys/core";
 var GeminiProvider = class extends BaseProvider2 {
   config = {
     id: "gemini",

@@ -1,5 +1,5 @@
 import { Readable } from 'svelte/store';
-import { BYOKClient, ProviderId, KeyStatus, LLMProvider, BYOKState, KeyMetadata, KeyValidationResult, ChatRequest, ChatResponse, ChatStreamChunk, ModelInfo } from '@byok-llm/core';
+import { BYOKClient, ProviderId, KeyStatus, LLMProvider, BYOKState, KeyMetadata, KeyValidationResult, ChatRequest, ChatResponse, ChatStreamChunk, ModelInfo } from '@byo-keys/core';
 
 interface BYOKStores {
     /**
@@ -117,7 +117,7 @@ declare function createReadyProvidersStore(stores: BYOKStores): Readable<LLMProv
  * ```svelte
  * <script>
  *   import { onMount } from 'svelte';
- *   import { initializeBYOK, getBYOKContext } from '@byok-llm/svelte';
+ *   import { initializeBYOK, getBYOKContext } from '@byo-keys/svelte';
  *
  *   const stores = getBYOKContext();
  *

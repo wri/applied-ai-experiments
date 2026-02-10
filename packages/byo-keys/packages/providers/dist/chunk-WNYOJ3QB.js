@@ -1,5 +1,5 @@
 // src/ollama.ts
-import { BaseProvider } from "@byok-llm/core";
+import { BaseProvider } from "@byo-keys/core";
 var OllamaProvider = class extends BaseProvider {
   config;
   capabilities = {

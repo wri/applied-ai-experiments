@@ -1,4 +1,4 @@
-import { BaseProvider, ProviderConfig, ProviderCapabilities, BaseProviderOptions, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk } from '@byok-llm/core';
+import { BaseProvider, ProviderConfig, ProviderCapabilities, BaseProviderOptions, KeyValidationResult, ModelInfo, ChatRequest, ChatResponse, ChatStreamChunk } from '@byo-keys/core';
 
 interface OllamaProviderOptions extends BaseProviderOptions {
     /**
