@@ -107,23 +107,7 @@ jobs:
         run: cd hub && pnpm build
 
       - name: Copy experiment index to hub output
-        run: cp experiment-index.json dist/hub/
-
-      - name: Create root redirect
-        run: |
-          cat > dist/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta http-equiv="refresh" content="0; url=hub/">
-              <title>Redirecting to Experiments Hub</title>
-          </head>
-          <body>
-              <p>Redirecting to <a href="hub/">Experiments Hub</a>...</p>
-          </body>
-          </html>
-          EOF
+        run: cp experiment-index.json dist/
 
       - name: Build experiment demos
         run: |
@@ -136,7 +120,7 @@ jobs:
           find dist -type f | head -50
           echo ""
           echo "=== Hub index exists ==="
-          ls -la dist/hub/index.html || echo "WARNING: hub index.html not found"
+          ls -la dist/index.html || echo "WARNING: hub index.html not found"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
