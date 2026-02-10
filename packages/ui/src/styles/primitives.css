@@ -1,0 +1,235 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --border-width-0: 0; /** No border */
+  --border-width-1: 1px; /** Default thin border */
+  --border-width-2: 2px; /** Medium border */
+  --border-width-3: 3px; /** Thick border */
+  --border-width-4: 4px; /** Heavy border */
+  --border-width-6: 6px; /** Extra heavy divider (WRI) */
+  --border-style-none: none;
+  --border-style-solid: solid;
+  --border-style-dashed: dashed;
+  --border-style-dotted: dotted;
+  --color-base-50: oklch(0.965 0.008 90);
+  --color-base-100: oklch(0.940 0.008 90);
+  --color-base-150: oklch(0.910 0.008 90);
+  --color-base-200: oklch(0.875 0.008 90);
+  --color-base-300: oklch(0.790 0.008 90);
+  --color-base-400: oklch(0.700 0.008 90);
+  --color-base-500: oklch(0.620 0.008 90);
+  --color-base-600: oklch(0.530 0.008 90);
+  --color-base-700: oklch(0.440 0.008 90);
+  --color-base-800: oklch(0.350 0.008 90);
+  --color-base-850: oklch(0.300 0.008 90);
+  --color-base-900: oklch(0.250 0.008 90);
+  --color-base-950: oklch(0.200 0.008 90);
+  --color-base-paper: oklch(0.988 0.008 90); /** Lightest - warm paper white */
+  --color-base-black: oklch(0.145 0.008 90); /** Darkest - warm black */
+  --color-red-50: oklch(0.965 0.040 25);
+  --color-red-100: oklch(0.920 0.080 25);
+  --color-red-200: oklch(0.850 0.120 25);
+  --color-red-300: oklch(0.750 0.160 25);
+  --color-red-400: oklch(0.650 0.180 25);
+  --color-red-500: oklch(0.580 0.180 25);
+  --color-red-600: oklch(0.500 0.160 25);
+  --color-red-700: oklch(0.420 0.140 25);
+  --color-red-800: oklch(0.350 0.100 25);
+  --color-red-900: oklch(0.280 0.070 25);
+  --color-red-950: oklch(0.220 0.050 25);
+  --color-orange-50: oklch(0.965 0.045 55);
+  --color-orange-100: oklch(0.920 0.090 55);
+  --color-orange-200: oklch(0.860 0.130 55);
+  --color-orange-300: oklch(0.780 0.160 55);
+  --color-orange-400: oklch(0.700 0.170 55);
+  --color-orange-500: oklch(0.630 0.160 55);
+  --color-orange-600: oklch(0.550 0.140 55);
+  --color-orange-700: oklch(0.460 0.110 55);
+  --color-orange-800: oklch(0.380 0.080 55);
+  --color-orange-900: oklch(0.300 0.055 55);
+  --color-orange-950: oklch(0.240 0.040 55);
+  --color-yellow-50: oklch(0.970 0.040 95);
+  --color-yellow-100: oklch(0.940 0.080 95);
+  --color-yellow-200: oklch(0.900 0.120 95);
+  --color-yellow-300: oklch(0.850 0.150 95);
+  --color-yellow-400: oklch(0.800 0.160 95);
+  --color-yellow-500: oklch(0.750 0.150 95);
+  --color-yellow-600: oklch(0.680 0.130 95);
+  --color-yellow-700: oklch(0.580 0.100 95);
+  --color-yellow-800: oklch(0.480 0.070 95);
+  --color-yellow-900: oklch(0.380 0.050 95);
+  --color-yellow-950: oklch(0.300 0.035 95);
+  --color-green-50: oklch(0.965 0.035 145);
+  --color-green-100: oklch(0.920 0.070 145);
+  --color-green-200: oklch(0.860 0.110 145);
+  --color-green-300: oklch(0.780 0.140 145);
+  --color-green-400: oklch(0.700 0.150 145);
+  --color-green-500: oklch(0.620 0.140 145);
+  --color-green-600: oklch(0.540 0.120 145);
+  --color-green-700: oklch(0.460 0.095 145);
+  --color-green-800: oklch(0.380 0.070 145);
+  --color-green-900: oklch(0.300 0.050 145);
+  --color-green-950: oklch(0.240 0.035 145);
+  --color-cyan-50: oklch(0.965 0.035 195);
+  --color-cyan-100: oklch(0.920 0.070 195);
+  --color-cyan-200: oklch(0.860 0.105 195);
+  --color-cyan-300: oklch(0.780 0.130 195);
+  --color-cyan-400: oklch(0.700 0.135 195);
+  --color-cyan-500: oklch(0.620 0.125 195);
+  --color-cyan-600: oklch(0.540 0.110 195);
+  --color-cyan-700: oklch(0.460 0.090 195);
+  --color-cyan-800: oklch(0.380 0.065 195);
+  --color-cyan-900: oklch(0.300 0.045 195);
+  --color-cyan-950: oklch(0.240 0.030 195);
+  --color-blue-50: oklch(0.965 0.030 250);
+  --color-blue-100: oklch(0.920 0.060 250);
+  --color-blue-200: oklch(0.860 0.100 250);
+  --color-blue-300: oklch(0.780 0.135 250);
+  --color-blue-400: oklch(0.680 0.150 250);
+  --color-blue-500: oklch(0.600 0.150 250);
+  --color-blue-600: oklch(0.520 0.135 250);
+  --color-blue-700: oklch(0.440 0.110 250);
+  --color-blue-800: oklch(0.360 0.080 250);
+  --color-blue-900: oklch(0.280 0.055 250);
+  --color-blue-950: oklch(0.220 0.040 250);
+  --color-purple-50: oklch(0.965 0.030 300);
+  --color-purple-100: oklch(0.920 0.060 300);
+  --color-purple-200: oklch(0.860 0.100 300);
+  --color-purple-300: oklch(0.780 0.130 300);
+  --color-purple-400: oklch(0.680 0.150 300);
+  --color-purple-500: oklch(0.600 0.150 300);
+  --color-purple-600: oklch(0.520 0.140 300);
+  --color-purple-700: oklch(0.440 0.115 300);
+  --color-purple-800: oklch(0.360 0.085 300);
+  --color-purple-900: oklch(0.280 0.060 300);
+  --color-purple-950: oklch(0.220 0.045 300);
+  --color-magenta-50: oklch(0.965 0.035 345);
+  --color-magenta-100: oklch(0.920 0.070 345);
+  --color-magenta-200: oklch(0.860 0.110 345);
+  --color-magenta-300: oklch(0.780 0.145 345);
+  --color-magenta-400: oklch(0.680 0.165 345);
+  --color-magenta-500: oklch(0.600 0.165 345);
+  --color-magenta-600: oklch(0.520 0.150 345);
+  --color-magenta-700: oklch(0.440 0.120 345);
+  --color-magenta-800: oklch(0.360 0.090 345);
+  --color-magenta-900: oklch(0.280 0.060 345);
+  --color-magenta-950: oklch(0.220 0.045 345);
+  --color-wri-green: oklch(0.520 0.150 160); /** WRI Primary Green */
+  --color-wri-green-light: oklch(0.650 0.120 160);
+  --color-wri-green-dark: oklch(0.400 0.120 160);
+  --color-wri-yellow: oklch(0.800 0.170 85); /** WRI Accent Yellow */
+  --color-wri-yellow-light: oklch(0.880 0.130 85);
+  --color-wri-yellow-dark: oklch(0.700 0.150 85);
+  --duration-instant: 0ms; /** No transition */
+  --duration-fast: 100ms; /** Quick micro-interactions */
+  --duration-normal: 200ms; /** Standard transitions */
+  --duration-slow: 300ms; /** Deliberate animations */
+  --duration-slower: 500ms; /** Complex animations */
+  --duration-slowest: 700ms; /** Large-scale animations */
+  --easing-linear: 0,0,1,1;
+  --easing-ease: 0.25,0.1,0.25,1;
+  --easing-ease-in: 0.42,0,1,1; /** Accelerate from rest */
+  --easing-ease-out: 0,0,0.58,1; /** Decelerate to rest */
+  --easing-ease-in-out: 0.42,0,0.58,1; /** Smooth acceleration and deceleration */
+  --easing-bounce: 0.68,-0.55,0.265,1.55; /** Playful overshoot effect */
+  --radius-none: 0;
+  --radius-sm: 0.125rem; /** 2px */
+  --radius-default: 0.25rem; /** 4px */
+  --radius-md: 0.375rem; /** 6px */
+  --radius-lg: 0.5rem; /** 8px */
+  --radius-xl: 0.75rem; /** 12px */
+  --radius-2xl: 1rem; /** 16px */
+  --radius-3xl: 1.5rem; /** 24px */
+  --radius-full: 9999px; /** Pill/circle shape */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 oklch(0.15 0.008 90 / 0.05); /** Subtle shadow for small elevations */
+  --shadow-default: 0 1px 3px 0 oklch(0.15 0.008 90 / 0.1), 0 1px 2px -1px oklch(0.15 0.008 90 / 0.1);
+  --shadow-md: 0 4px 6px -1px oklch(0.15 0.008 90 / 0.1), 0 2px 4px -2px oklch(0.15 0.008 90 / 0.1);
+  --shadow-lg: 0 10px 15px -3px oklch(0.15 0.008 90 / 0.1), 0 4px 6px -4px oklch(0.15 0.008 90 / 0.1);
+  --shadow-xl: 0 20px 25px -5px oklch(0.15 0.008 90 / 0.1), 0 8px 10px -6px oklch(0.15 0.008 90 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px oklch(0.15 0.008 90 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 oklch(0.15 0.008 90 / 0.05);
+  --space-0: 0;
+  --space-1: 0.25rem; /** 4px */
+  --space-2: 0.5rem; /** 8px */
+  --space-3: 0.75rem; /** 12px */
+  --space-4: 1rem; /** 16px */
+  --space-5: 1.25rem; /** 20px */
+  --space-6: 1.5rem; /** 24px */
+  --space-7: 1.75rem; /** 28px */
+  --space-8: 2rem; /** 32px */
+  --space-9: 2.25rem; /** 36px */
+  --space-10: 2.5rem; /** 40px */
+  --space-11: 2.75rem; /** 44px */
+  --space-12: 3rem; /** 48px */
+  --space-14: 3.5rem; /** 56px */
+  --space-16: 4rem; /** 64px */
+  --space-20: 5rem; /** 80px */
+  --space-24: 6rem; /** 96px */
+  --space-28: 7rem; /** 112px */
+  --space-32: 8rem; /** 128px */
+  --space-36: 9rem; /** 144px */
+  --space-40: 10rem; /** 160px */
+  --space-44: 11rem; /** 176px */
+  --space-48: 12rem; /** 192px */
+  --space-52: 13rem; /** 208px */
+  --space-56: 14rem; /** 224px */
+  --space-60: 15rem; /** 240px */
+  --space-64: 16rem; /** 256px */
+  --space-72: 18rem; /** 288px */
+  --space-80: 20rem; /** 320px */
+  --space-96: 24rem; /** 384px */
+  --space-px: 1px;
+  --space-0-5: 0.125rem; /** 2px */
+  --space-1-5: 0.375rem; /** 6px */
+  --space-2-5: 0.625rem; /** 10px */
+  --space-3-5: 0.875rem; /** 14px */
+  --font-family-sans: 'Inter', 'Proxima Nova', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /** Sans-serif stack with Inter as primary */
+  --font-family-serif: 'Freight Display Pro', 'Tiempos Headline', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif; /** Serif stack with Freight Display Pro for WRI headlines */
+  --font-family-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace; /** Monospace stack with IBM Plex Mono as primary */
+  --font-family-display: 'Freight Display Pro', 'Tiempos Headline', ui-serif, Georgia, serif; /** Display font for WRI headlines */
+  --font-family-ui: ui-sans-serif, system-ui, -apple-system, sans-serif; /** System UI font for compact interfaces */
+  --font-size-xs: 0.75rem; /** 12px */
+  --font-size-sm: 0.875rem; /** 14px */
+  --font-size-base: 1rem; /** 16px */
+  --font-size-lg: 1.125rem; /** 18px */
+  --font-size-xl: 1.25rem; /** 20px */
+  --font-size-2xl: 1.5rem; /** 24px */
+  --font-size-3xl: 1.875rem; /** 30px */
+  --font-size-4xl: 2.25rem; /** 36px */
+  --font-size-5xl: 3rem; /** 48px */
+  --font-size-6xl: 3.75rem; /** 60px */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  --font-lineHeight-none: 1;
+  --font-lineHeight-tight: 1.25;
+  --font-lineHeight-snug: 1.375;
+  --font-lineHeight-normal: 1.5;
+  --font-lineHeight-relaxed: 1.625;
+  --font-lineHeight-loose: 2;
+  --font-letterSpacing-tighter: -0.05em;
+  --font-letterSpacing-tight: -0.025em;
+  --font-letterSpacing-normal: 0;
+  --font-letterSpacing-wide: 0.025em;
+  --font-letterSpacing-wider: 0.05em;
+  --font-letterSpacing-widest: 0.1em;
+  --z-hide: -1; /** Hidden below content */
+  --z-base: 0; /** Default document flow */
+  --z-raised: 1; /** Slightly elevated content */
+  --z-dropdown: 1000; /** Dropdown menus and selects */
+  --z-sticky: 1100; /** Sticky headers and footers */
+  --z-fixed: 1200; /** Fixed position elements */
+  --z-modal-backdrop: 1300; /** Modal overlay/backdrop */
+  --z-modal: 1400; /** Modal dialogs */
+  --z-popover: 1500; /** Popovers and floating panels */
+  --z-tooltip: 1600; /** Tooltips (highest priority) */
+  --z-toast: 1700; /** Toast notifications */
+}

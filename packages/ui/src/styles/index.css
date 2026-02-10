@@ -1,0 +1,49 @@
+/**
+ * @wri-datalab/ui - Prototype Design System Styles
+ *
+ * Import this file to get all theme variants:
+ *   import '@wri-datalab/ui/styles';
+ *
+ * Usage:
+ *   <div data-variant="prototype">              <!-- Default (dark) -->
+ *   <div data-variant="prototype" data-theme="light">
+ *   <div data-variant="prototype" data-theme="dark">
+ *   <div data-variant="prototype" data-theme="high-contrast">
+ */
+
+@import './primitives.css';
+@import './prototype.css';
+@import './prototype-light.css';
+@import './prototype-high-contrast.css';
+
+/* Base styles for prototype variant */
+[data-variant="prototype"] {
+  font-family: var(--font-body);
+  font-size: var(--text-body-font-size);
+  line-height: var(--text-body-line-height);
+  color: var(--tx);
+  background-color: var(--bg);
+}
+
+/* Utility classes */
+[data-variant="prototype"] .label {
+  font-family: var(--text-label-font-family);
+  font-size: var(--text-label-font-size);
+  font-weight: var(--text-label-font-weight);
+  line-height: var(--text-label-line-height);
+  letter-spacing: var(--text-label-letter-spacing);
+  text-transform: var(--text-label-text-transform);
+  color: var(--text-label-color);
+}
+
+[data-variant="prototype"] .panel-title {
+  font-family: var(--text-panel-title-font-family);
+  font-size: var(--text-panel-title-font-size);
+  font-weight: var(--text-panel-title-font-weight);
+  text-transform: var(--text-panel-title-text-transform);
+}
+
+[data-variant="prototype"] .value {
+  font-family: var(--text-value-font-family);
+  font-size: var(--text-value-font-size);
+}

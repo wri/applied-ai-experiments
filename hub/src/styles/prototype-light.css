@@ -1,0 +1,49 @@
+/**
+ * Prototype Design Variant - Light Theme Overrides
+ *
+ * Source of truth from new_design_resources/css/variants/prototype-light.css
+ * Only overrides values that differ from the dark theme default.
+ */
+
+[data-variant="prototype"][data-theme="light"] {
+  /* === Core Colors === */
+  --bg: #faf8f6; /** Page background */
+  --bg-2: #f2efe9; /** Cards, panels */
+  --bg-3: #e8e4de; /** Panel headers */
+  --tx: #2c2a28; /** Body text */
+  --tx-2: #5c5a58; /** Secondary text */
+  --tx-3: #8c8a88; /** Labels */
+  --ui: #d8d4ce; /** Borders */
+  --ui-2: #c8c4be; /** Hover border */
+  --ui-3: #b8b4ae; /** Active border */
+
+  /* === Component Overrides === */
+  --component-input-background: #ffffff;
+  --component-panel-header-background: #f2efe9;
+  --component-table-header-background: #e8e4de;
+
+  /* === Surface & Aliases === */
+  --foreground: #2c2a28;
+  --foreground-muted: #5c5a58;
+  --foreground-faint: #8c8a88;
+  --background: #faf8f6;
+  --background-alt: #f2efe9;
+  --surface-default: #faf8f6;
+  --surface-raised: #f2efe9;
+  --text-primary: #2c2a28;
+  --text-secondary: #5c5a58;
+  --text-tertiary: #8c8a88;
+  --text-label-color: #8c8a88;
+  --card-background: #f2efe9;
+  --card-border-color: #d8d4ce;
+  --divider-color: #d8d4ce;
+
+  /* === Focus Ring === */
+  --focus-ring: oklch(0.700 0.150 85);
+  --focus-ring-color: oklch(0.700 0.150 85);
+  --focus-ring-offset-color: #faf8f6;
+
+  /* === Primary Content (for light backgrounds) === */
+  --primary-content: #1c1a18;
+  --secondary-content: #faf8f6;
+}

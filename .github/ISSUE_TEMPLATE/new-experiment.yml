@@ -1,0 +1,94 @@
+name: New Experiment
+description: Request scaffolding of a new experiment directory
+labels: ["new-experiment"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill out this form to automatically scaffold a new experiment.
+        A PR will be created with the template files populated from your inputs.
+
+  - type: input
+    id: title
+    attributes:
+      label: Experiment Title
+      description: Human-readable name for the experiment
+      placeholder: "e.g. LLM Cost-Performance Tradeoffs"
+    validations:
+      required: true
+
+  - type: input
+    id: slug
+    attributes:
+      label: Slug
+      description: >
+        Lowercase directory name (letters, numbers, hyphens only).
+        Must start and end with a letter or number, 3-60 characters.
+      placeholder: "e.g. llm-cost-perf"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Experiment Type
+      options:
+        - spike
+        - prototype
+        - evaluation
+        - benchmark
+        - research
+        - notebook
+        - marimo
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: 1-3 sentences explaining what this experiment is and why it matters
+      placeholder: "What question does this experiment answer? Why is it worth exploring?"
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: GitHub username of the experiment owner (defaults to issue author)
+      placeholder: "@username"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: themes
+    attributes:
+      label: Themes
+      description: Select any applicable themes
+      options:
+        - label: cost-perf
+        - label: evals
+        - label: patterns
+        - label: geospatial
+        - label: reliability
+        - label: agents
+        - label: scouting
+        - label: prototyping
+
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Comma-separated free-form tags for search and filtering
+      placeholder: "e.g. llm, openai, structured-output"
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Prior art, links, or other notes (included in PR description only)
+    validations:
+      required: false

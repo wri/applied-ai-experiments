@@ -1,0 +1,56 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/primitives.css';
+import '../styles/prototype.css';
+import '../styles/prototype-light.css';
+import '../styles/prototype-high-contrast.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'WRI AI Experiments Hub - Explore our AI research and experiments' } = Astro.props;
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const canonicalURL = new URL(Astro.url.pathname, 'https://wri.github.io');
+---
+
+<!DOCTYPE html>
+<html lang="en" data-variant="prototype">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} | WRI Applied AI Experiments`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:site_name" content="WRI Applied AI Experiments" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>{title} | WRI Applied AI Experiments</title>
+    <script is:inline>
+      // Initialize theme from localStorage or system preference
+      (function() {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        if (theme !== 'dark') {
+          document.documentElement.setAttribute('data-theme', theme);
+        }
+        // Prototype default (no data-theme) is dark, so only set for light/high-contrast
+      })();
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

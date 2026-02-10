@@ -1,0 +1,51 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-content">
+    <a href="https://www.wri.org/data/applied-ai-group" target="_blank" rel="noopener noreferred">
+    WRI Applied AI Group
+    </a>
+    <span class="separator">|</span>
+    <a href="https://github.com/wri/applied-ai-experiments" target="_blank" rel="noopener noreferrer">
+      GitHub
+    </a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--bg-2);
+    border-top: 1px solid var(--ui);
+    margin-top: auto;
+  }
+
+  .footer-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-ui);
+    color: var(--tx-3);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+  }
+
+  .separator {
+    color: var(--ui);
+  }
+
+  .footer-content a {
+    color: var(--tx-3);
+    transition: color var(--transition-fast) ease;
+  }
+
+  .footer-content a:hover {
+    color: var(--primary);
+  }
+</style>

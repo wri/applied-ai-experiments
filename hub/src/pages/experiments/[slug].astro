@@ -1,0 +1,419 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadExperimentIndex, loadBriefContent, transformBriefMarkdown } from '../../utils/experiments';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  const index = await loadExperimentIndex();
+  const paths = await Promise.all(
+    index.experiments.map(async (exp) => {
+      let briefHtml: string | null = null;
+      if (exp._has_brief) {
+        const md = await loadBriefContent(exp.slug);
+        if (md) {
+          const cleaned = transformBriefMarkdown(md);
+          briefHtml = cleaned ? await marked(cleaned) : null;
+        }
+      }
+      return {
+        params: { slug: exp.slug },
+        props: { experiment: exp, briefHtml },
+      };
+    })
+  );
+  return paths;
+}
+
+const { experiment, briefHtml } = Astro.props;
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Check if sidebar has any content
+const hasThemes = experiment.themes && experiment.themes.length > 0;
+const hasTags = experiment.tags && experiment.tags.length > 0;
+const hasRelated = experiment.related_experiments && experiment.related_experiments.length > 0;
+const hasSidebarContent = hasThemes || hasTags || hasRelated;
+
+// Check for main content sections
+const hasResultsSummary = experiment.results?.summary && experiment.results.summary.trim();
+const hasLessons = experiment.results?.lessons && experiment.results.lessons.length > 0;
+const hasBrief = !!briefHtml;
+const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
+---
+
+<BaseLayout title={experiment.title} description={experiment.description}>
+  <article class="experiment-detail">
+    <header class="experiment-header">
+      <div class="breadcrumb">
+        <a href={base}>Home</a>
+        <span>/</span>
+        <a href={`${base}experiments/`}>Experiments</a>
+        <span>/</span>
+        <span>{experiment.slug}</span>
+      </div>
+
+      <h1>{experiment.title}</h1>
+
+      <div class="meta">
+        <span class={`badge badge-type-${experiment.type}`}>
+          {experiment.type}
+        </span>
+      </div>
+
+      <p class="description">{experiment.description}</p>
+
+      <div class="actions">
+        {experiment._has_demo && !experiment._is_notebook && (
+          <a href={`${base}${experiment.slug}/`} class="btn btn-primary">
+            View Demo
+          </a>
+        )}
+        {experiment._is_notebook && (
+          <a href={`${base}notebook/${experiment.slug}/`} class="btn btn-primary">
+            View Notebook
+          </a>
+        )}
+        <a href={`https://github.com/wri/applied-ai-experiments/tree/main/experiments/${experiment.slug}`}
+           class="btn btn-secondary"
+           target="_blank"
+           rel="noopener noreferrer">
+          View Source
+        </a>
+      </div>
+    </header>
+
+    <div class={`content-grid ${!hasSidebarContent ? 'no-sidebar' : ''}`}>
+      <main class="main-content">
+        {!hasMainContent && (
+          <div class="empty-content">
+            <p>This experiment doesn't have detailed documentation yet.</p>
+            <p>Check out the <a href={`https://github.com/wri/applied-ai-experiments/tree/main/experiments/${experiment.slug}`} target="_blank" rel="noopener noreferrer">source code</a> for more information.</p>
+          </div>
+        )}
+
+        {hasBrief && (
+          <section class="section brief-content">
+            <div set:html={briefHtml} />
+          </section>
+        )}
+
+        {hasResultsSummary && (
+          <section class="section">
+            <h2>Results Summary</h2>
+            <p>{experiment.results.summary}</p>
+          </section>
+        )}
+
+        {hasLessons && (
+          <section class="section">
+            <h2>Lessons Learned</h2>
+            <ul>
+              {experiment.results.lessons.map((lesson: string) => (
+                <li>{lesson}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </main>
+
+      {hasSidebarContent && (
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <h3>Details</h3>
+            <dl class="details-list">
+              <dt>Type</dt>
+              <dd>{experiment.type}</dd>
+
+              {experiment.runtime && (
+                <>
+                  <dt>Runtime</dt>
+                  <dd>{experiment.runtime}</dd>
+                </>
+              )}
+            </dl>
+          </div>
+
+          {hasThemes && (
+            <div class="sidebar-card">
+              <h3>Themes</h3>
+              <div class="tags">
+                {experiment.themes.map((theme: string) => (
+                  <span class="tag">{theme}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasTags && (
+            <div class="sidebar-card">
+              <h3>Tags</h3>
+              <div class="tags">
+                {experiment.tags.map((tag: string) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasRelated && (
+            <div class="sidebar-card">
+              <h3>Related</h3>
+              <ul class="related-list">
+                {experiment.related_experiments.map((slug: string) => (
+                  <li>
+                    <a href={`${base}experiments/${slug}/`}>{slug}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .experiment-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .experiment-header {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--ui);
+  }
+
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    margin-bottom: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .breadcrumb a {
+    color: var(--tx-3);
+    transition: color 150ms ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--primary);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+  }
+
+  .description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--tx-2);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-6);
+  }
+
+  .content-grid.no-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .empty-content {
+    padding: var(--space-6);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--tx-2);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .empty-content p {
+    margin-bottom: var(--space-2);
+  }
+
+  .section {
+    margin-bottom: var(--space-6);
+  }
+
+  .section h2 {
+    font-size: 0.875rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .section p,
+  .section li {
+    font-family: var(--font-body);
+    color: var(--tx);
+    line-height: 1.6;
+    font-size: 0.875rem;
+  }
+
+  .sidebar-card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--space-3);
+  }
+
+  .sidebar-card h3 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+    margin-bottom: 0;
+  }
+
+  .details-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) var(--space-3);
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .details-list dt {
+    color: var(--tx-3);
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+  }
+
+  .details-list dd {
+    color: var(--tx);
+    text-transform: capitalize;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0.75rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--bg);
+    border: 1px solid var(--ui);
+    color: var(--tx-2);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .related-list {
+    list-style: none;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .related-list li {
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--ui);
+  }
+
+  .related-list li:last-child {
+    border-bottom: none;
+  }
+
+  .related-list a {
+    color: var(--tx-2);
+  }
+
+  .related-list a:hover {
+    color: var(--primary);
+  }
+
+  .brief-content :global(h1) {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    margin-top: 0;
+    margin-bottom: var(--space-3);
+    color: var(--tx);
+  }
+
+  .brief-content :global(h2),
+  .brief-content :global(h3),
+  .brief-content :global(h4) {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-2);
+    color: var(--tx);
+  }
+
+  .brief-content :global(p) {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--tx);
+    margin-bottom: var(--space-3);
+  }
+
+  .brief-content :global(ul),
+  .brief-content :global(ol) {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--tx);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+  }
+
+  .brief-content :global(li) {
+    margin-bottom: var(--space-1);
+  }
+
+  .brief-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--ui);
+    margin: var(--space-4) 0;
+  }
+
+  .brief-content :global(strong) {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .brief-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    background: var(--bg-2);
+    padding: 0.125rem 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+</style>

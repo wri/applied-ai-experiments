@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ExperimentCard from '../components/ExperimentCard.astro';
+import { loadExperimentIndex } from '../utils/experiments';
+
+const index = await loadExperimentIndex();
+const experiments = index.experiments;
+const typeCount = Object.keys(index.by_type).length;
+const themeCount = Object.keys(index.by_theme).length;
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Sort experiments by updated_at for "Recently Updated" section
+const recentlyUpdated = [...experiments]
+  .filter(e => e.updated_at)
+  .sort((a, b) => {
+    const dateA = new Date(a.updated_at || 0).getTime();
+    const dateB = new Date(b.updated_at || 0).getTime();
+    return dateB - dateA;
+  })
+  .slice(0, 4);
+
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <h1>AI Experiments Hub</h1>
+    <p class="subtitle">
+      Explore {index.count} experiment{index.count !== 1 ? 's' : ''} across {themeCount} theme{themeCount !== 1 ? 's' : ''}
+    </p>
+  </section>
+
+  <section class="stats">
+    <div class="stat-card">
+      <span class="stat-value">{index.count}</span>
+      <span class="stat-label">Total Experiments</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{Object.keys(index.by_type).length}</span>
+      <span class="stat-label">Experiment Types</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{experiments.filter(e => e._has_demo).length}</span>
+      <span class="stat-label">Live Demos</span>
+    </div>
+  </section>
+
+  {recentlyUpdated.length > 0 && (
+    <section class="recently-updated">
+      <h2>Recently Updated</h2>
+      <div class="updated-list">
+        {recentlyUpdated.map(exp => (
+          <a href={`${base}experiments/${exp.slug}/`} class="updated-item">
+            <span class="updated-title">{exp.title}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="experiments-section">
+    <div class="section-header">
+      <h2>Featured Experiments</h2>
+      <a href={`${base}experiments/`} class="btn btn-secondary">
+        View All
+      </a>
+    </div>
+    <div class="experiments-grid">
+      {experiments.slice(0, 6).map(exp => (
+        <ExperimentCard experiment={exp} />
+      ))}
+    </div>
+  </section>
+
+  {Object.keys(index.by_type).length > 0 && (
+    <section class="types-section">
+      <h2>By Type</h2>
+      <div class="type-list">
+        {Object.entries(index.by_type).map(([type, slugs]) => (
+          <div class="type-item">
+            <span class="type-name">{type}</span>
+            <span class="type-count">{slugs.length}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: var(--space-6) 0 var(--space-8);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .stat-card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    text-align: center;
+  }
+
+  .stat-value {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--primary);
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    margin-top: var(--space-1);
+  }
+
+  .recently-updated {
+    margin-bottom: var(--space-8);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .recently-updated h2 {
+    padding: var(--padding-panel-header);
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+    margin-bottom: 0;
+    font-size: var(--text-title-sm);
+  }
+
+  .updated-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .updated-item {
+    display: block;
+    padding: var(--padding-panel-header);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ui);
+    transition: background var(--transition-fast) ease;
+  }
+
+  .updated-item:last-child {
+    border-bottom: none;
+  }
+
+  .updated-item:hover {
+    background: var(--bg-3);
+    text-decoration: none;
+  }
+
+  .updated-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    color: var(--tx);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+  }
+
+  .experiments-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .types-section {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--ui);
+  }
+
+  .types-section h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  .type-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .type-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--padding-btn-sm);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-ui);
+  }
+
+  .type-name {
+    text-transform: capitalize;
+    color: var(--tx-2);
+  }
+
+  .type-count {
+    background: var(--primary);
+    color: var(--primary-content);
+    padding: var(--padding-badge);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-badge);
+    font-weight: var(--font-weight-medium);
+  }
+</style>

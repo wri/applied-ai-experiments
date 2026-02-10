@@ -1,0 +1,2 @@
+# HTML exports of notebooks go here
+# Generate with: jupyter nbconvert --to html notebooks/*.ipynb --output-dir exports

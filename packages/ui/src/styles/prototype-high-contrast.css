@@ -1,0 +1,56 @@
+/**
+ * Prototype Design Variant - High Contrast Theme Overrides
+ *
+ * Source of truth from new_design_resources/css/variants/prototype-high-contrast.css
+ * Maximum contrast for accessibility - pure black/white with high-contrast accents.
+ */
+
+[data-variant="prototype"][data-theme="high-contrast"] {
+  /* === Core Colors === */
+  --bg: #000000; /** Page background */
+  --bg-2: #0a0a0a; /** Cards, panels */
+  --bg-3: #1a1a1a; /** Panel headers */
+  --tx: #ffffff; /** Body text */
+  --tx-2: #ffffff; /** Secondary text */
+  --tx-3: #cccccc; /** Labels */
+  --ui: #ffffff; /** Borders */
+  --ui-2: #ffffff; /** Hover border */
+  --ui-3: #ffffff; /** Active border */
+
+  /* === Brand Colors (High Contrast) === */
+  --primary: #ffaa00; /** High contrast amber */
+  --primary-hover: #ffcc00;
+  --primary-content: #000000;
+  --accent: #ffaa00;
+
+  /* === Component Overrides === */
+  --component-input-background: #0a0a0a;
+  --component-panel-header-background: #1a1a1a;
+  --component-table-header-background: #1a1a1a;
+
+  /* === Surface & Aliases === */
+  --foreground: #ffffff;
+  --foreground-muted: #ffffff;
+  --foreground-faint: #cccccc;
+  --background: #000000;
+  --background-alt: #0a0a0a;
+  --surface-default: #000000;
+  --surface-raised: #0a0a0a;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --text-tertiary: #cccccc;
+  --text-label-color: #cccccc;
+  --card-background: #0a0a0a;
+  --card-border-color: #ffffff;
+  --divider-color: #ffffff;
+
+  /* === Focus Ring === */
+  --focus-ring: #ffcc00;
+  --focus-ring-color: #ffcc00;
+  --focus-ring-offset-color: #000000;
+
+  /* === Interactive States (High Contrast) === */
+  --interactive-primary-default: #ffcc00;
+  --interactive-primary-hover: #ffdd33;
+  --interactive-primary-active: #e6b800;
+}

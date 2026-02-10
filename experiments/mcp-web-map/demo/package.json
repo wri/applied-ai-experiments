@@ -1,0 +1,29 @@
+{
+  "name": "mcp-web-map-demo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@byo-keys/core": "workspace:*",
+    "@byo-keys/providers": "workspace:*",
+    "@byo-keys/svelte": "workspace:*",
+    "@wri-datalab/ui": "workspace:*",
+    "maplibre-gl": "^5.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "catalog:",
+    "@sveltejs/kit": "catalog:",
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

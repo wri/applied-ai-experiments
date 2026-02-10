@@ -1,0 +1,55 @@
+name: Update Experiment Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/**/info.yaml'
+      - 'experiments/**/experiment.yaml'
+      - '.github/scripts/generate-index.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-index:
+    name: Update Index
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Generate experiment index
+        run: uv run python .github/scripts/generate-index.py
+
+      - name: Update README
+        run: uv run python .github/scripts/update_readme.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet experiment-index.json README.md; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add experiment-index.json README.md
+          git commit -m "chore: update experiment index [skip ci]"
+          git push

@@ -1,0 +1,96 @@
+/* Import UI styles from @wri-datalab/ui */
+@import '@wri-datalab/ui/styles';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+/* Base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--tx);
+  line-height: var(--text-body-line-height);
+}
+
+/* Full-height app container */
+.app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Typography using design tokens */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--tx);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  margin: 0;
+}
+
+/* Link styles */
+a {
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+/* Code blocks */
+code {
+  font-family: var(--font-mono);
+  background-color: var(--bg-2);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875em;
+}
+
+/* MapLibre popup overrides */
+.maplibregl-popup-content {
+  background: var(--bg);
+  color: var(--tx);
+  border: 1px solid var(--ui);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-body-font-size);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.maplibregl-popup-close-button {
+  color: var(--tx-2);
+  font-size: 1.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.maplibregl-popup-close-button:hover {
+  color: var(--tx);
+  background: var(--bg-2);
+}
+
+.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--bg);
+}
+
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--bg);
+}
+
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--bg);
+}
+
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--bg);
+}

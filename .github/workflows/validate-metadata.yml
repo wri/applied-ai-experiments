@@ -1,0 +1,35 @@
+name: Validate Experiment Metadata
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/**/info.yaml'
+      - 'experiments/**/experiment.yaml'
+      - '.github/scripts/validate-experiments.py'
+      - '.github/templates/**/info.yaml'
+      - '.github/templates/**/experiment.yaml'
+
+jobs:
+  validate:
+    name: Validate Experiments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Validate experiment metadata
+        run: uv run python .github/scripts/validate-experiments.py
+
+      - name: Check for validation errors
+        if: failure()
+        run: |
+          echo "::error::Experiment metadata validation failed. Please fix the errors above."
+          exit 1

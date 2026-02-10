@@ -1,0 +1,34 @@
+# ---- Required ----
+slug: CHANGEME                          # Must match directory name
+title: "CHANGEME"
+type: benchmark                       # evaluation | benchmark | spike | prototype | research | notebook | marimo
+status: idea                            # idea | started | paused | completed | archived
+description: >
+  CHANGEME: One to two sentences. What is this and why does it matter?
+
+# ---- Recommended ----
+owner: "CHANGEME"
+created_at: YYYY-MM-DD
+updated_at: YYYY-MM-DD
+
+# ---- Classification ----
+themes: []                              # cost-perf | evals | patterns | geospatial | reliability | agents | scouting | prototyping
+tags:
+  - benchmark
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+  type: static                          # static | sveltekit | notebook-html | marimo-html | marimo-wasm | astro
+  build_command: ""
+  output_dir: ""
+
+# ---- Results (at completion) ----
+results:
+  summary: >
+    Brief summary of findings.
+  lessons: []                           # Key takeaways that apply beyond this experiment
+
+# ---- Links ----
+related_experiments: []                 # Slugs of related experiments
+external_links: []                      # [{label: "...", url: "..."}]

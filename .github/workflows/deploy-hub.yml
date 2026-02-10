@@ -1,0 +1,158 @@
+name: Deploy Experiments Hub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'hub/**'
+      - 'experiments/**/demo/**'
+      - 'experiments/**/info.yaml'
+      - 'experiments/**/experiment.yaml'
+      - '.github/scripts/build-demos.sh'
+      - '.github/scripts/generate-index.py'
+  workflow_dispatch:
+
+# Only deploy when commit message contains [deploy] or via workflow_dispatch
+# Comment out this condition to enable automatic deploys on every relevant push
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  check-deploy:
+    name: Check if deploy needed
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - name: Check commit message or dispatch
+        id: check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.head_commit.message }}" == *"[deploy]"* ]]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "Skipping deploy - add [deploy] to commit message or use workflow_dispatch"
+          fi
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: check-deploy
+    if: needs.check-deploy.outputs.should_deploy == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --extra notebooks
+
+      - name: Validate experiments
+        run: uv run python .github/scripts/validate-experiments.py
+
+      - name: Generate experiment index
+        run: uv run python .github/scripts/generate-index.py
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache demo builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build-cache
+            experiments/*/demo/dist
+            experiments/*/demo/.svelte-kit
+          key: ${{ runner.os }}-demo-builds-${{ hashFiles('experiments/*/demo/src/**', 'experiments/*/demo/package.json', 'experiments/*/demo/svelte.config.js') }}
+          restore-keys: |
+            ${{ runner.os }}-demo-builds-
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro hub site
+        run: cd hub && pnpm build
+
+      - name: Copy experiment index to hub output
+        run: cp experiment-index.json dist/hub/
+
+      - name: Create root redirect
+        run: |
+          cat > dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta http-equiv="refresh" content="0; url=hub/">
+              <title>Redirecting to Experiments Hub</title>
+          </head>
+          <body>
+              <p>Redirecting to <a href="hub/">Experiments Hub</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Build experiment demos
+        run: |
+          chmod +x .github/scripts/build-demos.sh
+          WORKSPACE_INSTALL=true ./.github/scripts/build-demos.sh dist
+
+      - name: Verify build outputs
+        run: |
+          echo "=== dist/ structure ==="
+          find dist -type f | head -50
+          echo ""
+          echo "=== Hub index exists ==="
+          ls -la dist/hub/index.html || echo "WARNING: hub index.html not found"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

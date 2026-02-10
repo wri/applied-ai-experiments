@@ -1,0 +1,47 @@
+{
+  "name": "@wri-datalab/ui",
+  "version": "0.1.0",
+  "description": "Svelte component library with Prototype design system",
+  "type": "module",
+  "svelte": "./src/index.ts",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "svelte": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./styles": "./src/styles/index.css"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint src",
+    "stories": "pnpm --filter @wri-datalab/ui-stories dev",
+    "stories:build": "pnpm --filter @wri-datalab/ui-stories build"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "dependencies": {
+    "@byo-keys/core": "workspace:*",
+    "@byo-keys/svelte": "workspace:*",
+    "marked": "^12.0.0",
+    "shiki": "^3.0.0"
+  },
+  "devDependencies": {
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "typescript": "catalog:"
+  },
+  "keywords": [
+    "svelte",
+    "components",
+    "ui",
+    "design-system",
+    "prototype"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,38 @@
+# ---- Required ----
+slug: semantic-document-search
+title: "Semantic Document Search"
+type: prototype
+status: started
+description: >
+  Client-side semantic search tool for PDF documents using browser-based embeddings.
+  Upload a PDF, search by meaning, and see relevant pages highlighted in a visual heatmap.
+
+# ---- Recommended ----
+owner: "@kovaca"
+created_at: 2026-01-20
+updated_at: 2026-01-23
+
+# ---- Classification ----
+themes:
+  - reliability
+  - patterns
+tags:
+  - embedding
+  - semantic-search
+  - transformers.js
+
+# ---- Demo ----
+demo:
+  enabled: true
+  type: sveltekit
+  build_command: "pnpm build"
+  output_dir: "demo/dist"
+
+# ---- Results ----
+results:
+  summary: null
+  lessons: []
+
+# ---- Links ----
+related_experiments: []
+external_links: []

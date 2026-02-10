@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Benchmark Sample",
+  "description": "Schema for benchmark test samples",
+  "type": "object",
+  "required": ["id", "input", "expected"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the sample"
+    },
+    "input": {
+      "description": "Input to provide to the model",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "object" }
+      ]
+    },
+    "expected": {
+      "description": "Expected/reference output",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "object" }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Category for grouping"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"],
+          "description": "Difficulty rating"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source of this sample"
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tags for filtering"
+        }
+      }
+    }
+  }
+}

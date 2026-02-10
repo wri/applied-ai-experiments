@@ -3,6 +3,11 @@
 #   "pyyaml"
 # ]
 # ///
+"""
+Update README.md with a table of experiments.
+
+Supports both info.yaml (preferred) and experiment.yaml (legacy for migration).
+"""
 import pathlib
 
 import yaml  # requires PyYAML
@@ -16,6 +21,7 @@ END_MARKER = "<!-- EXPERIMENTS-END -->"
 
 
 def load_experiments():
+    """Load experiment metadata from all experiments."""
     experiments = []
 
     if not EXPERIMENTS_DIR.exists():
@@ -25,22 +31,38 @@ def load_experiments():
         if not child.is_dir():
             continue
 
-        info_path = child / "info.yaml"
-        if not info_path.exists():
+        # Skip hidden directories
+        if child.name.startswith("."):
             continue
 
-        with info_path.open("r", encoding="utf-8") as f:
+        # Try info.yaml first (preferred), then experiment.yaml (legacy for migration)
+        yaml_path = child / "info.yaml"
+        if not yaml_path.exists():
+            yaml_path = child / "experiment.yaml"
+
+        if not yaml_path.exists():
+            continue
+
+        with yaml_path.open("r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
 
         slug = child.name
         title = data.get("title") or data.get("name") or slug
         status = data.get("status", "unknown")
+        exp_type = data.get("type", "-")
+        description = data.get("description", "")
+
+        # Truncate description if too long
+        if description and len(description) > 80:
+            description = description[:77].strip() + "..."
 
         experiments.append(
             {
                 "slug": slug,
                 "title": title,
                 "status": status,
+                "type": exp_type,
+                "description": description,
                 "rel_path": f"experiments/{slug}/",
             }
         )
@@ -49,21 +71,24 @@ def load_experiments():
 
 
 def build_table(experiments):
+    """Build a markdown table from experiments."""
     if not experiments:
         return "_No experiments found in `experiments/`._"
 
     lines = [
-        "| Title | Status |",
-        "| ----- | ------ |",
+        "| Experiment | Type | Status | Description |",
+        "| ---------- | ---- | ------ | ----------- |",
     ]
     for exp in experiments:
         link = f"[{exp['title']}]({exp['rel_path']})"
-        lines.append(f"| {link} | `{exp['status']}` |")
+        desc = exp["description"].replace("\n", " ").strip() if exp["description"] else "-"
+        lines.append(f"| {link} | `{exp['type']}` | `{exp['status']}` | {desc} |")
 
     return "\n".join(lines)
 
 
 def update_readme(content, new_section):
+    """Update the experiments section in README content."""
     if START_MARKER not in content or END_MARKER not in content:
         raise SystemExit(
             "Could not find EXPERIMENTS markers in README.md. "
@@ -96,7 +121,7 @@ def main():
     if new_content != content:
         with README_PATH.open("w", encoding="utf-8") as f:
             f.write(new_content)
-        print("README.md updated with experiments table.")
+        print(f"README.md updated with {len(experiments)} experiments.")
     else:
         print("README.md unchanged.")
 
