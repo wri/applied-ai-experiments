@@ -216,7 +216,7 @@ node_modules/
 # Experiment outputs (keep results/ but ignore large generated files)
 experiments/**/outputs/
 experiments/**/results/*.json
-
+experiments/**/exports/
 # Notebook exports (committed selectively)
 # experiments/**/exports/
 

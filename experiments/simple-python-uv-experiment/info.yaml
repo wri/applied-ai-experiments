@@ -1,3 +1,36 @@
+# ---- Required ----
+slug: simple-python-uv-experiment
 title: "Simple Python UV experiment"
-status: "active"
-slug: "simple-python-uv-experiment"
+type: marimo
+status: started
+description: >
+  Self-contained marimo notebook exploring the Resource Watch API, using uv for
+  dependency management with inline script metadata.
+
+# ---- Recommended ----
+owner: "@amanahuja"
+created_at: 2025-11-13
+updated_at: 2025-11-14
+
+# ---- Classification ----
+themes: []
+tags:
+  - marimo
+  - embeddings
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+  type: marimo-wasm
+  build_command: "marimo export html-wasm experiment_one.py -o exports/index.html"
+  output_dir: "exports"
+
+# ---- Results (at completion) ----
+results:
+  summary: >
+    Brief summary of findings.
+  lessons: []
+
+# ---- Links ----
+related_experiments: []
+external_links: []
