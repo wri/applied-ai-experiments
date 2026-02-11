@@ -45,6 +45,11 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://wri.github.io');
         // Prototype default (no data-theme) is dark, so only set for light/high-contrast
       })();
     </script>
+    <script
+      id="counterscale-script"
+      data-site-id="applied-ai-experiments"
+      src="https://counterscale.tilers.workers.dev/tracker.js"
+      defer></script>
   </head>
   <body>
     <Header />
