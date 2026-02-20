@@ -17,12 +17,18 @@ with app.setup:
     import marimo as mo
     import requests
     import csv, time, sys
+    from pathlib import Path
 
     # for looking at results
     import pandas as pd
 
+    # Calculate data directory - works whether run from src/ or root
+    SCRIPT_DIR = Path.cwd()
+    DATA_DIR = SCRIPT_DIR.parent / "data" if SCRIPT_DIR.name == "src" else SCRIPT_DIR / "data"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
     BASE = "https://api.resourcewatch.org/v1/dataset"
-    OUTFILE = "resourcewatch_datasets.csv"
+    OUTFILE = DATA_DIR / "resourcewatch_datasets.csv"
 
 
 @app.cell(hide_code=True)
@@ -58,7 +64,6 @@ def _():
 
 @app.cell
 def _():
-
     FIELDS = [
         "id",
         "name",
@@ -109,13 +114,13 @@ def extract_rows(js):
 
         # tags from vocabulary (flatten & unique)
         tags = set()
-        for vocab in (attr.get("vocabulary") or []):
+        for vocab in attr.get("vocabulary") or []:
             tags.update(vocab.get("attributes", {}).get("tags", []) or [])
         tags_list = sorted(tags)
 
         # layer names (if present in include)
         layer_names = []
-        for lyr in (attr.get("layer") or []):
+        for lyr in attr.get("layer") or []:
             if isinstance(lyr, dict):
                 nm = (lyr.get("attributes") or {}).get("name") or lyr.get("name")
                 if nm:
@@ -157,17 +162,20 @@ def _(FIELDS):
 
             # page 1
             rows = extract_rows(first)
-            for r in rows: w.writerow(r)
+            for r in rows:
+                w.writerow(r)
 
             # remaining pages
             for page_num in range(2, total_pages + 1):
                 js = get_page(page_num, session=s)
                 rows = extract_rows(js)
-                for r in rows: w.writerow(r)
+                for r in rows:
+                    w.writerow(r)
                 # be polite; avoid hammering the API
                 time.sleep(0.15)
 
         print(f"Done. Wrote CSV: {OUTFILE}")
+
     return (main,)
 
 
@@ -178,8 +186,8 @@ def _(main):
 
 
 @app.cell
-def _(FIELDS):
-    df = pd.read_csv("resourcewatch_datasets.csv", dtype=str)
+def _(FIELDS, OUTFILE):
+    df = pd.read_csv(OUTFILE, dtype=str)
     df = df[[*FIELDS]]
     df
     return
@@ -187,8 +195,6 @@ def _(FIELDS):
 
 @app.cell
 def _():
-
-
     # url = "https://api.resourcewatch.org/v1/dataset"
     # params = {
     #     "application": "rw",
@@ -204,20 +210,18 @@ def _():
 
 @app.cell
 def _():
-    #response_json.keys()
+    # response_json.keys()
     return
 
 
 @app.cell
 def _():
-
-    #response_json['data']
+    # response_json['data']
     return
 
 
 @app.cell
 def _():
-
     # BASE = "https://api.resourcewatch.org/v1/dataset"
     # params = {
     #     "application": "rw",

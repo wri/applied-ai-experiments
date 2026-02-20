@@ -16,23 +16,42 @@ with app.setup:
     import marimo as mo
     import requests, csv, time
     import pandas as pd
+    from pathlib import Path
+
+    # Calculate data directory - works whether run from src/ or root
+    SCRIPT_DIR = Path.cwd()
+    DATA_DIR = SCRIPT_DIR.parent / "data" if SCRIPT_DIR.name == "src" else SCRIPT_DIR / "data"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     BASE = "https://datasets.wri.org/api/3/action/package_search"
 
     DATASET_FIELDS = [
-        "id","title","name","tags","createdAt","updatedAt",
-        "license","organization","numResources"
+        "id",
+        "title",
+        "name",
+        "tags",
+        "createdAt",
+        "updatedAt",
+        "license",
+        "organization",
+        "numResources",
     ]
 
     RESOURCE_FIELDS = [
-        "dataset_id","resource_id","name","format","url","last_modified","size"
+        "dataset_id",
+        "resource_id",
+        "name",
+        "format",
+        "url",
+        "last_modified",
+        "size",
     ]
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-    r"""
+        r"""
     ## WRI CKAN (datasets.wri.org) → `wri_data_explorer_01.csv`
 
     **What this does**
@@ -55,10 +74,10 @@ def _(mo):
     **Implementation notes**
 
     * We also build a *resources* DataFrame in memory for inspection (one row per resource), but we only write the *datasets* CSV.
-    * Optionally filter with `q=…` if we later need subsets; for now it’s a full catalog pull.
-      """
-  )
-  return
+    * Optionally filter with `q=…` if we later need subsets; for now it's a full catalog pull.
+    """
+    )
+    return
 
 
 @app.cell
@@ -88,8 +107,10 @@ def _():
             time.sleep(0.15)
 
     def to_dataset_row(pkg):
-        tags = sorted({t.get("name","").strip() for t in (pkg.get("tags") or []) if t.get("name")})
-        org = (pkg.get("organization") or {}).get("title") or (pkg.get("organization") or {}).get("name")
+        tags = sorted({t.get("name", "").strip() for t in (pkg.get("tags") or []) if t.get("name")})
+        org = (pkg.get("organization") or {}).get("title") or (pkg.get("organization") or {}).get(
+            "name"
+        )
         return {
             "id": pkg.get("id"),
             "title": pkg.get("title"),
@@ -104,16 +125,18 @@ def _():
 
     def to_resource_rows(pkg):
         rows = []
-        for res in (pkg.get("resources") or []):
-            rows.append({
-                "dataset_id": pkg.get("id"),
-                "resource_id": res.get("id"),
-                "name": res.get("name") or res.get("description") or "",
-                "format": res.get("format"),
-                "url": res.get("url"),
-                "last_modified": res.get("last_modified") or res.get("revision_timestamp"),
-                "size": res.get("size"),
-            })
+        for res in pkg.get("resources") or []:
+            rows.append(
+                {
+                    "dataset_id": pkg.get("id"),
+                    "resource_id": res.get("id"),
+                    "name": res.get("name") or res.get("description") or "",
+                    "format": res.get("format"),
+                    "url": res.get("url"),
+                    "last_modified": res.get("last_modified") or res.get("revision_timestamp"),
+                    "size": res.get("size"),
+                }
+            )
         return rows
 
     return fetch_ckan_package_search, to_dataset_row, to_resource_rows
@@ -136,7 +159,7 @@ def _(fetch_ckan_package_search, to_dataset_row, to_resource_rows):
         resources_df = pd.DataFrame(resource_records)
 
         # Write datasets df to CSV
-        datasets_df.to_csv("wri_data_explorer_01.csv", index=False, encoding="utf-8")
+        datasets_df.to_csv(DATA_DIR / "wri_data_explorer_01.csv", index=False, encoding="utf-8")
 
         print(f"Datasets: {len(datasets_df)} rows")
         print(f"Resources: {len(resources_df)} rows (not saved)")

@@ -59,44 +59,41 @@ def _():
     import json
     import re, html
     import datetime as dt
-    return dt, html, mo, pd, re, requests
+    from pathlib import Path
+
+    return Path, dt, html, mo, pd, re, requests
 
 
 @app.cell
-def _():
-
-    BASE = "https://wri-data-catalogue-worldresources.hub.arcgis.com/api/search/v1/collections"
-    BASE = "https://wri-data-catalogue-worldresources.hub.arcgis.com/api/search/v1/collections/dataset"
-
-    BASE = "https://wri-data-catalogue-worldresources.hub.arcgis.com/api/search/v1/collections/dataset/items"
-
+def _(Path):
+    # Calculate data directory - works whether run from src/ or root
+    SCRIPT_DIR = Path.cwd()
+    DATA_DIR = SCRIPT_DIR.parent / "data" if SCRIPT_DIR.name == "src" else SCRIPT_DIR / "data"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     BASE = "https://wri-data-catalogue-worldresources.hub.arcgis.com/api/search/v1/collections/dataset/items"
-
-    BASE = "https://wri-data-catalogue-worldresources.hub.arcgis.com/api/search/v1/collections/dataset/items"
-    return (BASE,)
+    return BASE, DATA_DIR
 
 
 @app.cell
 def _(BASE, requests):
-    js_first = requests.get(BASE, params={"limit":1}, timeout=60).json()
-    print("Number of datasets we will be fetching: ", js_first["numberMatched"])  
+    js_first = requests.get(BASE, params={"limit": 1}, timeout=60).json()
+    print("Number of datasets we will be fetching: ", js_first["numberMatched"])
     return
 
 
 @app.cell
 def _(BASE, dt, html, pd, re, requests):
-
     def ms_to_iso(ms):
         if not ms:
             return ""
         try:
-            return dt.datetime.utcfromtimestamp(int(ms)/1000).isoformat() + "Z"
+            return dt.datetime.utcfromtimestamp(int(ms) / 1000).isoformat() + "Z"
         except Exception:
             return ""
 
     TAG_RE = re.compile(r"<[^>]+>")
-    WS_RE  = re.compile(r"\s+")
+    WS_RE = re.compile(r"\s+")
 
     def clean_html(s):
         if not s:
@@ -119,11 +116,11 @@ def _(BASE, dt, html, pd, re, requests):
             r = requests.get(url, params=params, timeout=60)
             r.raise_for_status()
             js = r.json()
-            for f in (js.get("features") or []):
+            for f in js.get("features") or []:
                 yield f
             # follow rel=next
             next_href = ""
-            for ln in (js.get("links") or []):
+            for ln in js.get("links") or []:
                 if isinstance(ln, dict) and ln.get("rel") == "next" and ln.get("href"):
                     next_href = ln["href"]
                     break
@@ -140,8 +137,8 @@ def _(BASE, dt, html, pd, re, requests):
             "slug": p.get("slug") or "",
             "provider": p.get("owner") or p.get("source") or "",
             "tags": ", ".join(p.get("tags") or p.get("keywords") or []),
-            "layerCount": "",                        # not exposed here
-            "layerNames": "",                        # not exposed here
+            "layerCount": "",  # not exposed here
+            "layerNames": "",  # not exposed here
             "createdAt": ms_to_iso(p.get("created")),
             "dataLastUpdated": ms_to_iso(p.get("modified")),
             "updatedAt": ms_to_iso(p.get("modified")),
@@ -164,8 +161,13 @@ def _(BASE, dt, html, pd, re, requests):
 
 @app.cell
 def _(BASE, normalize_feature, pd, requests):
-    # for sanity checks. 
-    df_preview = pd.DataFrame([normalize_feature(f) for f in requests.get(BASE, params={"limit": 5}, timeout=60).json().get("features", [])])
+    # for sanity checks.
+    df_preview = pd.DataFrame(
+        [
+            normalize_feature(f)
+            for f in requests.get(BASE, params={"limit": 5}, timeout=60).json().get("features", [])
+        ]
+    )
     df_preview
     return
 
@@ -180,9 +182,9 @@ def _(build_df):
 
 
 @app.cell
-def _(df_all):
-    ## Write to CSV 
-    outfilename = "wri_arcgis_catalog_01.csv"
+def _(DATA_DIR, df_all):
+    ## Write to CSV
+    outfilename = DATA_DIR / "wri_arcgis_catalog_01.csv"
     df_all.to_csv(outfilename, index=False, encoding="utf-8")
     print(f"Wrote {len(df_all)} rows to file: {outfilename}")
     return

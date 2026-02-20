@@ -17,13 +17,18 @@ with app.setup:
     import marimo as mo
     import requests
     import csv, time, sys
+    from pathlib import Path
 
     # for looking at results
     import pandas as pd
 
+    # Calculate data directory - works whether run from src/ or root
+    SCRIPT_DIR = Path.cwd()
+    DATA_DIR = SCRIPT_DIR.parent / "data" if SCRIPT_DIR.name == "src" else SCRIPT_DIR / "data"
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
     BASE = "https://api.resourcewatch.org/v1/dataset"
-    #https://api.resourcewatch.org/v1/dataset?application=gfw&includes=metadata%2Cvocabulary%2Clayer&published=true&page[size]=9999&env=production
-    OUTFILE = "global_forest_watch_datasets.csv"
+    OUTFILE = DATA_DIR / "global_forest_watch_datasets.csv"
 
 
 @app.cell(hide_code=True)
@@ -55,7 +60,6 @@ def _():
 
 @app.cell
 def _():
-
     FIELDS = [
         "id",
         "name",
@@ -106,13 +110,13 @@ def extract_rows(js):
 
         # tags from vocabulary (flatten & unique)
         tags = set()
-        for vocab in (attr.get("vocabulary") or []):
+        for vocab in attr.get("vocabulary") or []:
             tags.update(vocab.get("attributes", {}).get("tags", []) or [])
         tags_list = sorted(tags)
 
         # layer names (if present in include)
         layer_names = []
-        for lyr in (attr.get("layer") or []):
+        for lyr in attr.get("layer") or []:
             if isinstance(lyr, dict):
                 nm = (lyr.get("attributes") or {}).get("name") or lyr.get("name")
                 if nm:
@@ -136,7 +140,6 @@ def extract_rows(js):
 
 @app.cell
 def _(FIELDS):
-
     def main():
         s = requests.Session()
         first = get_page(1, session=s)
@@ -155,13 +158,15 @@ def _(FIELDS):
 
             # page 1
             rows = extract_rows(first)
-            for r in rows: w.writerow(r)
+            for r in rows:
+                w.writerow(r)
 
             # remaining pages
             for page_num in range(2, total_pages + 1):
                 js = get_page(page_num, session=s)
                 rows = extract_rows(js)
-                for r in rows: w.writerow(r)
+                for r in rows:
+                    w.writerow(r)
                 # be polite; avoid hammering the API
                 time.sleep(0.15)
 
@@ -193,8 +198,7 @@ def _():
 
 @app.cell
 def _(FIELDS):
-
-    #mo.stop(not save_button.value)
+    # mo.stop(not save_button.value)
     df = pd.read_csv(OUTFILE, dtype=str)
     df = df[[*FIELDS]]
     df
@@ -209,7 +213,7 @@ def _(df):
 
 @app.cell
 def _():
-    ## Gut check What other applications are on resorucewatch's API? 
+    ## Gut check What other applications are on resorucewatch's API?
 
     url = "https://api.resourcewatch.org/v1/dataset"
     params = {
