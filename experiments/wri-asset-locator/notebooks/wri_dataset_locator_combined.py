@@ -76,7 +76,7 @@ def _(mo):
 
 @app.cell
 def _(df_all):
-    df_all['source_collection'].value_counts()
+    df_all["source_collection"].value_counts()
     return
 
 
@@ -101,17 +101,58 @@ def _():
     import pandas as pd
     import re, html
     from datetime import datetime
+    from pathlib import Path
 
     from pprint import pprint
-    return datetime, html, mo, os, pd, re
+
+    return Path, datetime, html, mo, os, pd, re
 
 
 @app.cell
-def _(os):
-    datapath = 'wri_scraped_datasets'
-    csv_files = [f for f in os.listdir(datapath) if f.endswith(".csv")]
+def _(Path, mo):
+    # Calculate data directory - works whether run from notebooks/ or root
+    NOTEBOOK_DIR = Path.cwd()
+    DATA_DIR = (
+        NOTEBOOK_DIR.parent / "data" if NOTEBOOK_DIR.name == "notebooks" else NOTEBOOK_DIR / "data"
+    )
+
+    # Check if required data files exist
+    REQUIRED_FILES = [
+        "resourcewatch_datasets.csv",
+        "wri_arcgis_catalog_01.csv",
+        "global_forest_watch_datasets.csv",
+        "eae_datasets_pdf-extract.csv",
+        "wri_data_explorer_01.csv",
+    ]
+
+    missing_files = [f for f in REQUIRED_FILES if not (DATA_DIR / f).exists()]
+
+    if missing_files:
+        mo.stop(
+            True,
+            mo.md(f"""
+            ## ⚠️ Missing Data Files
+            
+            This notebook requires source data files that have not been generated yet.
+            
+            **Missing files:** {", ".join(missing_files)}
+            
+            **To generate these files:**
+            
+            Run the fetch_all script:
+            ```bash
+            python src/fetch_all.py
+            ```
+            
+            Or run each fetch script individually in edit mode. See README.md for details.
+            """),
+        )
+
+    datapath = DATA_DIR
+    csv_files = [f.name for f in datapath.glob("*.csv")]
+    print(f"Found {len(csv_files)} CSV files in {datapath}")
     print(csv_files)
-    return (datapath,)
+    return DATA_DIR, REQUIRED_FILES, datapath, missing_files
 
 
 @app.cell
@@ -131,145 +172,165 @@ def _(mo):
 
 
 @app.cell
-def _(datapath, os, pd):
+def _(datapath, pd):
     # Resource watch
 
-    df_rw = pd.read_csv(os.path.join(datapath, 'resourcewatch_datasets.csv'))
+    df_rw = pd.read_csv(datapath / "resourcewatch_datasets.csv")
     print(f"Loaded {len(df_rw)} datasets from collection: 'Resource watch'")
 
-    print (f"Original Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
+    print(f"Original Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
 
-    df_rw.rename(columns={
-        "id": "dataset_id", 
-        "name": "dataset_name", 
-        "slug": "slug",
-        "updatedAt": "last_updated",
-        "tags": "dataset_tags",
-        }, inplace=True
+    df_rw.rename(
+        columns={
+            "id": "dataset_id",
+            "name": "dataset_name",
+            "slug": "slug",
+            "updatedAt": "last_updated",
+            "tags": "dataset_tags",
+        },
+        inplace=True,
     )
 
     # add these columns
     df_rw["source_collection"] = "resource_watch"
     df_rw["source"] = df_rw.apply(
-        lambda x: f"resource_watch > {x['provider']}" if pd.notnull(x.get("provider")) else "resource_watch",
-        axis=1
+        lambda x: f"resource_watch > {x['provider']}"
+        if pd.notnull(x.get("provider"))
+        else "resource_watch",
+        axis=1,
     )
-    df_rw["dataset_description"] = ""   # none in source
+    df_rw["dataset_description"] = ""  # none in source
 
-    print (f"Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
+    print(f"Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
     return (df_rw,)
 
 
 @app.cell
-def _(datapath, os, pd):
+def _(datapath, pd):
     # ArcGIS catalog
-    df_arc = pd.read_csv(os.path.join(datapath, 'wri_arcgis_catalog_01.csv'))
+    df_arc = pd.read_csv(datapath / "wri_arcgis_catalog_01.csv")
     print(f"Loaded {len(df_arc)} datasets from collection: 'ArcGIS catalog'")
 
-    print (f"Original Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
+    print(f"Original Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
 
-    df_arc.rename(columns={
-        "id": "dataset_id", 
-        "name": "dataset_name", 
-        "description": "dataset_description",
-        "tags": "dataset_tags",
-        "updatedAt": "date_last_updated",
-        "createdAt": "date_created"
-        }, inplace=True
+    df_arc.rename(
+        columns={
+            "id": "dataset_id",
+            "name": "dataset_name",
+            "description": "dataset_description",
+            "tags": "dataset_tags",
+            "updatedAt": "date_last_updated",
+            "createdAt": "date_created",
+        },
+        inplace=True,
     )
 
     # add these columns
     df_arc["source_collection"] = "arcgis_wri_catalog"
     df_arc["source"] = df_arc.apply(
-        lambda x: f"arcgis_wri_catalog > {x['provider']}" if pd.notnull(x.get("provider")) else "arcgis_wri_catalog",
-        axis=1
+        lambda x: f"arcgis_wri_catalog > {x['provider']}"
+        if pd.notnull(x.get("provider"))
+        else "arcgis_wri_catalog",
+        axis=1,
     )
 
-    print (f"Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
+    print(f"Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
     return (df_arc,)
 
 
 @app.cell
-def _(datapath, os, pd):
+def _(datapath, pd):
     # GFW
-    df_gfw = pd.read_csv(os.path.join(datapath, 'global_forest_watch_datasets.csv'))
+    df_gfw = pd.read_csv(datapath / "global_forest_watch_datasets.csv")
     print(f"Loaded {len(df_gfw)} datasets from collection: 'GFW'")
 
-    print (f"Original Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
+    print(f"Original Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
 
-    df_gfw.rename(columns={
-        "id": "dataset_id", 
-        "name": "dataset_name", 
-        "description": "dataset_description",
-        "tags": "dataset_tags",
-        }, inplace=True
+    df_gfw.rename(
+        columns={
+            "id": "dataset_id",
+            "name": "dataset_name",
+            "description": "dataset_description",
+            "tags": "dataset_tags",
+        },
+        inplace=True,
     )
 
     # add these columns
     df_gfw["source_collection"] = "global_forest_watch"
     df_gfw["source"] = df_gfw.apply(
-        lambda x: f"global_forest_watch > {x['provider']}" if pd.notnull(x.get("provider")) else "global_forest_watch",
-        axis=1
+        lambda x: f"global_forest_watch > {x['provider']}"
+        if pd.notnull(x.get("provider"))
+        else "global_forest_watch",
+        axis=1,
     )
 
-    print (f"Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
+    print(f"Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
     return (df_gfw,)
 
 
 @app.cell
-def _(datapath, os, pd):
+def _(datapath, pd):
     # EAE
-    df_eae = pd.read_csv(os.path.join(datapath, 'eae_datasets_pdf-extract.csv'))
+    df_eae = pd.read_csv(datapath / "eae_datasets_pdf-extract.csv")
     print(f"Loaded {len(df_eae)} datasets from collection: 'EAE'")
 
-    print (f"Original Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
+    print(f"Original Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
 
-    df_eae.rename(columns={
-        "id": "dataset_id", 
-        "name": "dataset_name", 
-        "description": "dataset_description",
-        "tags": "dataset_tags",
-        }, inplace=True
+    df_eae.rename(
+        columns={
+            "id": "dataset_id",
+            "name": "dataset_name",
+            "description": "dataset_description",
+            "tags": "dataset_tags",
+        },
+        inplace=True,
     )
 
     # add these columns
     df_eae["source_collection"] = "energy_access_explorer"
     df_eae["source"] = df_eae.apply(
-        lambda x: f"energy_access_explorer > {x['provider']}" if pd.notnull(x.get("provider")) else "energy_access_explorer",
-        axis=1
+        lambda x: f"energy_access_explorer > {x['provider']}"
+        if pd.notnull(x.get("provider"))
+        else "energy_access_explorer",
+        axis=1,
     )
 
-    print (f"Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
+    print(f"Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
     return (df_eae,)
 
 
 @app.cell
-def _(datapath, os, pd):
+def _(datapath, pd):
     # wri data explorer
 
-    df_ex = pd.read_csv(os.path.join(datapath, 'wri_data_explorer_01.csv'))
+    df_ex = pd.read_csv(datapath / "wri_data_explorer_01.csv")
     print(f"Loaded {len(df_ex)} datasets from collection: 'WRI Data Explorer'")
 
-    print (f"Original Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
+    print(f"Original Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
 
-    df_ex.rename(columns={
-        "id": "dataset_id", 
-        "name": "dataset_name",
-        "title": "dataset_description", 
-        "tags": "dataset_tags",
-        "updatedAt": "date_last_updated",
-        "createdAt": "date_created",
-        }, inplace=True
+    df_ex.rename(
+        columns={
+            "id": "dataset_id",
+            "name": "dataset_name",
+            "title": "dataset_description",
+            "tags": "dataset_tags",
+            "updatedAt": "date_last_updated",
+            "createdAt": "date_created",
+        },
+        inplace=True,
     )
 
     # add these columns
     df_ex["source_collection"] = "wri_data_explorer"
     df_ex["source"] = df_ex.apply(
-        lambda x: f"wri_data_explorer > {x['organization']}" if pd.notnull(x.get("organization")) else "wri_data_explorer",
-        axis=1
+        lambda x: f"wri_data_explorer > {x['organization']}"
+        if pd.notnull(x.get("organization"))
+        else "wri_data_explorer",
+        axis=1,
     )
 
-    print (f"Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
+    print(f"Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
     return (df_ex,)
 
 
@@ -279,7 +340,6 @@ def _(df_arc, df_eae, df_ex, df_gfw, df_rw, pd):
     df_all = pd.concat([df_rw, df_gfw, df_arc, df_eae, df_ex], ignore_index=True)
     print(f"Total: {len(df_all)} datasets loaded.")
 
-
     print(df_all.shape)
     df_all
     return (df_all,)
@@ -288,7 +348,7 @@ def _(df_arc, df_eae, df_ex, df_gfw, df_rw, pd):
 @app.cell
 def _(datetime, html, pd, re):
     # choose a delimiter that won't collide often in natural text
-    DELIM = " | "   # (use "\x1F" if you need a control-char delimiter)
+    DELIM = " | "  # (use "\x1F" if you need a control-char delimiter)
 
     # columns you definitely want to include if present
     PREFERRED_ORDER = [
@@ -301,8 +361,8 @@ def _(datetime, html, pd, re):
         "date_created",
     ]
 
-    WS_RE   = re.compile(r"\s+")
-    TAG_RE  = re.compile(r"<[^>]+>")  # just in case some HTML slipped in
+    WS_RE = re.compile(r"\s+")
+    TAG_RE = re.compile(r"<[^>]+>")  # just in case some HTML slipped in
 
     def to_iso_date(x):
         """Try to coerce common date forms to YYYY-MM-DD; otherwise return the original string."""
@@ -349,18 +409,22 @@ def _(datetime, html, pd, re):
             # Keep tags compact
             if col == "dataset_tags":
                 # unify separators, remove duplicate commas/spaces
-                val = ", ".join([t.strip() for t in re.split(r"[|,;]", val) if t.strip()]) if val else ""
+                val = (
+                    ", ".join([t.strip() for t in re.split(r"[|,;]", val) if t.strip()])
+                    if val
+                    else ""
+                )
 
             if val:
                 parts.append(f"{col}: {val}")
 
         return delim.join(parts)
+
     return (serialize_row,)
 
 
 @app.cell
 def _(df_all, serialize_row):
-
     df_all["dataset_info_combined"] = df_all.apply(serialize_row, axis=1)
     return
 
@@ -368,9 +432,13 @@ def _(df_all, serialize_row):
 @app.cell
 def _(df_all):
     # truncate the description column as it can get very long
-    MAX_DESC = 600  # in chars, example 1200 characters. 
+    MAX_DESC = 600  # in chars, example 1200 characters.
 
-    df_all["dataset_short_desc"] = df_all["dataset_description"].astype(str).apply(lambda s: (s[:MAX_DESC] + "…") if len(s) > MAX_DESC else s)
+    df_all["dataset_short_desc"] = (
+        df_all["dataset_description"]
+        .astype(str)
+        .apply(lambda s: (s[:MAX_DESC] + "…") if len(s) > MAX_DESC else s)
+    )
     return
 
 
@@ -382,13 +450,13 @@ def _(mo):
 
 
 @app.cell
-def _(datapath, df, export_button, mo, os, reordered_cols):
+def _(datapath, df, export_button, mo, reordered_cols):
     # block this cell from running until button is clicked
     mo.stop(not export_button.value)
 
-    outfilename = 'wri_datasets_all_joined_01.csv'
-    df[reordered_cols].to_csv(os.path.join(datapath, outfilename))
-    print (f"Saved to file: {outfilename}")
+    outfilename = "wri_datasets_all_joined_01.csv"
+    df[reordered_cols].to_csv(datapath / outfilename)
+    print(f"Saved to file: {outfilename}")
     return
 
 
@@ -403,39 +471,32 @@ def _(df_all):
         "dataset_tags",
         "source_collection",
         "dataset_id",
-
         "dataset_short_desc",
         "date_created",
         "date_last_updated",
-
         "source",
         "slug",
         "provider",
         "url",
-
         "license",
         "category",
         "group",
         "organization",
-
         "dataset_description",
-
         "layerCount",
         "layerNames",
         "numResources",
-
         "last_updated",
         "createdAt",
         "dataLastUpdated",
         "updatedAt",
-
         "type",
         "unit",
-        "usedIn_EAP","dataset_description",
+        "usedIn_EAP",
+        "dataset_description",
         "usedIn_Demand",
         "usedIn_Supply",
         "usedIn_NeedAssist",
-
         "dataset_info_combined",
     ]
 
@@ -520,20 +581,32 @@ def _():
     from molabel import SimpleLabel
     from sentence_transformers import SentenceTransformer
     from umap import UMAP
+
     return SentenceTransformer, UMAP, alt, pairwise_distances
 
 
 @app.cell(hide_code=True)
 def _(alt, pltr):
     _chart = (
-        alt.Chart(pltr, 
-                  title="Datasets Projection Plot - test")
+        alt.Chart(pltr, title="Datasets Projection Plot - test")
         .mark_point()
         .encode(
-            x=alt.X("x", scale=alt.Scale(domain=[pltr["x"].min() - 1, pltr["x"].max() + 1]), title="UMAP X"),
-            y=alt.Y("y", scale=alt.Scale(domain=[pltr["y"].min() - 1, pltr["y"].max() + 1]), title="UMAP Y"),
-            color=alt.Color("match_score", scale=alt.Scale(scheme="lightgreyred"), title="Cosine Distance to Query"),
-            tooltip=[alt.Tooltip("text", title="Dataset Info")]
+            x=alt.X(
+                "x",
+                scale=alt.Scale(domain=[pltr["x"].min() - 1, pltr["x"].max() + 1]),
+                title="UMAP X",
+            ),
+            y=alt.Y(
+                "y",
+                scale=alt.Scale(domain=[pltr["y"].min() - 1, pltr["y"].max() + 1]),
+                title="UMAP Y",
+            ),
+            color=alt.Color(
+                "match_score",
+                scale=alt.Scale(scheme="lightgreyred"),
+                title="Cosine Distance to Query",
+            ),
+            tooltip=[alt.Tooltip("text", title="Dataset Info")],
         )
         .interactive()  # Enable pan/zoom
     )
@@ -567,7 +640,7 @@ def _(SentenceTransformer):
 
 @app.cell
 def _(mo):
-    embed_button = mo.ui.run_button(label='Run Embedding')
+    embed_button = mo.ui.run_button(label="Run Embedding")
     embed_button
     return (embed_button,)
 
@@ -575,14 +648,14 @@ def _(mo):
 @app.cell
 def _(df_all, embed_button, mo, model_nomic):
     # Construct textx from df_all["dataset_info_combined"]
-    # typical runtime without GPU: 2.5 min 
+    # typical runtime without GPU: 2.5 min
 
     # block this cell from running until button is clicked
     mo.stop(not embed_button.value)
 
     @mo.persistent_cache
     def embed_dataframe_text():
-        #texts = df_all.to_dict()["dataset_info_combined"]
+        # texts = df_all.to_dict()["dataset_info_combined"]
         texts = df_all["dataset_info_combined"].tolist()
         X = model_nomic.encode(texts)
         return texts, X
@@ -601,15 +674,15 @@ def _(model_nomic):
 @app.cell
 def _(X, df_all):
     # We have transformed all the text in df_all into this  high-dimensional embedding space
-    print ("Sanity Check")
-    print (df_all.shape)
-    print (X.shape)
+    print("Sanity Check")
+    print(df_all.shape)
+    print(X.shape)
     return
 
 
 @app.cell
 def _(mo):
-    tranform_button = mo.ui.run_button(label='Apply dimensionality reduction')
+    tranform_button = mo.ui.run_button(label="Apply dimensionality reduction")
     tranform_button
     return (tranform_button,)
 
@@ -617,17 +690,13 @@ def _(mo):
 @app.cell
 def _(UMAP, X, mo, tranform_button):
     # dimensionality reduction step
-    # UMAP - tends to do well to maintain clusters from global structure. But transformed distance between clusters is no longer interpretable. 
+    # UMAP - tends to do well to maintain clusters from global structure. But transformed distance between clusters is no longer interpretable.
 
     # block this cell from running until button is clicked
     mo.stop(not tranform_button.value)
 
     umap_model = UMAP(
-        n_components=2,
-        n_neighbors=10,
-        min_dist=0.1,
-        metric="cosine",
-        random_state=42
+        n_components=2, n_neighbors=10, min_dist=0.1, metric="cosine", random_state=42
     )
     """
     UMAP model
@@ -644,7 +713,7 @@ def _(UMAP, X, mo, tranform_button):
     """
 
     @mo.persistent_cache
-    def apply_umap_transform(): 
+    def apply_umap_transform():
         tfm = umap_model.fit(X)
         X_tfm = tfm.transform(X)
         return X_tfm
@@ -688,13 +757,13 @@ def _(pltr, text_ui):
     query = text_ui.value
 
     # Boolean mask for rows where 'drought' appears in the 'text' column (case-insensitive)
-    query_mask = pltr['text'].str.contains(query, case=False, na=False)
+    query_mask = pltr["text"].str.contains(query, case=False, na=False)
 
     # Average 'match_score' for rows containing 'drought'
-    avg_match_score_for_query = pltr.loc[query_mask, 'match_score'].mean()
+    avg_match_score_for_query = pltr.loc[query_mask, "match_score"].mean()
 
     # Overall average 'match_score'
-    avg_match_score_overall = pltr['match_score'].mean()
+    avg_match_score_overall = pltr["match_score"].mean()
 
     (avg_match_score_for_query, avg_match_score_overall)
     return
@@ -713,12 +782,16 @@ def _():
 
 @app.cell(column=2, hide_code=True)
 def _(explanatory_diagram, explanatory_text, mo):
-    mo.vstack([
-        mo.md("## Visualization of WRI Datasets: Experiment"),
-        mo.hstack([explanatory_text, explanatory_diagram], justify="start", wrap = True, 
-              widths=[2,1],
-             # widths="equal"
-             )
+    mo.vstack(
+        [
+            mo.md("## Visualization of WRI Datasets: Experiment"),
+            mo.hstack(
+                [explanatory_text, explanatory_diagram],
+                justify="start",
+                wrap=True,
+                widths=[2, 1],
+                # widths="equal"
+            ),
         ]
     )
     return
@@ -727,26 +800,39 @@ def _(explanatory_diagram, explanatory_text, mo):
 @app.cell(hide_code=True)
 def _(alt, df_all, mo, pltr, text_ui, umap_model):
     chart = (
-        alt.Chart(pltr, 
-                  title=alt.Title(f"Datasets at WRI)", subtitle=[f"{len(df_all)} datasets with API-provided metadata only", f"UMAP projection (k_n={umap_model.get_params()['n_neighbors']})"]))
+        alt.Chart(
+            pltr,
+            title=alt.Title(
+                f"Datasets at WRI)",
+                subtitle=[
+                    f"{len(df_all)} datasets with API-provided metadata only",
+                    f"UMAP projection (k_n={umap_model.get_params()['n_neighbors']})",
+                ],
+            ),
+        )
         .mark_point()
         .encode(
-            x=alt.X("x", scale=alt.Scale(domain=[pltr["x"].min() - 1, pltr["x"].max() + 1]), title="UMAP X").axis(None),
-            y=alt.Y("y", scale=alt.Scale(domain=[pltr["y"].min() - 1, pltr["y"].max() + 1]), title="UMAP Y").axis(None),
+            x=alt.X(
+                "x",
+                scale=alt.Scale(domain=[pltr["x"].min() - 1, pltr["x"].max() + 1]),
+                title="UMAP X",
+            ).axis(None),
+            y=alt.Y(
+                "y",
+                scale=alt.Scale(domain=[pltr["y"].min() - 1, pltr["y"].max() + 1]),
+                title="UMAP Y",
+            ).axis(None),
             color=alt.Color(
-                "match_score", 
-                scale=alt.Scale(scheme="lightgreyred"),
-                title="similarity to query")
-                .legend(None),
-            #tooltip=[alt.Tooltip("text", title="Dataset Info")]
-            )
+                "match_score", scale=alt.Scale(scheme="lightgreyred"), title="similarity to query"
+            ).legend(None),
+            # tooltip=[alt.Tooltip("text", title="Dataset Info")]
+        )
         .configure_axis(grid=False)
         .configure_view(stroke=None)
-
-        #.interactive()  # to enable pan/zoom
+        # .interactive()  # to enable pan/zoom
     )
 
-    if text_ui.value: 
+    if text_ui.value:
         print(f'Searching for user query: "{text_ui.value}"')
 
     widget = mo.ui.altair_chart(chart)
@@ -791,7 +877,6 @@ def _(df_all, display_cols, widget):
 
     df_selected = df_all.iloc[indices]
 
-
     df_selected[display_cols]
     return (indices,)
 
@@ -811,7 +896,11 @@ def _(df_all, display_cols, indices, pd, reordered_cols):
 
         # Prepare printable dict without null/empty values
         row_dict = row.to_dict()
-        non_empty = {k: v for k, v in row_dict.items() if pd.notna(v) and str(v).strip() not in ("", "nan", "None")}
+        non_empty = {
+            k: v
+            for k, v in row_dict.items()
+            if pd.notna(v) and str(v).strip() not in ("", "nan", "None")
+        }
         empty_keys = [k for k, v in row_dict.items() if k not in non_empty]
 
         # Alignment for colons
@@ -832,7 +921,7 @@ def _(df_all, display_cols, indices, pd, reordered_cols):
             print(", ".join(empty_keys))
 
     # Example usage:
-    if len(indices.values) > 0: 
+    if len(indices.values) > 0:
         print_row_details(indices[0])
     return
 
