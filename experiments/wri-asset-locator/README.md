@@ -20,7 +20,7 @@ Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive 
 ## Approach
 
 There is documentation built into the main notebook
-`wri_dataset_locator_combined.py`
+`asset_locator.py`
 
 Experiment Methodology Steps: 
 * Fetches a list of assets and metadata from various sources, such as ResourceWatch. 
@@ -49,7 +49,7 @@ Experiment Methodology Steps:
 - `src/fetch_all.py` : convenience script to run all fetch notebooks and data combination
 
 **Main notebook** (in `notebooks/`):
-- `notebooks/wri_dataset_locator_combined.py` : loads combined data, creates embeddings, and visualizes
+- `notebooks/asset_locator.py` : loads combined data, creates embeddings, and visualizes
 
 ## How to run the experiment
 
@@ -84,7 +84,7 @@ uv run marimo edit src/fetch_datasets_wri_data_explorer.py
 ### Running the Main Notebook
 Once data files are generated (including `wri_assets_info_combined.csv`):
 ```bash
-uv run marimo edit notebooks/wri_dataset_locator_combined.py
+uv run marimo edit notebooks/asset_locator.py
 ```
 
 The notebook will check for the combined data file and show instructions if it's missing.

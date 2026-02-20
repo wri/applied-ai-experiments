@@ -20,7 +20,7 @@ tags:
 demo:
   enabled: false
   type: marimo-wasm                     # static | sveltekit | notebook-html | marimo-html | marimo-wasm | astro
-  build_command: "marimo export html-wasm notebooks/exploration.py -o exports/index.html"
+  build_command: "marimo export html-wasm notebooks/asset_locator.py -o exports/index.html"
   output_dir: "exports"
 
 # ---- Results (at completion) ----
