@@ -30,7 +30,14 @@ Experiment Methodology Steps:
 * Create a simple UI and visualization
 
 
-### List of files
+## What's in here
+
+```
+├── src/            # Implementation
+├── data/           # Input data and test fixtures
+├── evals/          # Eval configs and scoring (if applicable)
+└── outputs/        # Generated artifacts (gitignored if large)
+```
 
 The main notebook: `wri_dataset_locator_combined.py`
 * This is the main notebook for the experiment
@@ -72,3 +79,18 @@ uvx marimo edit --sandbox <name of file.py>
 ```
 This command will open a browser window to a **marimo** notebook, which provides an interface to the experiment as well as the code itself. 
 
+
+## Decisions & Learnings Log
+
+Use this as a lightweight log of important decisions and learnings.
+– Decision or learning, and why it matters.
+- Another note.
+
+## Future Work
+- What we'd do next if this experiment shows promise.
+- How this could roll into a product, tool, or broader system.
+- Follow-up experiments or variations to explore.
+
+## Results
+
+_Summary of findings once the experiment is complete. Link to [brief.md](./brief.md) for the full write-up._
