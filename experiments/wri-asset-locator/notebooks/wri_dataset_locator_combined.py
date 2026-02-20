@@ -57,19 +57,12 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Load list of datasets from various CSVs
+    ## Load combined assets data
 
-    List of datasets were generated using these notebooks:
+    Asset data is pre-combined from multiple sources (Resource Watch, ArcGIS, Global Forest Watch, 
+    Energy Access Explorer, WRI Data Explorer) using the `src/combine_assets_data.py` script.
 
-    | Notebook                          | Generated Dataset                  |
-    |-----------------------------------|------------------------------------|
-    | `resource_watch_datasets.py`      | `resourcewatch_datasets.csv`       |
-    | `energy_access_explorer_pdf-scrape.py` | `eae_datasets_pdf-extract.csv` |
-    | `arcgis_wri_catalog.py`           | `wri_arcgis_catalog_01.csv`        |
-    | `data_explorer_01.py`             | `wri_data_explorer_01.csv`         |
-    | `global_forest_watch.py`             | `global_forest_watch_datasets.csv`         |
-
-    See the respective notebooks for details.
+    The combined dataset is available in `wri_assets_info_combined.csv`.
     """)
     return
 
@@ -97,15 +90,10 @@ def _(df_all):
 @app.cell
 def _():
     import marimo as mo
-    import os
     import pandas as pd
-    import re, html
-    from datetime import datetime
     from pathlib import Path
 
-    from pprint import pprint
-
-    return Path, datetime, html, mo, os, pd, re
+    return Path, mo, pd
 
 
 @app.cell
@@ -116,348 +104,46 @@ def _(Path, mo):
         NOTEBOOK_DIR.parent / "data" if NOTEBOOK_DIR.name == "notebooks" else NOTEBOOK_DIR / "data"
     )
 
-    # Check if required data files exist
-    REQUIRED_FILES = [
-        "resourcewatch_datasets.csv",
-        "wri_arcgis_catalog_01.csv",
-        "global_forest_watch_datasets.csv",
-        "eae_datasets_pdf-extract.csv",
-        "wri_data_explorer_01.csv",
-    ]
+    # Check if required combined data file exists
+    REQUIRED_FILE = "wri_assets_info_combined.csv"
 
-    missing_files = [f for f in REQUIRED_FILES if not (DATA_DIR / f).exists()]
-
-    if missing_files:
+    if not (DATA_DIR / REQUIRED_FILE).exists():
         mo.stop(
             True,
             mo.md(f"""
-            ## ⚠️ Missing Data Files
+            ## ⚠️ Missing Combined Data File
             
-            This notebook requires source data files that have not been generated yet.
+            This notebook requires `{REQUIRED_FILE}` which hasn't been generated yet.
             
-            **Missing files:** {", ".join(missing_files)}
+            **To generate this file:**
             
-            **To generate these files:**
-            
-            Run the fetch_all script:
+            Run the fetch_all script (includes data combination):
             ```bash
             python src/fetch_all.py
             ```
             
-            Or run each fetch script individually in edit mode. See README.md for details.
+            Or run the combination script directly:
+            ```bash
+            uv run src/combine_assets_data.py
+            ```
+            
+            See README.md for more details.
             """),
         )
 
     datapath = DATA_DIR
-    csv_files = [f.name for f in datapath.glob("*.csv")]
-    print(f"Found {len(csv_files)} CSV files in {datapath}")
-    print(csv_files)
-    return DATA_DIR, REQUIRED_FILES, datapath, missing_files
+    print(f"Data directory: {datapath.absolute()}")
+    return DATA_DIR, REQUIRED_FILE, datapath
 
 
 @app.cell
-def _(mo):
-    mo.md(r"""
-    The following column names will be consistent across all dataframes
-
-    dataset_id
-    dataset_name
-    source_collection
-    dataset_description
-    dataset_tags
-    date_last_updated
-    date_created
-    """)
-    return
-
-
-@app.cell
-def _(datapath, pd):
-    # Resource watch
-
-    df_rw = pd.read_csv(datapath / "resourcewatch_datasets.csv")
-    print(f"Loaded {len(df_rw)} datasets from collection: 'Resource watch'")
-
-    print(f"Original Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
-
-    df_rw.rename(
-        columns={
-            "id": "dataset_id",
-            "name": "dataset_name",
-            "slug": "slug",
-            "updatedAt": "last_updated",
-            "tags": "dataset_tags",
-        },
-        inplace=True,
-    )
-
-    # add these columns
-    df_rw["source_collection"] = "resource_watch"
-    df_rw["source"] = df_rw.apply(
-        lambda x: f"resource_watch > {x['provider']}"
-        if pd.notnull(x.get("provider"))
-        else "resource_watch",
-        axis=1,
-    )
-    df_rw["dataset_description"] = ""  # none in source
-
-    print(f"Columns (n={len(df_rw.columns)}): {df_rw.columns.tolist()}")
-    return (df_rw,)
-
-
-@app.cell
-def _(datapath, pd):
-    # ArcGIS catalog
-    df_arc = pd.read_csv(datapath / "wri_arcgis_catalog_01.csv")
-    print(f"Loaded {len(df_arc)} datasets from collection: 'ArcGIS catalog'")
-
-    print(f"Original Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
-
-    df_arc.rename(
-        columns={
-            "id": "dataset_id",
-            "name": "dataset_name",
-            "description": "dataset_description",
-            "tags": "dataset_tags",
-            "updatedAt": "date_last_updated",
-            "createdAt": "date_created",
-        },
-        inplace=True,
-    )
-
-    # add these columns
-    df_arc["source_collection"] = "arcgis_wri_catalog"
-    df_arc["source"] = df_arc.apply(
-        lambda x: f"arcgis_wri_catalog > {x['provider']}"
-        if pd.notnull(x.get("provider"))
-        else "arcgis_wri_catalog",
-        axis=1,
-    )
-
-    print(f"Columns (n={len(df_arc.columns)}): {df_arc.columns.tolist()}")
-    return (df_arc,)
-
-
-@app.cell
-def _(datapath, pd):
-    # GFW
-    df_gfw = pd.read_csv(datapath / "global_forest_watch_datasets.csv")
-    print(f"Loaded {len(df_gfw)} datasets from collection: 'GFW'")
-
-    print(f"Original Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
-
-    df_gfw.rename(
-        columns={
-            "id": "dataset_id",
-            "name": "dataset_name",
-            "description": "dataset_description",
-            "tags": "dataset_tags",
-        },
-        inplace=True,
-    )
-
-    # add these columns
-    df_gfw["source_collection"] = "global_forest_watch"
-    df_gfw["source"] = df_gfw.apply(
-        lambda x: f"global_forest_watch > {x['provider']}"
-        if pd.notnull(x.get("provider"))
-        else "global_forest_watch",
-        axis=1,
-    )
-
-    print(f"Columns (n={len(df_gfw.columns)}): {df_gfw.columns.tolist()}")
-    return (df_gfw,)
-
-
-@app.cell
-def _(datapath, pd):
-    # EAE
-    df_eae = pd.read_csv(datapath / "eae_datasets_pdf-extract.csv")
-    print(f"Loaded {len(df_eae)} datasets from collection: 'EAE'")
-
-    print(f"Original Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
-
-    df_eae.rename(
-        columns={
-            "id": "dataset_id",
-            "name": "dataset_name",
-            "description": "dataset_description",
-            "tags": "dataset_tags",
-        },
-        inplace=True,
-    )
-
-    # add these columns
-    df_eae["source_collection"] = "energy_access_explorer"
-    df_eae["source"] = df_eae.apply(
-        lambda x: f"energy_access_explorer > {x['provider']}"
-        if pd.notnull(x.get("provider"))
-        else "energy_access_explorer",
-        axis=1,
-    )
-
-    print(f"Columns (n={len(df_eae.columns)}): {df_eae.columns.tolist()}")
-    return (df_eae,)
-
-
-@app.cell
-def _(datapath, pd):
-    # wri data explorer
-
-    df_ex = pd.read_csv(datapath / "wri_data_explorer_01.csv")
-    print(f"Loaded {len(df_ex)} datasets from collection: 'WRI Data Explorer'")
-
-    print(f"Original Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
-
-    df_ex.rename(
-        columns={
-            "id": "dataset_id",
-            "name": "dataset_name",
-            "title": "dataset_description",
-            "tags": "dataset_tags",
-            "updatedAt": "date_last_updated",
-            "createdAt": "date_created",
-        },
-        inplace=True,
-    )
-
-    # add these columns
-    df_ex["source_collection"] = "wri_data_explorer"
-    df_ex["source"] = df_ex.apply(
-        lambda x: f"wri_data_explorer > {x['organization']}"
-        if pd.notnull(x.get("organization"))
-        else "wri_data_explorer",
-        axis=1,
-    )
-
-    print(f"Columns (n={len(df_ex.columns)}): {df_ex.columns.tolist()}")
-    return (df_ex,)
-
-
-@app.cell
-def _(df_arc, df_eae, df_ex, df_gfw, df_rw, pd):
-    ## Step 2: Combine into one unified DataFrame
-    df_all = pd.concat([df_rw, df_gfw, df_arc, df_eae, df_ex], ignore_index=True)
-    print(f"Total: {len(df_all)} datasets loaded.")
-
-    print(df_all.shape)
-    df_all
+def _(REQUIRED_FILE, datapath, pd):
+    # Load the pre-combined assets data
+    df_all = pd.read_csv(datapath / REQUIRED_FILE)
+    print(f"Loaded {len(df_all)} assets from combined dataset")
+    print(f"Shape: {df_all.shape}")
+    print(f"Columns: {len(df_all.columns)}")
     return (df_all,)
-
-
-@app.cell
-def _(datetime, html, pd, re):
-    # choose a delimiter that won't collide often in natural text
-    DELIM = " | "  # (use "\x1F" if you need a control-char delimiter)
-
-    # columns you definitely want to include if present
-    PREFERRED_ORDER = [
-        "dataset_id",
-        "dataset_name",
-        "source_collection",
-        "dataset_description",
-        "dataset_tags",
-        "date_last_updated",
-        "date_created",
-    ]
-
-    WS_RE = re.compile(r"\s+")
-    TAG_RE = re.compile(r"<[^>]+>")  # just in case some HTML slipped in
-
-    def to_iso_date(x):
-        """Try to coerce common date forms to YYYY-MM-DD; otherwise return the original string."""
-        if pd.isna(x) or x == "":
-            return ""
-        s = str(x).strip()
-        # epoch ms or s
-        if s.isdigit():
-            try:
-                secs = int(s) / (1000 if len(s) >= 12 else 1)
-                return datetime.utcfromtimestamp(secs).strftime("%Y-%m-%d")
-            except Exception:
-                pass
-        # pandas-style parse
-        try:
-            return pd.to_datetime(s, errors="coerce", utc=True).date().isoformat()
-        except Exception:
-            return s
-
-    def clean_text(s):
-        if s is None or (isinstance(s, float) and pd.isna(s)):
-            return ""
-        s = str(s)
-        # strip html, unescape, collapse ws
-        s = html.unescape(TAG_RE.sub("", s))
-        s = WS_RE.sub(" ", s).strip()
-        return s
-
-    def serialize_row(row: pd.Series, preferred=PREFERRED_ORDER, delim=DELIM):
-        # build ordered list: preferred first (if present), then all others (stable name sort) minus duplicates
-        cols = [c for c in preferred if c in row.index]
-        cols += [c for c in sorted(row.index) if c not in cols]
-
-        parts = []
-        for col in cols:
-            val = row[col]
-            if col in ("date_last_updated", "date_created"):
-                val = to_iso_date(val)
-            val = clean_text(val)
-
-            if val == "" or val.lower() == "nan" or val == "None":
-                continue  # skip empties
-
-            # Keep tags compact
-            if col == "dataset_tags":
-                # unify separators, remove duplicate commas/spaces
-                val = (
-                    ", ".join([t.strip() for t in re.split(r"[|,;]", val) if t.strip()])
-                    if val
-                    else ""
-                )
-
-            if val:
-                parts.append(f"{col}: {val}")
-
-        return delim.join(parts)
-
-    return (serialize_row,)
-
-
-@app.cell
-def _(df_all, serialize_row):
-    df_all["dataset_info_combined"] = df_all.apply(serialize_row, axis=1)
-    return
-
-
-@app.cell
-def _(df_all):
-    # truncate the description column as it can get very long
-    MAX_DESC = 600  # in chars, example 1200 characters.
-
-    df_all["dataset_short_desc"] = (
-        df_all["dataset_description"]
-        .astype(str)
-        .apply(lambda s: (s[:MAX_DESC] + "…") if len(s) > MAX_DESC else s)
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    export_button = mo.ui.run_button(label="Export dataframe to CSV")
-    export_button
-    return (export_button,)
-
-
-@app.cell
-def _(datapath, df, export_button, mo, reordered_cols):
-    # block this cell from running until button is clicked
-    mo.stop(not export_button.value)
-
-    outfilename = "wri_datasets_all_joined_01.csv"
-    df[reordered_cols].to_csv(datapath / outfilename)
-    print(f"Saved to file: {outfilename}")
-    return
 
 
 @app.cell
@@ -566,11 +252,6 @@ def _(mo):
 @app.cell
 def _(explanatory_diagram):
     explanatory_diagram
-    return
-
-
-@app.cell
-def _():
     return
 
 
@@ -772,11 +453,6 @@ def _(pltr, text_ui):
 @app.cell
 def _(pltr):
     pltr
-    return
-
-
-@app.cell
-def _():
     return
 
 
