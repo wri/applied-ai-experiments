@@ -45,10 +45,11 @@ Experiment Methodology Steps:
 - `src/fetch_datasets_resource_watch_datasets.py` : fetch datasets from the Resource Watch API
 - `src/fetch_datasets_scrape_pdfreport_energy_access_explorer.py` : fetch dataset info about EAE from the methodology report
 - `src/fetch_datasets_wri_data_explorer.py` : fetch datasets from the WRI Data Explorer
-- `src/fetch_all.py` : convenience script to run all fetch notebooks
+- `src/combine_assets_data.py` : combine all individual CSV files into unified dataset
+- `src/fetch_all.py` : convenience script to run all fetch notebooks and data combination
 
 **Main notebook** (in `notebooks/`):
-- `notebooks/wri_dataset_locator_combined.py` : combines data from all CSVs, creates embeddings, and visualizes
+- `notebooks/wri_dataset_locator_combined.py` : loads combined data, creates embeddings, and visualizes
 
 ## How to run the experiment
 
@@ -65,10 +66,11 @@ Experiment Methodology Steps:
 ### First Time Setup
 
 #### Option 1: Quick Start (Recommended)
-Run all fetch scripts at once:
+Run all fetch scripts and combine data at once:
 ```bash
 python src/fetch_all.py
 ```
+This will fetch all source data and create `wri_assets_info_combined.csv`.
 
 #### Option 2: Run Each Fetch Script Individually
 ```bash
@@ -80,12 +82,12 @@ uv run marimo edit src/fetch_datasets_wri_data_explorer.py
 ```
 
 ### Running the Main Notebook
-Once data files are generated:
+Once data files are generated (including `wri_assets_info_combined.csv`):
 ```bash
 uv run marimo edit notebooks/wri_dataset_locator_combined.py
 ```
 
-The notebook will check for required data files and show instructions if any are missing.
+The notebook will check for the combined data file and show instructions if it's missing.
 
 ### Subsequent Runs
 * Fetch scripts don't need to be run again unless you want fresh data
