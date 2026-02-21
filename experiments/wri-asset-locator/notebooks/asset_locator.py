@@ -16,7 +16,7 @@
 
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.20.1"
 app = marimo.App(width="columns")
 
 
@@ -59,7 +59,7 @@ def _(mo):
     mo.md(r"""
     ## Load combined assets data
 
-    Asset data is pre-combined from multiple sources (Resource Watch, ArcGIS, Global Forest Watch, 
+    Asset data is pre-combined from multiple sources (Resource Watch, ArcGIS, Global Forest Watch,
     Energy Access Explorer, WRI Data Explorer) using the `src/combine_assets_data.py` script.
 
     The combined dataset is available in `wri_assets_info_combined.csv`.
@@ -112,28 +112,28 @@ def _(Path, mo):
             True,
             mo.md(f"""
             ## ⚠️ Missing Combined Data File
-            
+
             This notebook requires `{REQUIRED_FILE}` which hasn't been generated yet.
-            
+
             **To generate this file:**
-            
+
             Run the fetch_all script (includes data combination):
             ```bash
             python src/fetch_all.py
             ```
-            
+
             Or run the combination script directly:
             ```bash
             uv run src/combine_assets_data.py
             ```
-            
+
             See README.md for more details.
             """),
         )
 
     datapath = DATA_DIR
     print(f"Data directory: {datapath.absolute()}")
-    return DATA_DIR, REQUIRED_FILE, datapath
+    return REQUIRED_FILE, datapath
 
 
 @app.cell
@@ -252,6 +252,11 @@ def _(mo):
 @app.cell
 def _(explanatory_diagram):
     explanatory_diagram
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -456,6 +461,11 @@ def _(pltr):
     return
 
 
+@app.cell
+def _():
+    return
+
+
 @app.cell(column=2, hide_code=True)
 def _(explanatory_diagram, explanatory_text, mo):
     mo.vstack(
@@ -475,11 +485,12 @@ def _(explanatory_diagram, explanatory_text, mo):
 
 @app.cell(hide_code=True)
 def _(alt, df_all, mo, pltr, text_ui, umap_model):
+    # Display projection
     chart = (
         alt.Chart(
             pltr,
             title=alt.Title(
-                f"Datasets at WRI)",
+                f"Datasets at WRI",
                 subtitle=[
                     f"{len(df_all)} datasets with API-provided metadata only",
                     f"UMAP projection (k_n={umap_model.get_params()['n_neighbors']})",
@@ -599,6 +610,11 @@ def _(df_all, display_cols, indices, pd, reordered_cols):
     # Example usage:
     if len(indices.values) > 0:
         print_row_details(indices[0])
+    return
+
+
+@app.cell
+def _():
     return
 
 
