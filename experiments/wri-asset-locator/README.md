@@ -16,6 +16,8 @@ Asana: https://app.asana.com/1/25496124013636/project/1210050417738685/task/1210
 
 Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive of assets. Provides only basic information about the selected asset, and a link. 
 
+![WRI Asset Locator Visualization](exports/screenshot_projection_01.png)
+*2D projection of WRI assets with semantic search and filtering*
 
 ## Approach
 
@@ -84,8 +86,10 @@ uv run marimo edit src/fetch_datasets_wri_data_explorer.py
 ### Running the Main Notebook
 Once data files are generated (including `wri_assets_info_combined.csv`):
 ```bash
-uv run marimo edit notebooks/asset_locator.py
+uv run marimo edit --sandbox notebooks/asset_locator.py
 ```
+
+The `--sandbox` flag runs the notebook in an isolated environment with dependencies automatically installed from the notebook's PEP 723 metadata.
 
 The notebook will check for the combined data file and show instructions if it's missing.
 
