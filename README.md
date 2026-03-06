@@ -57,6 +57,8 @@ applied-ai-experiments/
 | [Example Experiment](experiments/example-experiment/) | `prototype` | `idea` | A template example showing the structure of an experiment in this repository. |
 | [MCP Web Map](experiments/mcp-web-map/) | `prototype` | `paused` | Chat interface for MapLibre GL JS maps, built to test whether MCP running in... |
 | [Semantic Document Search](experiments/semantic-document-search/) | `prototype` | `started` | Client-side semantic search tool for PDF documents using browser-based embedd... |
+| [Simple Python UV experiment](experiments/simple-python-uv-experiment/) | `marimo` | `started` | Self-contained marimo notebook exploring the Resource Watch API, using uv for... |
+| [WRI Assets Locator](experiments/wri-asset-locator/) | `marimo` | `completed` | Fetches information about various WRI assets (currently datasets) and display... |
 <!-- EXPERIMENTS-END -->
 
 ## Experiment Types
