@@ -19,6 +19,8 @@
   "scripts": {
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "stories": "pnpm --filter @wri-datalab/ui-stories dev",
     "stories:build": "pnpm --filter @wri-datalab/ui-stories build"
   },
@@ -32,9 +34,14 @@
     "shiki": "^3.0.0"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/svelte": "^5.3.1",
+    "happy-dom": "^20.9.0",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
   },
   "keywords": [
     "svelte",

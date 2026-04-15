@@ -43,67 +43,67 @@ export class BYOKClientImpl implements BYOKClient {
   private emitter = new EventEmitter();
   private config: Required<Omit<BYOKClientConfig, 'providers' | 'storage' | 'proxyUrl' | 'modelConfig' | 'globalModelFilter'>> &
                   Pick<BYOKClientConfig, 'proxyUrl' | 'modelConfig' | 'globalModelFilter'>;
-  
+
   private state: BYOKState = {
     keys: {} as Record<ProviderId, KeyStatus>,
     providers: [],
     initialized: false,
   };
-  
+
   constructor(config: BYOKClientConfig) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.storage = createStorage(config.storage);
-    
+
     // Register providers
     for (const provider of config.providers) {
       this.registerProvider(provider);
     }
   }
-  
+
   // ---------------------------------------------------------------------------
   // Provider Management
   // ---------------------------------------------------------------------------
-  
+
   private registerProvider(provider: LLMProvider): void {
     const id = provider.config.id;
-    
+
     if (this.providers.has(id)) {
       console.warn(`Provider ${id} already registered, replacing`);
     }
-    
+
     this.providers.set(id, provider);
-    
+
     // Initialize state for this provider
     this.state.keys[id] = {
       hasKey: false,
       isValid: null,
       isValidating: false,
     };
-    
+
     this.state.providers = Array.from(this.providers.keys());
-    
+
     this.emit({ type: 'provider:added', providerId: id });
   }
-  
+
   getProvider(providerId: ProviderId): LLMProvider | undefined {
     return this.providers.get(providerId);
   }
-  
+
   listProviders(): LLMProvider[] {
     return Array.from(this.providers.values());
   }
-  
+
   // ---------------------------------------------------------------------------
   // Key Management
   // ---------------------------------------------------------------------------
-  
+
   async setKey(
-    providerId: ProviderId, 
-    key: string, 
+    providerId: ProviderId,
+    key: string,
     metadata?: KeyMetadata
   ): Promise<KeyValidationResult> {
     const provider = this.providers.get(providerId);
-    
+
     if (!provider) {
       return {
         valid: false,
@@ -112,20 +112,20 @@ export class BYOKClientImpl implements BYOKClient {
         errorCode: 'provider_not_found',
       };
     }
-    
+
     // Update state to validating
     this.updateKeyStatus(providerId, {
       hasKey: true,
       isValid: null,
       isValidating: true,
     });
-    
+
     this.emit({ type: 'key:validating', providerId });
-    
+
     try {
       // Validate the key
       const result = await provider.validateKey(key);
-      
+
       if (result.valid) {
         // Store the key
         await this.storage.set(providerId, key, metadata);
@@ -145,6 +145,7 @@ export class BYOKClientImpl implements BYOKClient {
           isValid: true,
           isValidating: false,
           lastValidated: Date.now(),
+          lastFourChars: key.slice(-4),
           models: filteredModels,
           selectedModel: defaultModel,
         });
@@ -159,45 +160,44 @@ export class BYOKClientImpl implements BYOKClient {
           isValidating: false,
           error: result.error,
         });
-        
+
         this.emit({ type: 'key:set', providerId, valid: false });
         this.emit({ type: 'key:validated', providerId, result });
       }
-      
+
       return result;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       this.updateKeyStatus(providerId, {
         hasKey: false,
         isValid: false,
         isValidating: false,
         error: errorMessage,
       });
-      
+
       const result: KeyValidationResult = {
         valid: false,
         providerId,
         error: errorMessage,
         errorCode: 'validation_failed',
       };
-      
+
       this.emit({ type: 'key:validated', providerId, result });
-      
+
       return result;
     }
   }
-  
+
   async removeKey(providerId: ProviderId): Promise<void> {
     await this.storage.remove(providerId);
-    
-    // Reset provider
+
+    // Reset provider internal state (clears API key)
     const provider = this.providers.get(providerId);
     if (provider) {
-      // Re-create provider to clear internal state
-      // (providers don't have a reset method, they just don't use the key)
+      provider.reset();
     }
-    
+
     this.updateKeyStatus(providerId, {
       hasKey: false,
       isValid: null,
@@ -210,18 +210,18 @@ export class BYOKClientImpl implements BYOKClient {
 
     this.emit({ type: 'key:removed', providerId });
   }
-  
+
   hasKey(providerId: ProviderId): boolean {
     return this.state.keys[providerId]?.hasKey ?? false;
   }
-  
+
   getKeyStatus(providerId: ProviderId): KeyStatus | undefined {
     return this.state.keys[providerId];
   }
-  
+
   async validateKey(providerId: ProviderId): Promise<KeyValidationResult> {
     const provider = this.providers.get(providerId);
-    
+
     if (!provider) {
       return {
         valid: false,
@@ -230,9 +230,9 @@ export class BYOKClientImpl implements BYOKClient {
         errorCode: 'provider_not_found',
       };
     }
-    
+
     const stored = await this.storage.get(providerId);
-    
+
     if (!stored) {
       return {
         valid: false,
@@ -241,11 +241,11 @@ export class BYOKClientImpl implements BYOKClient {
         errorCode: 'no_key',
       };
     }
-    
+
     // Check cache
     const status = this.state.keys[providerId];
     if (
-      status?.isValid !== null && 
+      status?.isValid !== null &&
       status?.lastValidated &&
       Date.now() - status.lastValidated < this.config.validationCacheTTL
     ) {
@@ -254,25 +254,25 @@ export class BYOKClientImpl implements BYOKClient {
         providerId,
       };
     }
-    
+
     // Re-validate
     return this.setKey(providerId, stored.key, stored.metadata);
   }
-  
+
   // ---------------------------------------------------------------------------
   // Chat API
   // ---------------------------------------------------------------------------
-  
+
   async chat(providerId: ProviderId, request: ChatRequest): Promise<ChatResponse> {
     const provider = this.getInitializedProvider(providerId);
     return provider.chat(request);
   }
-  
+
   async *chatStream(providerId: ProviderId, request: ChatRequest): AsyncIterable<ChatStreamChunk> {
     const provider = this.getInitializedProvider(providerId);
     yield* provider.chatStream(request);
   }
-  
+
   private getInitializedProvider(providerId: ProviderId): LLMProvider {
     const provider = this.providers.get(providerId);
 
@@ -395,67 +395,68 @@ export class BYOKClientImpl implements BYOKClient {
   // ---------------------------------------------------------------------------
   // State Management
   // ---------------------------------------------------------------------------
-  
+
   getState(): BYOKState {
     return { ...this.state };
   }
-  
+
   subscribe(listener: BYOKEventListener): Unsubscribe {
     return this.emitter.subscribe(listener);
   }
-  
+
   private updateKeyStatus(providerId: ProviderId, status: Partial<KeyStatus>): void {
     const current = this.state.keys[providerId] ?? {
       hasKey: false,
       isValid: null,
       isValidating: false,
     };
-    
+
     this.state.keys[providerId] = { ...current, ...status };
-    
+
     this.emit({ type: 'state:changed', state: this.getState() });
   }
-  
+
   private emit(event: BYOKEvent): void {
     this.emitter.emit(event);
   }
-  
+
   // ---------------------------------------------------------------------------
   // Lifecycle
   // ---------------------------------------------------------------------------
-  
+
   async initialize(): Promise<void> {
     if (this.state.initialized) return;
-    
+
     // Load stored keys
     const storedKeys = await this.storage.list();
-    
+
     for (const stored of storedKeys) {
       const provider = this.providers.get(stored.providerId);
-      
+
       if (provider) {
         // Initialize provider with stored key
         provider.initialize(stored.key);
-        
+
         // Update state
         this.updateKeyStatus(stored.providerId, {
           hasKey: true,
           isValid: stored.isValid ?? null,
           isValidating: false,
           lastValidated: stored.validatedAt,
+          lastFourChars: stored.key.slice(-4),
         });
-        
+
         // Optionally re-validate
         if (this.config.autoValidate) {
           this.validateKey(stored.providerId).catch(console.error);
         }
       }
     }
-    
+
     this.state.initialized = true;
     this.emit({ type: 'state:changed', state: this.getState() });
   }
-  
+
   async destroy(): Promise<void> {
     this.emitter.clear();
     this.providers.clear();

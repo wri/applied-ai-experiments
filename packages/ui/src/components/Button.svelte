@@ -6,7 +6,6 @@
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     loading?: boolean;
-    style?: string;
     children: Snippet;
   }
 
@@ -16,12 +15,25 @@
     loading = false,
     disabled = false,
     class: className = '',
-    style: customStyle = '',
     children,
     ...rest
   }: Props = $props();
+</script>
 
-  const baseStyles = `
+<button
+  class="ui-button variant-{variant} size-{size} {className}"
+  class:loading
+  disabled={disabled || loading}
+  {...rest}
+>
+  {#if loading}
+    <span class="spinner" aria-hidden="true"></span>
+  {/if}
+  {@render children()}
+</button>
+
+<style>
+  .ui-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -34,76 +46,98 @@
     border-width: var(--component-button-border-width);
     border-style: solid;
     cursor: pointer;
-    transition: all var(--transition-fast) ease;
+    transition: all var(--transition-fast, 0.15s) ease;
     text-decoration: none;
-  `;
+  }
 
-  const sizeStyles = {
-    sm: 'padding: 0.25rem 0.5rem; font-size: 0.75rem; min-height: 1.75rem;',
-    md: 'padding: var(--component-button-padding-y) var(--component-button-padding-x); min-height: var(--component-button-min-height);',
-    lg: 'padding: 0.75rem 1.5rem; font-size: 1rem; min-height: 3rem;',
-  };
+  /* Sizes */
+  .ui-button.size-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-height: 1.75rem;
+  }
 
-  const variantStyles = {
-    primary: `
-      background-color: var(--primary);
-      border-color: var(--primary);
-      color: var(--primary-content);
-    `,
-    secondary: `
-      background-color: transparent;
-      border-color: var(--ui);
-      color: var(--tx);
-    `,
-    ghost: `
-      background-color: transparent;
-      border-color: transparent;
-      color: var(--tx);
-    `,
-    danger: `
-      background-color: var(--error);
-      border-color: var(--error);
-      color: var(--primary-content);
-    `,
-  };
+  .ui-button.size-md {
+    padding: var(--component-button-padding-y) var(--component-button-padding-x);
+    min-height: var(--component-button-min-height);
+  }
 
-  const hoverStyles = {
-    primary: 'background-color: var(--primary-hover); border-color: var(--primary-hover);',
-    secondary: 'background-color: var(--bg-3); border-color: var(--ui-2);',
-    ghost: 'background-color: var(--bg-2);',
-    danger: 'background-color: var(--interactive-destructive-hover); border-color: var(--interactive-destructive-hover);',
-  };
+  .ui-button.size-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    min-height: 3rem;
+  }
 
-  const disabledStyles = `
+  /* Variant: primary */
+  .ui-button.variant-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-content);
+  }
+
+  .ui-button.variant-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+  }
+
+  /* Variant: secondary */
+  .ui-button.variant-secondary {
+    background-color: transparent;
+    border-color: var(--ui);
+    color: var(--tx);
+  }
+
+  .ui-button.variant-secondary:hover:not(:disabled) {
+    background-color: var(--bg-3);
+    border-color: var(--ui-2);
+  }
+
+  /* Variant: ghost */
+  .ui-button.variant-ghost {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--tx);
+  }
+
+  .ui-button.variant-ghost:hover:not(:disabled) {
+    background-color: var(--bg-2);
+  }
+
+  /* Variant: danger */
+  .ui-button.variant-danger {
+    background-color: var(--error);
+    border-color: var(--error);
+    color: var(--primary-content);
+  }
+
+  .ui-button.variant-danger:hover:not(:disabled) {
+    background-color: var(--interactive-destructive-hover);
+    border-color: var(--interactive-destructive-hover);
+  }
+
+  /* Disabled */
+  .ui-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  `;
-</script>
+  }
 
-<button
-  class="ui-button {className}"
-  class:loading
-  disabled={disabled || loading}
-  style="{baseStyles} {sizeStyles[size]} {variantStyles[variant]} {disabled || loading ? disabledStyles : ''} {customStyle}"
-  onmouseenter={(e) => {
-    if (!disabled && !loading) {
-      e.currentTarget.style.cssText += hoverStyles[variant];
-    }
-  }}
-  onmouseleave={(e) => {
-    if (!disabled && !loading) {
-      e.currentTarget.style.cssText = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${customStyle}`;
-    }
-  }}
-  {...rest}
->
-  {#if loading}
-    <span class="spinner" style="width: 1em; height: 1em; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite;"></span>
-  {/if}
-  {@render children()}
-</button>
+  /* Focus */
+  .ui-button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 
-<style>
+  /* Loading spinner */
+  .spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
   @keyframes spin {
     to { transform: rotate(360deg); }
   }

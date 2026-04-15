@@ -151,9 +151,10 @@
 
   .provider-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.5rem;
     padding: 0.5rem 0.75rem;
     background: var(--bg-2);
     border: 1px solid var(--ui);
@@ -165,6 +166,7 @@
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
+    flex-shrink: 0;
   }
 
   .provider-name {
@@ -178,6 +180,9 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
   }
 
   .key-preview {
@@ -189,10 +194,13 @@
   .key-input-group {
     display: flex;
     gap: 0.25rem;
+    min-width: 0;
+    flex: 1 1 0;
   }
 
   .key-input {
-    width: 140px;
+    min-width: 0;
+    flex: 1 1 0;
     padding: 0.25rem 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -224,6 +232,8 @@
     border-radius: 0.125rem;
     cursor: pointer;
     transition: all 100ms;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .save-btn {

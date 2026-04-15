@@ -6,11 +6,11 @@
 // Provider Types
 // -----------------------------------------------------------------------------
 
-export type ProviderId = 
-  | 'anthropic' 
-  | 'openai' 
-  | 'gemini' 
-  | 'ollama' 
+export type ProviderId =
+  | 'anthropic'
+  | 'openai'
+  | 'gemini'
+  | 'ollama'
   | 'openrouter'
   | 'groq'
   | 'together'
@@ -159,11 +159,11 @@ export interface ChatResponse {
   raw?: unknown;
 }
 
-export type FinishReason = 
-  | 'stop' 
-  | 'length' 
-  | 'tool_use' 
-  | 'content_filter' 
+export type FinishReason =
+  | 'stop'
+  | 'length'
+  | 'tool_use'
+  | 'content_filter'
   | 'error'
   | 'unknown';
 
@@ -201,9 +201,9 @@ export interface ToolDefinition {
   inputSchema: Record<string, unknown>;
 }
 
-export type ToolChoice = 
-  | 'auto' 
-  | 'none' 
+export type ToolChoice =
+  | 'auto'
+  | 'none'
   | { type: 'tool'; name: string };
 
 // -----------------------------------------------------------------------------
@@ -263,7 +263,7 @@ export interface KeyStorage {
   remove(providerId: ProviderId): Promise<void>;
   list(): Promise<StoredKey[]>;
   clear(): Promise<void>;
-  
+
   // Optional encryption support
   isEncrypted?(): boolean;
   setEncryptionKey?(passphrase: string): Promise<void>;
@@ -359,32 +359,37 @@ export type BYOKErrorCode =
 export interface LLMProvider {
   readonly config: ProviderConfig;
   readonly capabilities: ProviderCapabilities;
-  
+
   /**
    * Initialize the provider with an API key
    */
   initialize(key: string): void;
-  
+
   /**
    * Check if the provider has been initialized with a key
    */
   isInitialized(): boolean;
-  
+
+  /**
+   * Reset the provider, clearing the API key and internal state
+   */
+  reset(): void;
+
   /**
    * Validate an API key without storing it
    */
   validateKey(key: string): Promise<KeyValidationResult>;
-  
+
   /**
    * List available models
    */
   listModels(): Promise<ModelInfo[]>;
-  
+
   /**
    * Send a chat completion request
    */
   chat(request: ChatRequest): Promise<ChatResponse>;
-  
+
   /**
    * Send a streaming chat completion request
    */
@@ -427,62 +432,62 @@ export interface BYOKClient {
    * Get a provider by ID
    */
   getProvider(providerId: ProviderId): LLMProvider | undefined;
-  
+
   /**
    * List all registered providers
    */
   listProviders(): LLMProvider[];
-  
+
   /**
    * Set an API key for a provider (validates and stores)
    */
   setKey(providerId: ProviderId, key: string, metadata?: KeyMetadata): Promise<KeyValidationResult>;
-  
+
   /**
    * Remove an API key
    */
   removeKey(providerId: ProviderId): Promise<void>;
-  
+
   /**
    * Check if a provider has a stored key
    */
   hasKey(providerId: ProviderId): boolean;
-  
+
   /**
    * Get the current key status for a provider
    */
   getKeyStatus(providerId: ProviderId): KeyStatus | undefined;
-  
+
   /**
    * Re-validate a stored key
    */
   validateKey(providerId: ProviderId): Promise<KeyValidationResult>;
-  
+
   /**
    * Send a chat request to a specific provider
    */
   chat(providerId: ProviderId, request: ChatRequest): Promise<ChatResponse>;
-  
+
   /**
    * Send a streaming chat request
    */
   chatStream(providerId: ProviderId, request: ChatRequest): AsyncIterable<ChatStreamChunk>;
-  
+
   /**
    * Get the current state
    */
   getState(): BYOKState;
-  
+
   /**
    * Subscribe to state changes
    */
   subscribe(listener: BYOKEventListener): Unsubscribe;
-  
+
   /**
    * Initialize the client (loads stored keys)
    */
   initialize(): Promise<void>;
-  
+
   /**
    * Destroy the client and clear all state
    */

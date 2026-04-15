@@ -25,6 +25,19 @@
   background-color: var(--bg);
 }
 
+/* Global focus-visible styles for interactive elements */
+[data-variant="prototype"] :focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* Remove default focus outline for components that handle it internally */
+[data-variant="prototype"] .field-input:focus-visible,
+[data-variant="prototype"] .field-select:focus-visible,
+[data-variant="prototype"] .field-textarea:focus-visible {
+  outline: none;
+}
+
 /* Utility classes */
 [data-variant="prototype"] .label {
   font-family: var(--text-label-font-family);

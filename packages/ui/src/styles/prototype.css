@@ -75,12 +75,12 @@
   --component-button-gap: 0.5rem;
   --component-input-border-radius: 0.25rem; /** Corner radius */
   --component-input-font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  --component-input-padding-x: 0.75rem;
-  --component-input-padding-y: 0.5rem;
-  --component-input-font-size: 1rem;
+  --component-input-padding-x: 0.625rem;
+  --component-input-padding-y: 0.375rem;
+  --component-input-font-size: 0.8125rem;
   --component-input-line-height: 1.5;
   --component-input-border-width: 1px;
-  --component-input-min-height: 2.5rem;
+  --component-input-min-height: 2rem;
   --component-input-background: #1c1a18;
   --component-card-padding: 1rem;
   --component-card-padding-sm: 0.75rem;
@@ -152,4 +152,14 @@
   --divider-color: #433d38;
   --divider-width: 1px;
   --divider-style: solid;
+}
+
+/* Mobile: bump input font-size to 16px to prevent iOS auto-zoom on focus */
+@media (max-width: 768px) {
+  [data-variant="prototype"] {
+    --component-input-font-size: 1rem;
+    --component-input-padding-x: 0.75rem;
+    --component-input-padding-y: 0.5rem;
+    --component-input-min-height: 2.5rem;
+  }
 }

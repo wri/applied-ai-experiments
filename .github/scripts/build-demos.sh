@@ -107,7 +107,7 @@ if val is not None:
 " 2>/dev/null || echo ""
 }
 
-# Compute hash of demo source files
+# Compute hash of demo source files (includes shared packages)
 compute_demo_hash() {
     local demo_dir="$1"
 
@@ -117,14 +117,24 @@ compute_demo_hash() {
     fi
 
     # Hash relevant source files (excluding node_modules, .svelte-kit, dist)
-    find "$demo_dir" -type f \
-        \( -name "*.svelte" -o -name "*.ts" -o -name "*.js" -o -name "*.css" \
-           -o -name "*.html" -o -name "package.json" -o -name "*.json" -o -name "*.py" \) \
-        -not -path "*/node_modules/*" \
-        -not -path "*/.svelte-kit/*" \
-        -not -path "*/dist/*" \
-        -not -path "*/.build/*" \
-        -print0 2>/dev/null | \
+    # Also include shared packages (packages/ui/src, packages/byo-keys/packages/*/src)
+    # so that dependency changes invalidate the cache
+    {
+        find "$demo_dir" -type f \
+            \( -name "*.svelte" -o -name "*.ts" -o -name "*.js" -o -name "*.css" \
+               -o -name "*.html" -o -name "package.json" -o -name "*.json" -o -name "*.py" \) \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.svelte-kit/*" \
+            -not -path "*/dist/*" \
+            -not -path "*/.build/*" \
+            -print0 2>/dev/null
+
+        # Include shared package sources in hash
+        find "$REPO_ROOT/packages/ui/src" -type f -print0 2>/dev/null
+        find "$REPO_ROOT/packages/byo-keys/packages/core/src" -type f -print0 2>/dev/null
+        find "$REPO_ROOT/packages/byo-keys/packages/providers/src" -type f -print0 2>/dev/null
+        find "$REPO_ROOT/packages/byo-keys/packages/svelte/src" -type f -print0 2>/dev/null
+    } | \
         sort -z | \
         xargs -0 cat 2>/dev/null | \
         shasum -a 256 | \

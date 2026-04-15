@@ -46,26 +46,8 @@
   }
 </script>
 
-<div
-  class="ui-search-input {className}"
-  style="
-    position: relative;
-    display: flex;
-    align-items: center;
-  "
->
-  <div
-    class="search-icon"
-    style="
-      position: absolute;
-      left: var(--space-3);
-      color: var(--tx-3);
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-    "
-    aria-hidden="true"
-  >
+<div class="ui-search-input {className}">
+  <div class="search-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
       <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -80,21 +62,7 @@
     oninput={handleInput}
     onchange={handleChange}
     onkeydown={handleKeydown}
-    style="
-      width: 100%;
-      height: var(--component-input-min-height);
-      padding: var(--component-input-padding-y) var(--space-8) var(--component-input-padding-y) calc(var(--space-3) + 16px + var(--space-2));
-      font-family: var(--component-input-font-family);
-      font-size: var(--component-input-font-size);
-      line-height: var(--component-input-line-height);
-      color: var(--tx);
-      background-color: var(--component-input-background);
-      border: var(--component-input-border-width) solid var(--ui);
-      border-radius: var(--component-input-border-radius);
-      outline: none;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    "
-    class:disabled
+    class="search-field"
   />
 
   {#if value}
@@ -102,22 +70,6 @@
       type="button"
       class="search-clear"
       onclick={handleClear}
-      style="
-        position: absolute;
-        right: var(--space-2);
-        width: 1.5rem;
-        height: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--tx-3);
-        cursor: pointer;
-        border-radius: var(--radius-sm);
-        transition: color var(--transition-fast), background-color var(--transition-fast);
-      "
       aria-label="Clear search"
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,18 +80,69 @@
 </div>
 
 <style>
-  input:focus {
+  .ui-search-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: var(--space-3, 0.75rem);
+    color: var(--tx-3);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-field {
+    width: 100%;
+    height: var(--component-input-min-height);
+    padding: var(--component-input-padding-y) var(--space-8, 2rem) var(--component-input-padding-y) calc(var(--space-3, 0.75rem) + 16px + var(--space-2, 0.5rem));
+    font-family: var(--component-input-font-family);
+    font-size: var(--component-input-font-size);
+    line-height: var(--component-input-line-height);
+    color: var(--tx);
+    background-color: var(--component-input-background);
+    border: var(--component-input-border-width) solid var(--ui);
+    border-radius: var(--component-input-border-radius);
+    outline: none;
+    transition: border-color var(--transition-fast, 0.15s), box-shadow var(--transition-fast, 0.15s);
+  }
+
+  .search-field:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px var(--focus-ring-color);
   }
 
-  input:disabled {
+  .search-field:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  input::-webkit-search-cancel-button {
+  .search-field::placeholder {
+    color: var(--tx-3);
+  }
+
+  .search-field::-webkit-search-cancel-button {
     display: none;
+  }
+
+  .search-clear {
+    position: absolute;
+    right: var(--space-2, 0.5rem);
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--tx-3);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast, 0.15s), background-color var(--transition-fast, 0.15s);
   }
 
   .search-clear:hover {

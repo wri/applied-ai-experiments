@@ -39,19 +39,7 @@
 
 <div class="ui-textarea-wrapper {className}">
   {#if label}
-    <label
-      for={textareaId}
-      style="
-        display: block;
-        font-family: var(--text-label-font-family);
-        font-size: var(--text-label-font-size);
-        font-weight: var(--text-label-font-weight);
-        letter-spacing: var(--text-label-letter-spacing);
-        text-transform: var(--text-label-text-transform);
-        color: var(--text-label-color);
-        margin-bottom: 0.5rem;
-      "
-    >
+    <label for={textareaId} class="field-label">
       {label}
     </label>
   {/if}
@@ -59,60 +47,72 @@
     id={textareaId}
     value={textareaValue}
     oninput={(e) => { value = e.currentTarget.value; }}
+    class="field-textarea"
     class:error
-    style="
-      width: 100%;
-      padding: var(--component-input-padding-y) var(--component-input-padding-x);
-      font-family: var(--component-input-font-family);
-      font-size: var(--component-input-font-size);
-      line-height: {lineHeight};
-      color: var(--tx);
-      background-color: var(--component-input-background);
-      border: var(--component-input-border-width) solid {error ? 'var(--error)' : 'var(--ui)'};
-      border-radius: var(--component-input-border-radius);
-      min-height: {minHeight};
-      max-height: {maxHeight};
-      resize: {resize};
-      transition: border-color var(--transition-fast) ease;
-      box-sizing: border-box;
-    "
-    onfocus={(e) => {
-      if (!error) {
-        e.currentTarget.style.borderColor = 'var(--border-focus, var(--primary))';
-      }
-    }}
-    onblur={(e) => {
-      e.currentTarget.style.borderColor = error ? 'var(--error)' : 'var(--ui)';
-    }}
+    style="min-height: {minHeight}; max-height: {maxHeight}; resize: {resize};"
     {...rest}
   ></textarea>
   {#if error}
-    <span
-      style="
-        display: block;
-        font-size: var(--font-size-sm, 0.75rem);
-        color: var(--error);
-        margin-top: 0.25rem;
-      "
-    >
-      {error}
-    </span>
+    <span class="field-message error">{error}</span>
   {:else if hint}
-    <span
-      style="
-        display: block;
-        font-size: var(--font-size-sm, 0.75rem);
-        color: var(--tx-3);
-        margin-top: 0.25rem;
-      "
-    >
-      {hint}
-    </span>
+    <span class="field-message hint">{hint}</span>
   {/if}
 </div>
 
 <style>
-  textarea::placeholder {
+  .field-label {
+    display: block;
+    font-family: var(--text-label-font-family);
+    font-size: var(--text-label-font-size);
+    font-weight: var(--text-label-font-weight);
+    letter-spacing: var(--text-label-letter-spacing);
+    text-transform: var(--text-label-text-transform);
+    color: var(--text-label-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .field-textarea {
+    width: 100%;
+    padding: var(--component-input-padding-y) var(--component-input-padding-x);
+    font-family: var(--component-input-font-family);
+    font-size: var(--component-input-font-size);
+    line-height: 1.5;
+    color: var(--tx);
+    background-color: var(--component-input-background);
+    border: var(--component-input-border-width) solid var(--ui);
+    border-radius: var(--component-input-border-radius);
+    transition: border-color var(--transition-fast, 0.15s) ease;
+    box-sizing: border-box;
+  }
+
+  .field-textarea:focus-visible {
+    outline: none;
+    border-color: var(--border-focus, var(--primary));
+  }
+
+  .field-textarea.error {
+    border-color: var(--error);
+  }
+
+  .field-textarea.error:focus-visible {
+    border-color: var(--error);
+  }
+
+  .field-textarea::placeholder {
+    color: var(--tx-3);
+  }
+
+  .field-message {
+    display: block;
+    font-size: var(--font-size-sm, 0.75rem);
+    margin-top: 0.25rem;
+  }
+
+  .field-message.error {
+    color: var(--error);
+  }
+
+  .field-message.hint {
     color: var(--tx-3);
   }
 </style>
