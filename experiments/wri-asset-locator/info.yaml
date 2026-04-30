@@ -4,30 +4,31 @@ title: "WRI Assets Locator"
 type: marimo                          # evaluation | benchmark | spike | prototype | research | notebook | marimo
 status: completed                            # idea | started | paused | completed | archived
 description: >
-  Fetches information about various WRI assets (currently datasets) and displays them visually in a 2d projection for a user to search and explore. 
+  Fetches information about various WRI assets (currently datasets) and displays them visually for a user to search and explore. 
 
 # ---- Recommended ----
-owner: "Aman AHuja"
+owner: "Aman Ahuja"
 created_at: 2025-10-19
-updated_at: 2026-02-20
+updated_at: 2026-04-29
 
 # ---- Classification ----
-themes: [prototyping] 
+themes: 
+  - prototyping
+
 tags:
   - marimo
+  - embedding
+  - visualization
 
 # ---- Demo (when there's something to show) ----
 demo:
   enabled: false
-  type: marimo-wasm                     # static | sveltekit | notebook-html | marimo-html | marimo-wasm | astro
-  build_command: "marimo export html-wasm notebooks/asset_locator.py -o exports/index.html"
-  output_dir: "exports"
 
 # ---- Results (at completion) ----
 results:
   summary: >
-    Brief summary of findings.
-  lessons: []                           # Key takeaways that apply beyond this experiment
+    Confirmed feasibility of usefully navigating many WRI assets without rqeuiring existing curation. 
+  lessons: ["Lorem Ipsum", "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."]                           # Key takeaways that apply beyond this experiment
 
 # ---- Links ----
 related_experiments: []                 # Slugs of related experiments
