@@ -91,17 +91,19 @@ def _(Path, mo):
     DATA_DIR = (
         NOTEBOOK_DIR.parent / "data" if NOTEBOOK_DIR.name == "notebooks" else NOTEBOOK_DIR / "data"
     )
+    datapath = DATA_DIR
+    print(f"Data directory: {datapath.absolute()}")
 
     # Check if required combined data file exists
-    REQUIRED_FILE = "wri_assets_info_combined.csv"
+    COMBINED_ASSETS_FILE = "wri_assets_info_combined.csv"
 
-    if not (DATA_DIR / REQUIRED_FILE).exists():
+    if not (DATA_DIR / COMBINED_ASSETS_FILE).exists():
         mo.stop(
             True,
             mo.md(f"""
             ## ⚠️ Missing Combined Data File
 
-            This notebook requires `{REQUIRED_FILE}` which hasn't been generated yet.
+            This notebook requires `{COMBINED_ASSETS_FILE}` which hasn't been generated yet.
 
             **To generate this file:**
 
@@ -119,16 +121,15 @@ def _(Path, mo):
             """),
         )
 
-    datapath = DATA_DIR
-    print(f"Data directory: {datapath.absolute()}")
-    return REQUIRED_FILE, datapath
+
+    return COMBINED_ASSETS_FILE, datapath
 
 
 @app.cell
-def _(REQUIRED_FILE, datapath, pd):
+def _(COMBINED_ASSETS_FILE, datapath, pd):
     # Load the pre-combined assets data
     df_all = pd.read_csv(
-        datapath / REQUIRED_FILE,
+        datapath / COMBINED_ASSETS_FILE,
         dtype={
             "asset_last_updated_year": str,
             "asset_created_year": str,
