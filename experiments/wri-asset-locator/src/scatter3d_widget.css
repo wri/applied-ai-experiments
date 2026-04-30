@@ -1,0 +1,106 @@
+.s3d-root {
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+}
+
+.s3d-canvas-wrap {
+  position: relative;
+  width: 100%;
+  background: #0f172a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  cursor: grab;
+}
+
+canvas.s3d-grabbing {
+  cursor: grabbing;
+}
+
+.s3d-hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(17, 24, 39, 0.88);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #94a3b8;
+  line-height: 1.7;
+  pointer-events: none;
+}
+
+.s3d-hud button {
+  pointer-events: all;
+}
+
+.s3d-hud-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+#s3d-toggle-mode {
+  background: transparent;
+  color: #f1f5f9;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 5px;
+  padding: 2px 9px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+#s3d-toggle-mode:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.s3d-instructions {
+  font-size: 11px;
+}
+
+.s3d-count {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Dark mode is the default above; light mode override */
+@media (prefers-color-scheme: light) {
+  .s3d-canvas-wrap {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .s3d-hud {
+    background: rgba(248, 250, 252, 0.92);
+    border-color: rgba(100, 116, 139, 0.2);
+    color: #475569;
+  }
+
+  .s3d-hud-row {
+    color: #0f172a;
+  }
+
+  #s3d-toggle-mode {
+    color: #0f172a;
+    border-color: rgba(100, 116, 139, 0.4);
+  }
+
+  #s3d-toggle-mode:hover {
+    border-color: #0284c7;
+    color: #0284c7;
+  }
+
+  .s3d-count {
+    color: #94a3b8;
+  }
+}

@@ -2,6 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "altair==5.5.0",
+#     "duckdb==1.5.2",
 #     "einops==0.8.1",
 #     "marimo",
 #     "molabel==0.1.5",
@@ -10,13 +11,14 @@
 #     "pyarrow==22.0.0",
 #     "scikit-learn==1.7.2",
 #     "sentence-transformers==5.1.2",
+#     "sqlglot==30.6.0",
 #     "umap-learn==0.5.9.post2",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.20.1"
+__generated_with = "0.23.4"
 app = marimo.App(width="columns")
 
 
@@ -30,7 +32,7 @@ def _(mo):
        * Standardize schema and clean metadata fields (names, tags, descriptions, timestamps).
 
     2. **Text synthesis**
-       * Combine alll metadata fields for each dataset into a single representative text string.
+       * Combine all metadata fields for each dataset into a single representative text string.
        * Clean and normalize the text (remove HTML, unify separators, standardize dates, etc.).
        * create a new text feature that will be embedded
 
@@ -68,6 +70,78 @@ def _(mo):
 
 
 @app.cell
+def _():
+    import marimo as mo
+    import pandas as pd
+    from pathlib import Path
+
+    # for serialize
+    import re
+    import html
+    from datetime import datetime
+
+
+    return Path, datetime, html, mo, pd, re
+
+
+@app.cell
+def _(Path, mo):
+    # Calculate data directory - works whether run from notebooks/ or root
+    NOTEBOOK_DIR = Path.cwd()
+    DATA_DIR = (
+        NOTEBOOK_DIR.parent / "data" if NOTEBOOK_DIR.name == "notebooks" else NOTEBOOK_DIR / "data"
+    )
+    datapath = DATA_DIR
+    print(f"Data directory: {datapath.absolute()}")
+
+    # Check if required combined data file exists
+    COMBINED_ASSETS_FILE = "wri_assets_info_combined.csv"
+
+    if not (DATA_DIR / COMBINED_ASSETS_FILE).exists():
+        mo.stop(
+            True,
+            mo.md(f"""
+            ## ⚠️ Missing Combined Data File
+
+            This notebook requires `{COMBINED_ASSETS_FILE}` which hasn't been generated yet.
+
+            **To generate this file:**
+
+            Run the fetch_all script (includes data combination):
+            ```bash
+            python src/fetch_all.py
+            ```
+
+            Or run the combination script directly:
+            ```bash
+            uv run src/combine_assets_data.py
+            ```
+
+            See README.md for more details.
+            """),
+        )
+
+
+    return COMBINED_ASSETS_FILE, datapath
+
+
+@app.cell
+def _(COMBINED_ASSETS_FILE, datapath, pd):
+    # Load the pre-combined assets data
+    df_all = pd.read_csv(
+        datapath / COMBINED_ASSETS_FILE,
+        dtype={
+            "asset_last_updated_year": str,
+            "asset_created_year": str,
+        }
+    )
+    print(f"Loaded {len(df_all)} assets from combined dataset")
+    print(f"Shape: {df_all.shape}")
+    print(f"Columns: {len(df_all.columns)}")
+    return (df_all,)
+
+
+@app.cell
 def _(df_all):
     df_all["source_collection"].value_counts()
     return
@@ -88,62 +162,117 @@ def _(df_all):
 
 
 @app.cell
-def _():
-    import marimo as mo
-    import pandas as pd
-    from pathlib import Path
+def _(datetime, html, pd, re):
+    # Text cleaning and serialization utilities
 
-    return Path, mo, pd
+    # Choose a delimiter that won't collide often in natural text
+    DELIM = " | "
+
+    # Columns you definitely want to include if present
+    SERIALIZE_COLUMNS = [
+        "dataset_name",
+        "dataset_description",
+        "dataset_short_desc",
+        "dataset_tags",
+        "slug",
+
+        "layerNames", 
+        "license", 
+
+        'asset_last_updated_year',
+        'asset_created_year',
+        #"date_last_updated", "updatedAt", "dataLastUpdated", "last_updated",
+        #"date_created", "createdAt"
+    
+        ## NOT INCLUDED
+        # "dataset_id",
+        # "source_collection",
+        # "source", 
+        # "organization"
+        # "provider", 
+        # "url"
+    
+    ]
+
+    WS_RE = re.compile(r"\s+")
+    TAG_RE = re.compile(r"<[^>]+>")  # just in case some HTML slipped in
+
+    def to_iso_date(x):
+        """Try to coerce common date forms to YYYY-MM-DD; otherwise return the original string."""
+        if pd.isna(x) or x == "":
+            return ""
+        s = str(x).strip()
+        # epoch ms or s
+        if s.isdigit():
+            try:
+                secs = int(s) / (1000 if len(s) >= 12 else 1)
+                return datetime.utcfromtimestamp(secs).strftime("%Y-%m-%d")
+            except Exception:
+                pass
+        # pandas-style parse
+        try:
+            return pd.to_datetime(s, errors="coerce", utc=True).date().isoformat()
+        except Exception:
+            return s
+
+    def clean_text(s):
+        if s is None or (isinstance(s, float) and pd.isna(s)):
+            return ""
+        s = str(s)
+        # strip html, unescape, collapse ws
+        s = html.unescape(TAG_RE.sub("", s))
+        s = WS_RE.sub(" ", s).strip()
+        return s
+
+    def serialize_row(row: pd.Series, serialize_cols=SERIALIZE_COLUMNS, delim=DELIM):
+        # build ordered list: preferred first (if present), then all others (stable name sort) minus duplicates
+        cols = [c for c in serialize_cols if c in row.index]
+
+        parts = []
+        for col in cols:
+            val = row[col]
+            if col in ("date_last_updated", "date_created"):
+                val = to_iso_date(val)
+            val = clean_text(val)
+
+            if col in ("asset_last_updated_year", "asset_created_year"):
+                try:
+                    val = str(int(float(val)))
+                except (ValueError, TypeError):
+                    val = ""
+    
+            if val == "" or val.lower() == "nan" or val == "None":
+                continue  # skip empties
+
+            # Keep tags compact
+            if col == "dataset_tags":
+                # unify separators, remove duplicate commas/spaces
+                val = (
+                    ", ".join([t.strip() for t in re.split(r"[|,;]", val) if t.strip()])
+                    if val
+                    else ""
+                )
+
+            if val:
+                parts.append(f"{col}: {val}")
+
+        return delim.join(parts)
+
+    return (serialize_row,)
 
 
 @app.cell
-def _(Path, mo):
-    # Calculate data directory - works whether run from notebooks/ or root
-    NOTEBOOK_DIR = Path.cwd()
-    DATA_DIR = (
-        NOTEBOOK_DIR.parent / "data" if NOTEBOOK_DIR.name == "notebooks" else NOTEBOOK_DIR / "data"
-    )
-
-    # Check if required combined data file exists
-    REQUIRED_FILE = "wri_assets_info_combined.csv"
-
-    if not (DATA_DIR / REQUIRED_FILE).exists():
-        mo.stop(
-            True,
-            mo.md(f"""
-            ## ⚠️ Missing Combined Data File
-
-            This notebook requires `{REQUIRED_FILE}` which hasn't been generated yet.
-
-            **To generate this file:**
-
-            Run the fetch_all script (includes data combination):
-            ```bash
-            python src/fetch_all.py
-            ```
-
-            Or run the combination script directly:
-            ```bash
-            uv run src/combine_assets_data.py
-            ```
-
-            See README.md for more details.
-            """),
-        )
-
-    datapath = DATA_DIR
-    print(f"Data directory: {datapath.absolute()}")
-    return REQUIRED_FILE, datapath
+def _(df_all, serialize_row):
+    # Create combined text field for each asset
+    df_all["dataset_info_combined"] = df_all.apply(serialize_row, axis=1)
+    print("Created 'dataset_info_combined' field")
+    return
 
 
 @app.cell
-def _(REQUIRED_FILE, datapath, pd):
-    # Load the pre-combined assets data
-    df_all = pd.read_csv(datapath / REQUIRED_FILE)
-    print(f"Loaded {len(df_all)} assets from combined dataset")
-    print(f"Shape: {df_all.shape}")
-    print(f"Columns: {len(df_all.columns)}")
-    return (df_all,)
+def _(df_all):
+    df_all['dataset_info_combined'].head()
+    return
 
 
 @app.cell
@@ -158,8 +287,8 @@ def _(df_all):
         "source_collection",
         "dataset_id",
         "dataset_short_desc",
-        "date_created",
-        "date_last_updated",
+        'asset_last_updated_year',
+        'asset_created_year',
         "source",
         "slug",
         "provider",
@@ -172,10 +301,6 @@ def _(df_all):
         "layerCount",
         "layerNames",
         "numResources",
-        "last_updated",
-        "createdAt",
-        "dataLastUpdated",
-        "updatedAt",
         "type",
         "unit",
         "usedIn_EAP",
@@ -190,8 +315,8 @@ def _(df_all):
         "dataset_id",
         "dataset_name",
         "dataset_tags",
-        "createdAt",
-        "last_updated",
+        'asset_last_updated_year',
+        'asset_created_year',
         "source_collection",
         "dataset_description",
         # "dataset_info_combined"
@@ -199,20 +324,21 @@ def _(df_all):
 
     display_cols = [
         "dataset_name",
-        "source_collection",
+        "source",
+        # "source_collection",
         "dataset_short_desc",
         "dataset_tags",
-        "source",
-        "last_updated",
+        'asset_last_updated_year',
+        'asset_created_year',
         # "dataset_description",
     ]
     return display_cols, reordered_cols
 
 
 @app.cell
-def _(df_all, mo, model_nomic):
+def _(df_all, embed_model, mo):
     explanatory_text = mo.md(f"""
-    In this visualization, each marker reprents one WRI dataset. **There are n = {len(df_all)} datasets shown**. <br><br>The metadata about each dataset is embedded in vector space using a tranformer. **The number of dimensions in the embedding is m = {model_nomic.get_sentence_embedding_dimension()}**. This creates a n x m ({len(df_all)} x {model_nomic.get_sentence_embedding_dimension()}) matrix, which is then projected into 2-dimensions using UMAP. <br><br>UMAP (Uniform Manifold Approximation and Projection) is a dimensionality reduction technique, commonly used for visualizing high-dimensional data in a lower-dimensional space (typically 2D or 3D). The projected dimensions themselves are not interpretable, but UMAP is good at preserving global and local structures (distances between nodes).<br><br>In the projection, **datasets that are close to each other are "similar"** in the embedding space.
+    In this visualization, each marker reprents one WRI dataset. **There are n = {len(df_all)} datasets shown**. <br><br>The metadata about each dataset is embedded in vector space using a tranformer. **The number of dimensions in the embedding is m = {embed_model.get_sentence_embedding_dimension()}**. This creates a n x m ({len(df_all)} x {embed_model.get_sentence_embedding_dimension()}) matrix, which is then projected into 2-dimensions using UMAP. <br><br>UMAP (Uniform Manifold Approximation and Projection) is a dimensionality reduction technique, commonly used for visualizing high-dimensional data in a lower-dimensional space (typically 2D or 3D). The projected dimensions themselves are not interpretable, but UMAP is good at preserving global and local structures (distances between nodes).<br><br>In the projection, **datasets that are close to each other are "similar"** in the embedding space.
     """)
     return (explanatory_text,)
 
@@ -320,8 +446,15 @@ def _(SentenceTransformer):
     # block this cell from running until button is clicked
     # mo.stop(not run_button.value)
 
-    model_nomic = SentenceTransformer("nomic-ai/nomic-embed-text-v1", trust_remote_code=True)
-    return (model_nomic,)
+    # nomic-ai/nomic-embed-text-v1 — 768d, 8192 token context, requires "search_query:"/"search_document:" prefixes; good for long text
+    # embed_model = SentenceTransformer("nomic-ai/nomic-embed-text-v1", trust_remote_code=True)
+
+    # BAAI/bge-large-en-v1.5 — 1024d, best MTEB retrieval (54.29), best Earth Science score; query prefix optional
+    embed_model = SentenceTransformer("BAAI/bge-large-en-v1.5")
+
+    # thenlper/gte-large — 1024d, 0.67GB, no prefix needed, ~2pts behind bge-large on retrieval; most lightweight option
+    # embed_model = SentenceTransformer("thenlper/gte-large")
+    return (embed_model,)
 
 
 @app.cell
@@ -332,7 +465,7 @@ def _(mo):
 
 
 @app.cell
-def _(df_all, embed_button, mo, model_nomic):
+def _(df_all, embed_button, embed_model, mo):
     # Construct textx from df_all["dataset_info_combined"]
     # typical runtime without GPU: 2.5 min
 
@@ -343,7 +476,7 @@ def _(df_all, embed_button, mo, model_nomic):
     def embed_dataframe_text():
         # texts = df_all.to_dict()["dataset_info_combined"]
         texts = df_all["dataset_info_combined"].tolist()
-        X = model_nomic.encode(texts)
+        X = embed_model.encode(texts)
         return texts, X
 
     texts, X = embed_dataframe_text()
@@ -351,9 +484,9 @@ def _(df_all, embed_button, mo, model_nomic):
 
 
 @app.cell
-def _(model_nomic):
+def _(embed_model):
     # information about the transformer being used (embedding)
-    model_nomic
+    embed_model
     return
 
 
@@ -368,7 +501,7 @@ def _(X, df_all):
 
 @app.cell
 def _(mo):
-    tranform_button = mo.ui.run_button(label="Apply dimensionality reduction")
+    tranform_button = mo.ui.run_button(label="Apply dimensionality reduction (UMAP)")
     tranform_button
     return (tranform_button,)
 
@@ -419,27 +552,41 @@ def _(umap_model):
 
 
 @app.cell
-def _(X, X_tfm, model_nomic, pairwise_distances, pd, text_ui, texts):
+def _(X, X_tfm, embed_model, pairwise_distances, pd, text_ui, texts):
     # Construct a dataframe from the low-dim data
     pltr = pd.DataFrame(X_tfm, columns=["x", "y"]).assign(text=texts, match_score=0)
 
     # Compute pairwise distances to set color
     if text_ui.value:
-        vec = model_nomic.encode([text_ui.value])
+        vec = embed_model.encode([text_ui.value])
         sim = 1 - pairwise_distances(vec, X, metric="cosine")[0]
         z = (sim - sim.mean()) / sim.std()
-        pltr = pltr.assign(match_score=z)
-    return (pltr,)
+        #pltr = pltr.assign(match_score=z)
+        pltr = pltr.assign(match_score=sim)
+    return pltr, sim
 
 
 @app.cell
-def _(text_ui):
-    text_ui.value
+def _(sim):
+    sim
     return
 
 
 @app.cell
-def _(pltr, text_ui):
+def _(text_ui):
+    text_ui
+    return
+
+
+@app.cell
+def _():
+    import numpy as np
+
+    return (np,)
+
+
+@app.cell
+def _(np, pltr, text_ui):
     query = text_ui.value
 
     # Boolean mask for rows where 'drought' appears in the 'text' column (case-insensitive)
@@ -447,11 +594,13 @@ def _(pltr, text_ui):
 
     # Average 'match_score' for rows containing 'drought'
     avg_match_score_for_query = pltr.loc[query_mask, "match_score"].mean()
+    avg_sim_top10 = np.sort(pltr["match_score"])[::-1][:10].mean()
+    #pltr.loc[query_mask, "match_score"].mean() np.sort(sim)[::-1][:10].mean()   # mean of top-10 cosine scores
 
     # Overall average 'match_score'
     avg_match_score_overall = pltr["match_score"].mean()
 
-    (avg_match_score_for_query, avg_match_score_overall)
+    (avg_match_score_for_query, avg_sim_top10, avg_match_score_overall)
     return
 
 
@@ -514,9 +663,10 @@ def _(alt, df_all, mo, pltr, text_ui, umap_model):
             ).legend(None),
             # tooltip=[alt.Tooltip("text", title="Dataset Info")]
         )
+        .properties(width=800, height=500)
         .configure_axis(grid=False)
         .configure_view(stroke=None)
-        # .interactive()  # to enable pan/zoom
+        #.interactive()  # to enable pan/zoom
     )
 
     if text_ui.value:
