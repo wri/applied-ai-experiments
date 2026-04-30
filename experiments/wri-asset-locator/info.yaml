@@ -27,8 +27,8 @@ demo:
 # ---- Results (at completion) ----
 results:
   summary: >
-    Confirmed feasibility of usefully navigating many WRI assets without rqeuiring existing curation. 
-  lessons: ["Lorem Ipsum", "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."]                           # Key takeaways that apply beyond this experiment
+    Confirmed feasibility of usefully navigating many WRI assets without requiring existing curation. 
+  lessons: ["There may be quick approaches to making WRI assets more findable.", "This experiment was effective without using generative LLM models — it instead uses transformers and embeddings."]                           # Key takeaways that apply beyond this experiment
 
 # ---- Links ----
 related_experiments: []                 # Slugs of related experiments

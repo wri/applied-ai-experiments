@@ -1,6 +1,6 @@
 # WRI Asset locator
 
-Fetches information about various WRI assets (currently datasets) and displays them visually in a 2d projection for a user to search and explore. 
+Fetches information about various WRI assets (currently datasets) and displays them visually for a user to search and explore. 
 
 ## Idea garden reference
 
@@ -19,6 +19,13 @@ Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive 
 ![WRI Asset Locator Visualization](exports/screenshot_projection_01.png)
 *2D projection of WRI assets with semantic search and filtering*
 
+![Search example: coral reefs](exports/ss_wri-asset-locator-search_coralreefs.png)
+*Semantic search example: filtering by "coral reefs"*
+
+## Demo
+
+5-minute walkthrough of the notebook: https://www.loom.com/share/aa31b45469604c47b2afd915ce023bed
+
 ## Approach
 
 There is documentation built into the main notebook
@@ -28,7 +35,7 @@ Experiment Methodology Steps:
 * Fetches a list of assets and metadata from various sources, such as ResourceWatch. 
 * Flattens all descriptions and information into a text string per asset. 
 * Embeds the text string in a high-dimensional space using a transformer, then back down to a 2-dim space. 
-* Enable a search query which is embedded with the same transfomer, can compute distances to each asset
+* Enable a search query which is embedded with the same transformer, can compute distances to each asset
 * Create a simple UI and visualization
 
 
