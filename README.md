@@ -91,6 +91,7 @@ Experiments align with these themes:
 
 ### Prerequisites
 
+- python
 - Node.js 24+ (for JS/TS experiments)
 - [just](https://github.com/casey/just) (command runner)
 - [pnpm](https://pnpm.io/) (for JS/TS workspaces)
