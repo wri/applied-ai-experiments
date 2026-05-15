@@ -1,0 +1,39 @@
+POST https://data-api.globalforestwatch.org/dataset/gfw_integrated_alerts/latest/query
+
+{
+    
+    "geometry": { 
+
+        "type": "Polygon", 
+
+        "coordinates": [[ 
+
+           [
+  101.9134059517725,
+  -0.3180806908802252
+],
+[
+  101.9128400905203,
+  -0.2388468244034033
+],
+[
+  102.0146876774758,
+  -0.2388468244034033
+],
+[
+  102.015254104227,
+  -0.3180806908802252
+],
+[
+  101.9134059517725,
+  -0.3180806908802252
+]
+
+
+        ]] 
+
+    }, 
+
+    "sql": "SELECT longitude, latitude FROM results WHERE gfw_integrated_alerts__date >= '2023-07-01' AND gfw_integrated_alerts__date <= '2023-08-01'" 
+
+}
