@@ -1,6 +1,14 @@
 # Comparing LLM Models for WRI Tasks
 Interactive tool for querying multiple LLMs with the same prompt in parallel and comparing their responses, latency, token counts, and cost. See [brief.md](./brief.md) for the full context.
 
+
+## Status
+
+This experiment is currently in progress.
+* A few test queries have been tried, but would like to utilize tasks that are specific to WRI. 
+    * these tasks to be identified
+* Goal is to demo (to the applied AI community?) for iteration at least once before closing out the experiment.
+
 ## What's in here
 ├── notebooks/
 │   ├── compare_models.py                      # Primary notebook 
@@ -36,26 +44,28 @@ If you use mise (https://mise.jdx.dev/), you can store these in a local mise.tom
 
 ## Install & Run
 
+Start the notebook. 
+
+Suggested command to start the notebook from the experiment directory (`compare-models-for-wri-tasks/`): 
 ```sh
-cd notebooks/
-uv run --with marimo marimo edit --sandbox compare_models.py
+uv run --with marimo marimo edit --sandbox notebooks/compare_models.py
 ```
 
-Then open the link to the notebook in your browser and follow along
+Then: 
+* Open the link to view the notebook in your browser.
+* Follow along. 
 
-The models available are in `notebooks/util.py`. To add a model, update `MODEL_REGISTRY`.
+The available models are specified in `notebooks/util.py`. To add a model, update `MODEL_REGISTRY`.
 
 ## Decisions & Learnings Log
 
-* Chose to use LiteLLM over anyLLM, for better telemetry (like token usage)
-  and direct Langfuse integreation hooks. 
-* OpenRouter for access to models, to reduce the number of API keys needed. 
-* The first version used OpenCode Zen via the OpenAI SDK. (Retained for
-  reference: `notebooks/archive_compare_models_with_zen.py`)
+* Went with LiteLLM over anyLLM, for better telemetry (like token usage) and direct Langfuse integration hooks. 
+* Used OpenRouter for access to models, to reduce the number of API keys needed. 
+    * First tried OpenCode Zen via the OpenAI SDK (retained for reference: `notebooks/archive_compare_models_with_zen.py`)
 
 ## Future Work
 
-* system prompt as well as user prompt
+* Examine System Prompt vs. User Prompt
 * Update model registry to include frontier models, like Claude
 
 ## Results
