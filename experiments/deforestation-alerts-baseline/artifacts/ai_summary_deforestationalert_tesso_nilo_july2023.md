@@ -1,12 +1,12 @@
 # AI Alert Summary: Tesso Nilo National Park — July 2023
 
 Below is an _LLM-generated deforestation alert summary_, the output of the
-simple pipeline in his experiment. The prompt that produced this output is
+simple pipeline in this experiment. The prompt that produced this output is
 provided in the file `prompt_template.md`. 
 
 This specific output was shared with the Places to Watch team on January 21, 2024. 
 
-Important notes: 
+Notes: 
 * The model did not have access to the PTW reports
 * The model did not have access to the Mongabay articles on Tesso Nilo NP. 
  

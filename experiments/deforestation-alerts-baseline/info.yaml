@@ -18,15 +18,13 @@ updated_at: 2024-01-21
 # ---- Classification ----
 themes:
   - geospatial
-  - agents
 tags:
-  - spike
   - gfw
   - deforestation
   - places-to-watch
   - marimo
   - prompt-engineering
-  - altair
+  - ai-summary 
 
 # ---- Demo (when there's something to show) ----
 demo:
@@ -35,17 +33,14 @@ demo:
 # ---- Results (at completion) ----
 results:
   summary: >
-    Demonstrated feasibility of an automated baseline-to-narrative pipeline
-    for deforestation alert escalation at a Places to Watch site. July 2023
-    at Tesso Nilo showed 9,473 alert pixels — 89% above baseline average —
-    as part of a sustained multi-month escalation. The LLM-generated
-    narrative was well-received by the PTW team as a starting point.
+    Demonstrated feasibility and a possible approach for an automated
+    baseline-to-narrative pipeline for geospatial data. However, deforestation
+    alert data specifically requires a different interpretation and may not
+    ultimately be suited for this baseline-driven approach. 
   lessons:
-    - "The GFW Integrated Alerts API is queryable by arbitrary polygon and supports SQL filtering, making it well-suited for site-specific analysis."
-    - "Populating the prompt variables (especially DATASET_INFO and USER_NEEDS) was the most time-intensive part — getting those right matters more than prompt structure."
     - "The seasonal baseline was insufficient: comparing July 2023 only to the prior 12 months misses year-over-year seasonality and needs more historical depth."
     - "LLM narrative quality was high enough to share with partners, but the interpretation of the alerts dataset needs improvement before this pipeline could be used operationally."
-    - "The pipeline is replicable for other PTW sites with minimal changes — the main inputs are the polygon geometry and the target month."
+    - "The approach is replicable and can be automated, but basic, and has not yet found a use case that generates value."
 
 # ---- Links ----
 related_experiments:
