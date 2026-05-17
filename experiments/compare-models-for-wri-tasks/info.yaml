@@ -1,0 +1,37 @@
+# ---- Required ----
+slug: compare-models-for-wri-tasks                          # Must match directory name
+title: "Comparing LLM Models for WRI tasks"
+type: marimo                          # evaluation | benchmark | spike | prototype | research | notebook | marimo
+status: started                            # idea | started | paused | completed | archived
+description: >
+    Interactive tool for sending the same prompt to multiple LLMs in parallel and comparing responses, latency, token usage, and cost. Uses LiteLLM + OpenRouter for model access and Langfuse for observability.
+owner: "Aman Ahuja"
+created_at: 2026-01-30    # Experiment date
+updated_at: 2026-05-15    # Added to repo May 2026
+
+
+# ---- Classification ----
+themes:
+  - evals
+  - cost-perf
+tags:
+  - marimo
+  - litellm
+  - langfuse
+  - evaluation
+
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+
+# ---- Results (at completion) ----
+results:
+  summary: >
+    Brief summary of findings.
+  lessons: []                           # Key takeaways that apply beyond this experiment
+
+# ---- Links ----
+related_experiments:
+  - simple-python-uv-experiment
+external_links: []
