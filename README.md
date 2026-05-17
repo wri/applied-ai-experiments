@@ -55,6 +55,7 @@ applied-ai-experiments/
 | ---------- | ---- | ------ | ----------- |
 | [AI Provisioning Guide](experiments/ai-provisioning-guide/) | `prototype` | `started` | Interactive tool for navigating AI provisioning decisions. Includes a constra... |
 | [Comparing LLM Models for WRI tasks](experiments/compare-models-for-wri-tasks/) | `marimo` | `started` | Interactive tool for sending the same prompt to multiple LLMs in parallel and... |
+| [Deforestation Alerts Baseline Analysis](experiments/deforestation-alerts-baseline/) | `spike` | `completed` | A proof-of-concept pipeline for generating policy-oriented deforestation aler... |
 | [Example Experiment](experiments/example-experiment/) | `prototype` | `idea` | A template example showing the structure of an experiment in this repository. |
 | [MCP Web Map](experiments/mcp-web-map/) | `prototype` | `paused` | Chat interface for MapLibre GL JS maps, built to test whether MCP running in... |
 | [Semantic Document Search](experiments/semantic-document-search/) | `prototype` | `started` | Client-side semantic search tool for PDF documents using browser-based embedd... |
