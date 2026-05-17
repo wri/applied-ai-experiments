@@ -1,0 +1,50 @@
+# ---- Required ----
+slug: deforestation-alerts-baseline                          # Must match directory name
+title: "Deforestation Alerts Baseline Analysis"
+type: spike                           # evaluation | benchmark | spike | prototype | research | notebook | marimo
+status: completed                            # idea | started | paused | completed | archived
+description: >
+  A proof-of-concept pipeline for generating policy-oriented deforestation
+  alert summaries for Places to Watch sites. Queries the GFW Integrated
+  Alerts API to build a temporal baseline, analyzes a target month against
+  it, and produces a narrative via LLM. Implemented for Tesso Nilo National
+  Park, Indonesia (July 2023).
+
+# ---- Recommended ----
+owner: "Aman Ahuja"
+created_at: 2023-12-08
+updated_at: 2024-01-21
+
+# ---- Classification ----
+themes:
+  - geospatial
+tags:
+  - gfw
+  - deforestation
+  - places-to-watch
+  - marimo
+  - prompt-engineering
+  - ai-summary 
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+
+# ---- Results (at completion) ----
+results:
+  summary: >
+    Demonstrated feasibility and a possible approach for an automated
+    baseline-to-narrative pipeline for geospatial data. However, deforestation
+    alert data specifically requires a different interpretation and may not
+    ultimately be suited for this baseline-driven approach. 
+  lessons:
+    - "The seasonal baseline was insufficient: comparing July 2023 only to the prior 12 months misses year-over-year seasonality and needs more historical depth."
+    - "LLM narrative quality was high enough to share with partners, but the interpretation of the alerts dataset needs improvement before this pipeline could be used operationally."
+    - "The approach is replicable and can be automated, but basic, and has not yet found a use case that generates value."
+
+# ---- Links ----
+related_experiments:
+  - wri-asset-locator
+external_links:
+  - label: "Tesso Nilo on GFW Places to Watch"
+    url: "https://gfw.global/KWZV0t"
