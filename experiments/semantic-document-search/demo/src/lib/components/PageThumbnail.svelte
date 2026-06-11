@@ -5,6 +5,8 @@
 		pageNumber: number;
 		thumbnail?: string;
 		score?: number;
+		rawScore?: number;
+		rank?: number;
 		isTopResult?: boolean;
 		isSelected?: boolean;
 		onclick?: () => void;
@@ -14,21 +16,32 @@
 		pageNumber,
 		thumbnail,
 		score = 0,
+		rawScore,
+		rank,
 		isTopResult = false,
 		isSelected = false,
 		onclick
 	}: Props = $props();
 
-	// Heatmap color: transparent (low) -> muted teal -> vibrant teal (high)
+	// Heatmap color on the amber Prototype hue: transparent (low) -> warm amber (high).
 	function getHeatmapColor(score: number): string {
 		if (score === 0) return 'transparent';
-		// Use oklch for perceptually uniform color blending
+		// oklch for perceptually uniform blending; hue 85 = amber
 		const lightness = 70 - score * 20; // 70% -> 50%
-		const chroma = 0.1 + score * 0.15; // 0.1 -> 0.25
-		return `oklch(${lightness}% ${chroma} 180 / ${0.2 + score * 0.4})`;
+		const chroma = 0.1 + score * 0.17; // 0.1 -> 0.27
+		return `oklch(${lightness}% ${chroma} 85 / ${0.2 + score * 0.45})`;
 	}
 
 	let heatmapColor = $derived(getHeatmapColor(score));
+
+	// Tooltip distinguishes the relative (display) score from the raw cosine.
+	let tooltip = $derived(
+		score > 0
+			? `Page ${pageNumber} · relevance ${Math.round(score * 100)}% (relative)` +
+					(rawScore !== undefined ? ` · ${rawScore.toFixed(2)} raw cosine` : '') +
+					(rank !== undefined ? ` · rank #${rank}` : '')
+			: `Page ${pageNumber}`
+	);
 </script>
 
 <button
@@ -38,6 +51,7 @@
 	class:selected={isSelected}
 	{onclick}
 	type="button"
+	title={tooltip}
 >
 	<div class="thumbnail-container">
 		{#if thumbnail}

@@ -1,5 +1,6 @@
 # ---- Required ----
 slug: CHANGEME                          # Must match directory name
+schema_version: 2
 title: "CHANGEME"
 type: benchmark                       # evaluation | benchmark | spike | prototype | research | notebook | marimo
 status: idea                            # idea | started | paused | completed | archived

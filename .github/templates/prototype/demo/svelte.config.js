@@ -1,9 +1,12 @@
 import adapter from '@sveltejs/adapter-static';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const isLocalDev = process.env.LOCAL_DEV === 'true';
 
-// IMPORTANT: Replace 'proto-CHANGEME' with your experiment slug
-const SLUG = 'proto-CHANGEME';
+// The slug is always the experiment folder name (this file lives at
+// experiments/<slug>/demo/svelte.config.js) — derived, so it can't drift.
+const SLUG = path.basename(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

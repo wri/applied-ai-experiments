@@ -21,7 +21,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import date, timezone
+from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -48,6 +48,10 @@ VALID_THEMES = [
     "scouting",
     "prototyping",
 ]
+
+VALID_MATURITY = ["L1", "L2", "L3"]
+VALID_INVESTMENT_TYPES = ["probe", "spike", "exploration"]
+VALID_ORIGINS = ["team-driven", "prospecting"]
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 
@@ -140,6 +144,25 @@ def validate(fields: dict) -> list[str]:
     if exp_type and exp_type not in VALID_TYPES:
         errors.append(f"Invalid type '{exp_type}'. Must be one of: {', '.join(VALID_TYPES)}")
 
+    if is_empty(fields.get("falsifiable_signal")):
+        errors.append("Falsifiable success signal is required")
+    elif not re.search(r"\d", fields["falsifiable_signal"]):
+        # The coach's idea→started gate wants a concrete threshold; nudge early.
+        print(
+            "Warning: falsifiable signal contains no number — the coach's "
+            "falsifiability gate may flag it at idea → started",
+            file=sys.stderr,
+        )
+
+    for key, valid in (
+        ("maturity", VALID_MATURITY),
+        ("investment_type", VALID_INVESTMENT_TYPES),
+        ("origin", VALID_ORIGINS),
+    ):
+        value = (fields.get(key) or "").strip()
+        if value and value not in valid:
+            errors.append(f"Invalid {key} '{value}'. Must be one of: {', '.join(valid)}")
+
     # Warn on unknown themes (non-fatal, but log)
     for theme in fields.get("themes", []):
         if theme not in VALID_THEMES:
@@ -176,7 +199,7 @@ def fill_info_yaml(path: Path, fields: dict) -> None:
 
     # Replace title
     text = re.sub(
-        r'^(title:\s*).*$',
+        r"^(title:\s*).*$",
         rf'\g<1>"{title}"',
         text,
         count=1,
@@ -202,7 +225,7 @@ def fill_info_yaml(path: Path, fields: dict) -> None:
 
     # Replace owner
     text = re.sub(
-        r'^(owner:\s*).*$',
+        r"^(owner:\s*).*$",
         rf'\g<1>"{owner}"',
         text,
         count=1,
@@ -212,11 +235,23 @@ def fill_info_yaml(path: Path, fields: dict) -> None:
     # Replace dates
     text = text.replace("YYYY-MM-DD", today)
 
+    # Insert portfolio fields (templates don't carry them; add before the Demo
+    # or Results section so the file stays grouped)
+    portfolio_lines = []
+    for key in ("maturity", "investment_type", "origin"):
+        value = (fields.get(key) or "").strip()
+        if value:
+            portfolio_lines.append(f"{key}: {value}")
+    if portfolio_lines:
+        block = "# ---- Portfolio ----\n" + "\n".join(portfolio_lines) + "\n\n"
+        anchor = re.search(r"^# ---- (?:Demo|Results)", text, re.MULTILINE)
+        if anchor:
+            text = text[: anchor.start()] + block + text[anchor.start() :]
+        else:
+            text = text.rstrip("\n") + "\n\n" + block
+
     # Replace themes
-    if themes:
-        themes_yaml = "[" + ", ".join(themes) + "]"
-    else:
-        themes_yaml = "[]"
+    themes_yaml = "[" + ", ".join(themes) + "]" if themes else "[]"
     text = re.sub(
         r"^(themes:\s*)\[.*?\]",
         rf"\g<1>{themes_yaml}",
@@ -233,7 +268,9 @@ def fill_info_yaml(path: Path, fields: dict) -> None:
         # If it's `tags: []`, replace with the list form
         if re.search(r"^tags:\s*\[\]", text, re.MULTILINE):
             existing_type_tag = fields["type"]
-            all_tag_lines = f"  - {existing_type_tag}\n{tag_lines}" if existing_type_tag else tag_lines
+            all_tag_lines = (
+                f"  - {existing_type_tag}\n{tag_lines}" if existing_type_tag else tag_lines
+            )
             text = re.sub(
                 r"^tags:\s*\[\].*$",
                 f"tags:\n{all_tag_lines}",
@@ -249,6 +286,29 @@ def fill_info_yaml(path: Path, fields: dict) -> None:
                 insert_pos = tag_section.end()
                 text = text[:insert_pos] + tag_lines + "\n" + text[insert_pos:]
 
+    path.write_text(text)
+
+
+def fill_brief_md(path: Path, fields: dict) -> None:
+    """Inject the falsifiable success signal into the Signals subsection of brief.md,
+    so the experiment passes the coach's falsifiability gate from day one."""
+    signal = (fields.get("falsifiable_signal") or "").strip()
+    if not signal or not path.exists():
+        return
+    text = path.read_text()
+    # Same heading variants the coach's falsifiability gate recognizes.
+    m = re.search(
+        r"^###\s+(?:Signals?|What\s+signals?|What\s+would\s+change|Hypothesis|Success\s+criteria|Success\s+signals?)[^\n]*$",
+        text,
+        re.IGNORECASE | re.MULTILINE,
+    )
+    if not m:
+        print(
+            "Warning: no Signals subsection found in brief.md; signal not injected", file=sys.stderr
+        )
+        return
+    insert_pos = m.end()
+    text = text[:insert_pos] + f"\n\n**Success signal:** {signal}" + text[insert_pos:]
     path.write_text(text)
 
 
@@ -313,10 +373,20 @@ def main() -> None:
         "type": sections.get("Experiment Type", "").strip().lower(),
         "description": sections.get("Description", "").strip(),
         "owner": sections.get("Owner", "").strip(),
+        "falsifiable_signal": sections.get("Falsifiable success signal", "").strip(),
         "themes": parse_checkboxes(sections.get("Themes", "")),
         "tags": [],
         "context": sections.get("Additional Context", "").strip(),
     }
+
+    # Optional portfolio dropdowns ("_No response_" when unselected)
+    for key, label in (
+        ("maturity", "Maturity"),
+        ("investment_type", "Investment type"),
+        ("origin", "Origin"),
+    ):
+        value = sections.get(label, "").strip()
+        fields[key] = "" if is_empty(value) else value
 
     # Parse comma-separated tags
     raw_tags = sections.get("Tags", "").strip()
@@ -362,6 +432,8 @@ def main() -> None:
     info_yaml = exp_dir / "info.yaml"
     if info_yaml.exists():
         fill_info_yaml(info_yaml, fields)
+
+    fill_brief_md(exp_dir / "brief.md", fields)
 
     # Prototype-specific replacements
     if fields["type"] == "prototype":

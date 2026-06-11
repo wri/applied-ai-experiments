@@ -1,5 +1,6 @@
 # ---- Required ----
 slug: CHANGEME                          # Must match directory name
+schema_version: 2
 title: "CHANGEME"
 type: prototype                       # evaluation | benchmark | spike | prototype | research | notebook | marimo
 status: idea                            # idea | started | paused | completed | archived
@@ -28,6 +29,16 @@ results:
   summary: >
     Brief summary of findings.
   lessons: []                           # Key takeaways that apply beyond this experiment
+
+# ---- Media (optional) ----
+# Demo recordings are linked by URL — video files are never committed to the repo.
+# Upload to the team bucket or unlisted YouTube/Loom, then reference it here.
+# media:
+#   recordings:
+#     - src: https://storage.googleapis.com/<bucket>/<slug>/walkthrough.mp4
+#       caption: "90-second walkthrough"
+#     - src: https://www.youtube.com/watch?v=XXXX
+#       caption: "Team walkthrough (unlisted)"
 
 # ---- Links ----
 related_experiments: []                 # Slugs of related experiments

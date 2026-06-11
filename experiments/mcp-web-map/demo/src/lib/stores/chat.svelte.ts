@@ -16,6 +16,8 @@ export interface ChatMessage {
   toolCalls?: ToolCall[];
   status?: 'streaming' | 'complete' | 'error';
   thinking?: string;
+  /** Which tool engine produced this assistant turn (for the comparison UI). */
+  engine?: 'bridge' | 'webmcp';
 }
 
 // Generate unique ID
@@ -43,7 +45,7 @@ class ChatStore {
   }
 
   // Add an assistant message (potentially streaming)
-  addAssistantMessage(content: string = ''): ChatMessage {
+  addAssistantMessage(content: string = '', engine?: 'bridge' | 'webmcp'): ChatMessage {
     const message: ChatMessage = {
       id: generateId(),
       role: 'assistant',
@@ -51,6 +53,7 @@ class ChatStore {
       timestamp: new Date(),
       status: 'streaming',
       toolCalls: [],
+      engine,
     };
     this.messages = [...this.messages, message];
     this.isStreaming = true;

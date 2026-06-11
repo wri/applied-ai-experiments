@@ -8,6 +8,19 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 
 EXPERIMENTS_DIR := "experiments"
 TEMPLATES_DIR   := ".github/templates"
+
+# ============================================
+# Help
+# ============================================
+
+# Show all available recipes (this runs when you type `just` with no arguments)
+default:
+    just --list
+
+# Alias for `default`
+help:
+    just --list
+
 # ============================================
 # Setup Commands
 # ============================================
@@ -28,6 +41,7 @@ TEMPLATES_DIR   := ".github/templates"
     printf "Available templates:\n"
     printf "  - %s\n" $LIST
 
+# Scaffold a new experiment from a template (interactive, or pass name= and template=)
 @new-experiment name='' template='':
     #!/usr/bin/env bash
     # Ensure base dirs exist
@@ -170,7 +184,7 @@ TEMPLATES_DIR   := ".github/templates"
     echo "  cd \"$DEST\""
     echo "  # Edit info.yaml - slug and dates are pre-filled"
     echo "  # Update the CHANGEME placeholders"
-    echo "  # See docs/metadata-schema.md for all available fields"
+    echo "  # See .claude/skills/new-experiment/references/info-yaml-schema.md for all available fields"
 
 # ============================================
 # Experiment Management Commands
@@ -188,16 +202,24 @@ validate:
 validate-strict:
     python .github/scripts/validate-experiments.py --strict
 
+# Health check: metadata validation + coach gate sweep + demo base paths
+doctor:
+    #!/usr/bin/env bash
+    echo "=== Metadata validation ==="
+    python .github/scripts/validate-experiments.py --quiet
+    echo ""
+    echo "=== Coach gate sweep ==="
+    python .github/scripts/coach-sweep.py
+    echo ""
+    echo "=== Demo base paths (built output, if any) ==="
+    just verify-base-paths
+
 # Build all demos (outputs to dist/experiments/)
 build-demos:
     ./.github/scripts/build-demos.sh
 
 # Full build: validate + index + demos
 build-all: validate generate-index build-demos
-
-# Update README with experiment table
-update-readme:
-    python .github/scripts/update_readme.py
 
 # ============================================
 # Development Helpers
@@ -258,6 +280,41 @@ clean:
     rm -rf hub/node_modules
     rm -rf experiments/*/demo/node_modules
     @echo "Cleaned build outputs"
+
+# ============================================
+# Eval Sprint Runners (idea→completed L1 evals)
+# ============================================
+
+# Run the spatial-reasoning-benchmark across every model in
+# experiments/spatial-reasoning-benchmark/configs/grid.yaml. Writes
+# per-model JSON to results/ and aggregates results/comparisons.md.
+# Falls back to a stub when ANTHROPIC_API_KEY is not set, so this
+# command always completes — set the env var to get real results.
+run-spatial:
+    cd experiments/spatial-reasoning-benchmark && uv sync && uv run python src/run_all.py
+
+# Run confidence-calibration across every (model × prompt_variant) in
+# experiments/confidence-calibration/configs/grid.yaml. Writes
+# per-cell JSON and a calibration-curve / ECE comparisons.md.
+run-calibration:
+    cd experiments/confidence-calibration && uv sync && uv run python src/run_all.py
+
+# Run multilingual-reliability across every model in
+# experiments/multilingual-reliability/configs/grid.yaml. Each model
+# evaluates all (language × method) cells and writes a per-language
+# automated-score table to comparisons.md.
+run-multilingual:
+    cd experiments/multilingual-reliability && uv sync && uv run python src/run_all.py
+
+# Run all three evals end-to-end (the L1 sprint). With
+# ANTHROPIC_API_KEY unset this completes in ~10s using stubs;
+# with it set, expect a few minutes of real model calls.
+run-all-evals: run-spatial run-calibration run-multilingual
+    @echo ""
+    @echo "✅ All three evals complete. Comparison reports:"
+    @echo "   experiments/spatial-reasoning-benchmark/results/comparisons.md"
+    @echo "   experiments/confidence-calibration/results/comparisons.md"
+    @echo "   experiments/multilingual-reliability/results/comparisons.md"
 
 # ============================================
 # CI & Build Helpers

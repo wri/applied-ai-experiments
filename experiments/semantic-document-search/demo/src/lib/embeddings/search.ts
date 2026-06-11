@@ -1,4 +1,4 @@
-import type { Chunk, SearchResult, ChunkResult } from '../types';
+import type { Chunk, SearchResult, ChunkResult, SearchOutput } from '../types';
 
 /**
  * Calculate cosine similarity between two vectors
@@ -106,14 +106,28 @@ export function getPageScoreMap(results: SearchResult[]): Map<number, number> {
 }
 
 /**
- * Full search pipeline: find similar chunks and aggregate to pages
+ * Full search pipeline. Scores every chunk once, then derives:
+ *  - page-level normalized results (heatmap)
+ *  - the top-K raw chunk results (passages, metrics)
+ *  - all scored chunks (the sequential chunk strip)
  */
 export function search(
 	chunks: Chunk[],
 	queryEmbedding: number[],
 	topChunks: number = 50
-): SearchResult[] {
-	const chunkResults = searchChunks(chunks, queryEmbedding, topChunks);
-	const pageResults = aggregateToPages(chunkResults);
-	return normalizeScores(pageResults);
+): SearchOutput {
+	const allChunkResults: ChunkResult[] = chunks
+		.filter((chunk) => chunk.embedding)
+		.map((chunk) => ({
+			chunk,
+			similarity: cosineSimilarity(chunk.embedding!, queryEmbedding)
+		}));
+
+	const rawChunkResults = allChunkResults
+		.slice()
+		.sort((a, b) => b.similarity - a.similarity)
+		.slice(0, topChunks);
+
+	const pageResults = aggregateToPages(rawChunkResults);
+	return { results: normalizeScores(pageResults), rawChunkResults, allChunkResults };
 }

@@ -1,12 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ExperimentCard from '../../components/ExperimentCard.astro';
-import { loadExperimentIndex } from '../../utils/experiments';
+import { loadExperimentIndex, getThemeConfig } from '../../utils/experiments';
 
 const index = await loadExperimentIndex();
 const experiments = index.experiments;
 const types = Object.keys(index.by_type);
 const themes = Object.keys(index.by_theme);
+const demoCount = experiments.filter((e) => e._has_demo).length;
 ---
 
 <BaseLayout title="All Experiments">
@@ -34,7 +35,7 @@ const themes = Object.keys(index.by_theme);
         <button class="filter-tag active" data-filter="type" data-value="all">All</button>
         {types.map(type => (
           <button class="filter-tag" data-filter="type" data-value={type}>
-            {type} ({index.by_type[type].length})
+            {type} ({index.by_type[type as keyof typeof index.by_type].length})
           </button>
         ))}
       </div>
@@ -46,9 +47,17 @@ const themes = Object.keys(index.by_theme);
         <button class="filter-tag active" data-filter="theme" data-value="all">All</button>
         {themes.map(theme => (
           <button class="filter-tag" data-filter="theme" data-value={theme}>
-            {theme} ({index.by_theme[theme].length})
+            {getThemeConfig(theme)?.short ?? theme} ({index.by_theme[theme].length})
           </button>
         ))}
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Demo:</label>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-filter="demo" data-value="all">All</button>
+        <button class="filter-tag" data-filter="demo" data-value="true">Interactive demo ({demoCount})</button>
       </div>
     </div>
   </section>
@@ -62,7 +71,8 @@ const themes = Object.keys(index.by_theme);
       <div
         class="experiment-wrapper"
         data-type={exp.type}
-        data-themes={exp.themes.join(',')}
+        data-themes={(exp.themes ?? []).join(',')}
+        data-has-demo={exp._has_demo ? 'true' : 'false'}
         data-title={exp.title.toLowerCase()}
         data-description={exp.description?.toLowerCase() || ''}
         data-tags={(exp.tags || []).join(' ').toLowerCase()}
@@ -223,6 +233,7 @@ const themes = Object.keys(index.by_theme);
   let activeFilters = {
     type: 'all',
     theme: 'all',
+    demo: 'all',
     search: ''
   };
 
@@ -233,18 +244,20 @@ const themes = Object.keys(index.by_theme);
       const el = wrapper as HTMLElement;
       const type = el.getAttribute('data-type');
       const themes = el.getAttribute('data-themes')?.split(',') || [];
+      const hasDemo = el.getAttribute('data-has-demo') || 'false';
       const title = el.getAttribute('data-title') || '';
       const description = el.getAttribute('data-description') || '';
       const tags = el.getAttribute('data-tags') || '';
 
       const matchesType = activeFilters.type === 'all' || type === activeFilters.type;
       const matchesTheme = activeFilters.theme === 'all' || themes.includes(activeFilters.theme);
+      const matchesDemo = activeFilters.demo === 'all' || hasDemo === activeFilters.demo;
       const matchesSearch = activeFilters.search === '' ||
         title.includes(activeFilters.search) ||
         description.includes(activeFilters.search) ||
         tags.includes(activeFilters.search);
 
-      if (matchesType && matchesTheme && matchesSearch) {
+      if (matchesType && matchesTheme && matchesDemo && matchesSearch) {
         el.classList.remove('hidden');
         visibleCount++;
       } else {
@@ -266,7 +279,7 @@ const themes = Object.keys(index.by_theme);
   // Filter button handlers
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filterType = btn.getAttribute('data-filter') as 'type' | 'theme';
+      const filterType = btn.getAttribute('data-filter') as 'type' | 'theme' | 'demo';
       const value = btn.getAttribute('data-value') || 'all';
 
       // Update active state
@@ -286,7 +299,7 @@ const themes = Object.keys(index.by_theme);
 
   // Clear filters handler
   clearFiltersBtn?.addEventListener('click', () => {
-    activeFilters = { type: 'all', theme: 'all', search: '' };
+    activeFilters = { type: 'all', theme: 'all', demo: 'all', search: '' };
 
     filterButtons.forEach(btn => {
       const isAll = btn.getAttribute('data-value') === 'all';
@@ -296,4 +309,15 @@ const themes = Object.keys(index.by_theme);
     if (searchInput) searchInput.value = '';
     updateResults();
   });
+
+  // Deep-link support: /experiments/?demos=true pre-activates the "Interactive demo"
+  // filter so the home-page "Interactive demos" gateway lands here pre-filtered.
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('demos') === 'true') {
+    activeFilters.demo = 'true';
+    document.querySelectorAll('[data-filter="demo"]').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-value') === 'true');
+    });
+    updateResults();
+  }
 </script>

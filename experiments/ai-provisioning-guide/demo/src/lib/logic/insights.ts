@@ -1,5 +1,6 @@
 import type { MethodTCO, MethodId, MethodAssumptions, TCOInputs } from '../types.js';
 import { methodsById } from '../data/methods.js';
+import { CROSSOVER_VOLUME_POINTS, INSIGHT_CONFIG } from '../data/defaults.js';
 import { calculateMethodTCO } from './tco.js';
 
 /**
@@ -31,7 +32,7 @@ export function generateInsights(tcoResults: MethodTCO[]): string[] {
   }
 
   // Dominant cost category
-  for (const tco of sorted.slice(0, 3)) {
+  for (const tco of sorted.slice(0, INSIGHT_CONFIG.topMethodCount)) {
     const name = methodsById.get(tco.methodId)?.shortName ?? tco.methodId;
     const { inference, infrastructure, development, operations } = tco.breakdown;
     const categories = [
@@ -43,7 +44,7 @@ export function generateInsights(tcoResults: MethodTCO[]): string[] {
     const dominant = categories.reduce((a, b) => (a.value > b.value ? a : b));
     if (tco.breakdown.total > 0) {
       const pct = Math.round((dominant.value / tco.breakdown.total) * 100);
-      if (pct >= 50) {
+      if (pct >= INSIGHT_CONFIG.dominantCategoryThresholdPct) {
         insights.push(
           `${name}'s cost is **${pct}% ${dominant.label}** — that's the lever to optimize.`,
         );
@@ -64,7 +65,7 @@ export function findCrossoverVolume(
   inputs: TCOInputs,
   assumptions: Record<MethodId, MethodAssumptions>,
 ): number | null {
-  const volumes = [100, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 500_000, 1_000_000, 2_000_000];
+  const volumes = [...CROSSOVER_VOLUME_POINTS];
 
   let prevDiff: number | null = null;
 

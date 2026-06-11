@@ -1,5 +1,6 @@
 # ---- Required ----
 slug: simple-python-uv-experiment
+schema_version: 2
 title: "Simple Python UV experiment"
 type: marimo
 status: started
@@ -13,7 +14,8 @@ created_at: 2025-11-13
 updated_at: 2025-11-14
 
 # ---- Classification ----
-themes: []
+themes:
+  - prototyping
 tags:
   - marimo
   - embeddings

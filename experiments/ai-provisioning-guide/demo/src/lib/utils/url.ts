@@ -8,7 +8,10 @@ const OUTPUT_TOKENS_PARAM = 'out';
 const METHODS_PARAM = 'methods';
 const HORIZON_PARAM = 'horizon';
 
-export const ALLOWED_HORIZONS = [1, 3, 6, 12, 24, 36] as const;
+// Canonical definition lives in data/defaults.ts; re-exported here so existing
+// consumers can keep importing it from utils/url.
+import { ALLOWED_HORIZONS } from '../data/defaults.js';
+export { ALLOWED_HORIZONS };
 
 /**
  * Encode current app state into URL search params.

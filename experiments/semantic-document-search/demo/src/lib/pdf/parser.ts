@@ -1,8 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist';
 // Vite's ?url suffix returns the resolved URL for the worker file
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import type { Page, Chunk } from '../types';
-import { chunkText } from '../embeddings/chunker';
+import type { Page } from '../types';
 
 // Configure pdf.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
@@ -78,14 +77,15 @@ export async function parsePDF(
 		const page = await pdf.getPage(i);
 		const viewport = page.getViewport({ scale: 1.0 });
 		const text = await extractPageText(page);
-		const chunks = chunkText(text, i);
 
+		// Chunking is deliberately decoupled from parsing: it happens in the
+		// worker, keyed by (model, strategy), so the same extracted text can be
+		// re-chunked under different strategies without re-parsing the PDF.
 		pages.push({
 			pageNumber: i,
 			width: viewport.width,
 			height: viewport.height,
-			text,
-			chunks
+			text
 		});
 	}
 

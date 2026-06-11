@@ -43,6 +43,9 @@ var BaseProvider = class {
   isInitialized() {
     return this.apiKey !== null;
   }
+  reset() {
+    this.apiKey = null;
+  }
   getApiKey() {
     if (!this.apiKey) {
       throw new Error(`Provider ${this.config.id} not initialized with API key`);
@@ -508,6 +511,7 @@ var BYOKClientImpl = class {
           isValid: true,
           isValidating: false,
           lastValidated: Date.now(),
+          lastFourChars: key.slice(-4),
           models: filteredModels,
           selectedModel: defaultModel
         });
@@ -546,6 +550,7 @@ var BYOKClientImpl = class {
     await this.storage.remove(providerId);
     const provider = this.providers.get(providerId);
     if (provider) {
+      provider.reset();
     }
     this.updateKeyStatus(providerId, {
       hasKey: false,
@@ -723,7 +728,8 @@ var BYOKClientImpl = class {
           hasKey: true,
           isValid: stored.isValid ?? null,
           isValidating: false,
-          lastValidated: stored.validatedAt
+          lastValidated: stored.validatedAt,
+          lastFourChars: stored.key.slice(-4)
         });
         if (this.config.autoValidate) {
           this.validateKey(stored.providerId).catch(console.error);

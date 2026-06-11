@@ -13,7 +13,7 @@ Usage: python .github/scripts/generate-index.py
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +57,9 @@ def load_experiment(yaml_path: Path) -> dict[str, Any] | None:
     data["_has_demo"] = demo_enabled and (exp_dir / output_dir).exists()
     data["_is_notebook"] = demo_enabled and demo_cfg.get("type", "") in NOTEBOOK_DEMO_TYPES
     data["_has_brief"] = (exp_dir / "brief.md").exists()
+    media_cfg = data.get("media") or {}
+    recordings = media_cfg.get("recordings") if isinstance(media_cfg, dict) else None
+    data["_has_media"] = bool(recordings)
 
     return data
 
@@ -102,6 +105,9 @@ def main():
     by_type: dict[str, list[str]] = {}
     by_theme: dict[str, list[str]] = {}
     by_status: dict[str, list[str]] = {}
+    by_maturity: dict[str, list[str]] = {}
+    by_investment_type: dict[str, list[str]] = {}
+    by_origin: dict[str, list[str]] = {}
 
     for exp in experiments:
         slug = exp["slug"]
@@ -118,13 +124,29 @@ def main():
         status = exp.get("status", "unknown")
         by_status.setdefault(status, []).append(slug)
 
+        # Index by portfolio-view fields (skip if absent — not every experiment has them)
+        maturity = exp.get("maturity")
+        if maturity:
+            by_maturity.setdefault(maturity, []).append(slug)
+
+        investment_type = exp.get("investment_type")
+        if investment_type:
+            by_investment_type.setdefault(investment_type, []).append(slug)
+
+        origin = exp.get("origin")
+        if origin:
+            by_origin.setdefault(origin, []).append(slug)
+
     # Build final index
     index = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "count": len(experiments),
         "by_type": by_type,
         "by_theme": by_theme,
         "by_status": by_status,
+        "by_maturity": by_maturity,
+        "by_investment_type": by_investment_type,
+        "by_origin": by_origin,
         "experiments": experiments,
     }
 
@@ -136,9 +158,7 @@ def main():
 
     # Summary
     print(f"\nBy type: {', '.join(f'{k}({len(v)})' for k, v in sorted(by_type.items()))}")
-    print(
-        f"By status: {', '.join(f'{k}({len(v)})' for k, v in sorted(by_status.items()))}"
-    )
+    print(f"By status: {', '.join(f'{k}({len(v)})' for k, v in sorted(by_status.items()))}")
 
 
 if __name__ == "__main__":

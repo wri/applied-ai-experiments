@@ -41,13 +41,15 @@ No data leaves the browser. The embedding model (~30MB) downloads once and runs 
 
 ### What are the boundaries?
 
-- **Scope:** Single-document semantic search with heatmap visualization
+- **Scope:** Single-document semantic search with multiple visualization modes, a model picker, tunable chunking, and side-by-side config comparison
 - **Time box:** Open-ended; runs until we learn what we need
 - **Not doing:** Multi-document search, server-side processing, persistent storage of embeddings, OCR for scanned documents
-- **Model choice:** Selected Xenova/gte-small primarily for download size (~30MB) — best balance of quality vs. browser-friendliness among available models
-- **Visualization choice:** Considered a traditional ranked results list (loses document structure) and in-page text highlights (too granular for overview). Chose page-level heatmap to preserve the document's spatial structure and provide at-a-glance relevance scanning, with paragraph-level drill-down on click
-- **Dependencies:** transformers.js (Xenova/gte-small model), pdfjs-dist
-- **Constraints:** Browser memory limits for large PDFs (100+ pages), ~30MB model download on first use
+- **Model choice:** Now a picker over a curated set (MiniLM, GTE-small (default), BGE-small, mxbai-xsmall, Arctic-S) plus EmbeddingGemma-300M behind an explicit large-download opt-in. Models that need asymmetric query/document prompt prefixes (BGE, Arctic, Gemma) apply them automatically — omitting them tanks retrieval quality
+- **Visualization choice:** Page-level heatmap remains the default (preserves document structure, at-a-glance scanning), now joined by a ranked-passage list (classic results with query-term highlighting) and score charts (raw-cosine distribution + per-page bars). A collapsible quality panel surfaces honest, ground-truth-free signals (top raw cosine, gap to #2, timing, backend) with a plain-language verdict
+- **Chunking:** Pluggable strategies (paragraph (default), fixed-size with overlap, sentence-window, whole-page) with adjustable params, and a comparison mode that embeds the same document under 2+ (model, strategy) configs to judge which retrieves best
+- **Runtime:** transformers.js v4 with a WebGPU runtime (WASM fallback); chunks embed in batches in a Web Worker that owns the embeddings (keyed, LRU-cached per model+strategy+doc). Embedding starts as soon as text is extracted — thumbnails render in parallel and never block search
+- **Dependencies:** @huggingface/transformers v4, pdfjs-dist, @observablehq/plot
+- **Constraints:** Browser memory limits for large PDFs (100+ pages); first-use model download (~23–33MB for the light models, ~300MB for EmbeddingGemma); WebGPU recommended for the heavy model
 
 ---
 

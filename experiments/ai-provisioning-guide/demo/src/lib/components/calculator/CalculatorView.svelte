@@ -4,36 +4,17 @@
 	import { methods } from '$lib/data/methods.js';
 	import { calculateTCOCurve, calculateCumulativeCurve } from '$lib/logic/tco.js';
 	import { formatCurrency, formatCurrencyCompact, formatVolume, formatCostPerRequest } from '$lib/utils/format.js';
-	import { ALLOWED_HORIZONS } from '$lib/utils/url.js';
+	import { HORIZON_OPTIONS, methodColors, CHART_DIMENSIONS } from '$lib/data/defaults.js';
 	import type { MethodId } from '$lib/types.js';
 	import PlotContainer from '../shared/PlotContainer.svelte';
 	import VolumeInputs from './VolumeInputs.svelte';
 	import AssumptionsPanel from './AssumptionsPanel.svelte';
+	import AssumptionsReference from './AssumptionsReference.svelte';
 	import InsightsPanel from './InsightsPanel.svelte';
 
 	function toggle(id: MethodId) {
 		appStore.toggleComparison(id);
 	}
-
-	const horizonOptions: { value: number; label: string }[] = [
-		{ value: 1, label: '1 mo' },
-		{ value: 3, label: '3 mo' },
-		{ value: 6, label: '6 mo' },
-		{ value: 12, label: '1 yr' },
-		{ value: 24, label: '2 yr' },
-		{ value: 36, label: '3 yr' },
-	];
-
-	const methodColors: Record<string, string> = {
-		byok: '#6366f1',
-		provider_direct: '#f59e0b',
-		managed_router: '#10b981',
-		self_built_proxy: '#ef4444',
-		managed_inference: '#8b5cf6',
-		full_self_hosted: '#06b6d4',
-		edge_browser: '#ec4899',
-		hybrid: '#78716c',
-	};
 
 	// -- Chart specs --
 
@@ -53,9 +34,9 @@
 		});
 
 		return (Plot: any) => ({
-			marginLeft: 90,
-			marginRight: 20,
-			height: Math.max(200, numMethods * 50),
+			marginLeft: CHART_DIMENSIONS.marginLeftWide,
+			marginRight: CHART_DIMENSIONS.marginRight,
+			height: Math.max(CHART_DIMENSIONS.barMinHeight, numMethods * CHART_DIMENSIONS.barRowHeight),
 			x: { label: 'Monthly Cost ($)', tickFormat: (v: number) => formatCurrencyCompact(v) },
 			y: { label: null },
 			color: {
@@ -88,7 +69,7 @@
 		const inputs = appStore.tcoInputs;
 		const assumptions = appStore.assumptions;
 		const horizon = appStore.timeHorizonMonths;
-		const maxMonths = Math.max(horizon, 36);
+		const maxMonths = Math.max(horizon, CHART_DIMENSIONS.curveMinMonths);
 
 		const curveData = calculateCumulativeCurve(selected, inputs, assumptions, maxMonths);
 		const data = curveData.map((d) => ({
@@ -105,9 +86,9 @@
 		const colorRange = selected.map((id) => methodColors[id] ?? '#999');
 
 		return (Plot: any) => ({
-			marginLeft: 70,
-			marginRight: 20,
-			height: 300,
+			marginLeft: CHART_DIMENSIONS.marginLeftNarrow,
+			marginRight: CHART_DIMENSIONS.marginRight,
+			height: CHART_DIMENSIONS.curveHeight,
 			x: { label: 'Months', domain: [0, maxMonths] },
 			y: { label: 'Cumulative Cost ($)', tickFormat: (v: number) => formatCurrencyCompact(v) },
 			color: { legend: true, domain: colorDomain, range: colorRange },
@@ -148,9 +129,9 @@
 		const colorRange = selected.map((id) => methodColors[id] ?? '#999');
 
 		return (Plot: any) => ({
-			marginLeft: 70,
-			marginRight: 20,
-			height: 300,
+			marginLeft: CHART_DIMENSIONS.marginLeftNarrow,
+			marginRight: CHART_DIMENSIONS.marginRight,
+			height: CHART_DIMENSIONS.curveHeight,
 			x: { label: 'Monthly Volume', type: 'log', tickFormat: (v: number) => formatVolume(v) },
 			y: { label: 'Monthly Cost ($)', tickFormat: (v: number) => formatCurrencyCompact(v) },
 			color: { legend: true, domain: colorDomain, range: colorRange },
@@ -194,9 +175,9 @@
 			.sort((a, b) => a.costPerRequest - b.costPerRequest);
 
 		return (Plot: any) => ({
-			marginLeft: 90,
-			marginRight: 20,
-			height: Math.max(200, numMethods * 50),
+			marginLeft: CHART_DIMENSIONS.marginLeftWide,
+			marginRight: CHART_DIMENSIONS.marginRight,
+			height: Math.max(CHART_DIMENSIONS.barMinHeight, numMethods * CHART_DIMENSIONS.barRowHeight),
 			x: { label: 'Cost per Request ($)', tickFormat: (v: number) => '$' + v.toFixed(3) },
 			y: { label: null },
 			color: {
@@ -270,7 +251,7 @@
 				<div class="horizon-selector">
 					<span class="toggles-label">Time horizon:</span>
 					<div class="horizon-pills">
-						{#each horizonOptions as opt}
+						{#each HORIZON_OPTIONS as opt}
 							<button
 								class="horizon-pill"
 								class:active={appStore.timeHorizonMonths === opt.value}
@@ -342,6 +323,8 @@
 				</Panel>
 
 				<InsightsPanel />
+
+				<AssumptionsReference />
 			{/if}
 		</div>
 	</div>

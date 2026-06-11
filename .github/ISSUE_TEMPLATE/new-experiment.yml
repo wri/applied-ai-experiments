@@ -52,12 +52,56 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: falsifiable_signal
+    attributes:
+      label: Falsifiable success signal
+      description: >
+        What measurable result would change your mind? Include a number —
+        a threshold, sample size, latency/cost figure, or named model.
+      placeholder: "e.g. >=3 teams run their first eval in under 60 minutes; p95 latency < 2s on N=50 queries"
+    validations:
+      required: true
+
   - type: input
     id: owner
     attributes:
       label: Owner
       description: GitHub username of the experiment owner (defaults to issue author)
       placeholder: "@username"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: maturity
+    attributes:
+      label: Maturity
+      description: "How big is this bet? L1: 1-2 days, L2: 1-2 weeks, L3: 1-2 months"
+      options:
+        - L1
+        - L2
+        - L3
+    validations:
+      required: false
+
+  - type: dropdown
+    id: investment_type
+    attributes:
+      label: Investment type
+      options:
+        - probe
+        - spike
+        - exploration
+    validations:
+      required: false
+
+  - type: dropdown
+    id: origin
+    attributes:
+      label: Origin
+      options:
+        - team-driven
+        - prospecting
     validations:
       required: false
 

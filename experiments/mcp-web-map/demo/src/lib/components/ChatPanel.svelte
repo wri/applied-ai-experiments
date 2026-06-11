@@ -73,6 +73,11 @@
       {:else}
         {#each chatStore.messages as message (message.id)}
           <div class="message-wrapper">
+            {#if message.role === 'assistant' && message.engine}
+              <span class="engine-tag" class:webmcp={message.engine === 'webmcp'}>
+                {message.engine === 'webmcp' ? 'WebMCP' : 'Custom bridge'}
+              </span>
+            {/if}
             <ChatMessage
               role={message.role}
               content={message.content}
@@ -175,6 +180,25 @@
   .message-wrapper {
     display: flex;
     flex-direction: column;
+  }
+
+  .engine-tag {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: 0.0625rem 0.375rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .engine-tag.webmcp {
+    color: var(--accent, #f59e0b);
+    border-color: var(--accent, #f59e0b);
   }
 
   .tool-calls {

@@ -1,4 +1,4 @@
-type ProviderId = 'anthropic' | 'openai' | 'gemini' | 'ollama' | 'openrouter' | 'groq' | 'together' | (string & {});
+type ProviderId = 'anthropic' | 'openai' | 'gemini' | 'ollama' | 'openrouter' | 'groq' | 'together' | 'mistral' | 'huggingface' | (string & {});
 interface ProviderConfig {
     /** Provider identifier */
     id: ProviderId;
@@ -280,6 +280,10 @@ interface LLMProvider {
      */
     isInitialized(): boolean;
     /**
+     * Reset the provider, clearing the API key and internal state
+     */
+    reset(): void;
+    /**
      * Validate an API key without storing it
      */
     validateKey(key: string): Promise<KeyValidationResult>;
@@ -489,6 +493,7 @@ declare abstract class BaseProvider implements LLMProvider {
     constructor(options?: BaseProviderOptions);
     initialize(key: string): void;
     isInitialized(): boolean;
+    reset(): void;
     protected getApiKey(): string;
     protected getBaseUrl(): string;
     protected request<T>(endpoint: string, options?: RequestInit): Promise<T>;

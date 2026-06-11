@@ -2,6 +2,14 @@
 
 A monorepo for AI experiments developed by WRI's Applied AI Group. This repository hosts experiment code, documentation, and static demos deployed to GitHub Pages.
 
+> **New here? Start with [ONBOARDING.md](./ONBOARDING.md)** — a one-page path covering setup, the
+> create → run → publish loop, and what to read next by role. Deeper docs live in [`docs/`](./docs/),
+> and [`AGENTS.md`](./AGENTS.md) is the orientation for AI coding agents.
+
+The published gallery is at **https://wri.github.io/applied-ai-experiments/** — the [`hub/`](./hub/)
+Astro site that turns every experiment's metadata into a browsable gallery, a **Learnings** page,
+and curated cross-experiment **Insights**.
+
 ## Quick Start
 
 ### Create a New Experiment
@@ -49,19 +57,9 @@ applied-ai-experiments/
 
 ## Experiments
 
-<!-- EXPERIMENTS-START -->
-<!-- This section is auto-generated; do not edit by hand. -->
-| Experiment | Type | Status | Description |
-| ---------- | ---- | ------ | ----------- |
-| [AI Provisioning Guide](experiments/ai-provisioning-guide/) | `prototype` | `started` | Interactive tool for navigating AI provisioning decisions. Includes a constra... |
-| [Comparing LLM Models for WRI tasks](experiments/compare-models-for-wri-tasks/) | `marimo` | `started` | Interactive tool for sending the same prompt to multiple LLMs in parallel and... |
-| [Deforestation Alerts Baseline Analysis](experiments/deforestation-alerts-baseline/) | `spike` | `completed` | A proof-of-concept pipeline for generating policy-oriented deforestation aler... |
-| [Example Experiment](experiments/example-experiment/) | `prototype` | `idea` | A template example showing the structure of an experiment in this repository. |
-| [MCP Web Map](experiments/mcp-web-map/) | `prototype` | `paused` | Chat interface for MapLibre GL JS maps, built to test whether MCP running in... |
-| [Semantic Document Search](experiments/semantic-document-search/) | `prototype` | `started` | Client-side semantic search tool for PDF documents using browser-based embedd... |
-| [Simple Python UV experiment](experiments/simple-python-uv-experiment/) | `marimo` | `started` | Self-contained marimo notebook exploring the Resource Watch API, using uv for... |
-| [WRI Assets Locator](experiments/wri-asset-locator/) | `marimo` | `completed` | Fetches information about various WRI assets (currently datasets) and display... |
-<!-- EXPERIMENTS-END -->
+Browse the [`experiments/`](experiments/) directory, or run `just list-experiments`
+for a quick status overview. The [hub gallery site](hub/) renders the full catalog
+from each experiment's `info.yaml`.
 
 ## Experiment Types
 
@@ -88,6 +86,7 @@ Experiments align with these themes:
 | `agents` | Agentic workflows |
 | `scouting` | Technology landscape scanning |
 | `prototyping` | Feature exploration and prototyping |
+| `development` | AI-assisted software development |
 
 ## Development
 

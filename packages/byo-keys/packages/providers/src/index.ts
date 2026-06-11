@@ -6,9 +6,9 @@
 export { BaseProvider, parseSSE, type BaseProviderOptions } from '@byo-keys/core';
 
 // OpenAI-compatible base (for custom providers)
-export { 
-  OpenAICompatProvider, 
-  type OpenAICompatProviderOptions 
+export {
+  OpenAICompatProvider,
+  type OpenAICompatProviderOptions
 } from './openai-compat';
 
 // -----------------------------------------------------------------------------
@@ -16,71 +16,78 @@ export {
 // -----------------------------------------------------------------------------
 
 // Anthropic
-export { 
-  AnthropicProvider, 
-  anthropic, 
-  type AnthropicProviderOptions 
+export {
+  AnthropicProvider,
+  anthropic,
+  type AnthropicProviderOptions
 } from './anthropic';
 
 // OpenAI
-export { 
-  OpenAIProvider, 
-  openai, 
-  type OpenAIProviderOptions 
+export {
+  OpenAIProvider,
+  openai,
+  type OpenAIProviderOptions
 } from './openai';
 
 // Google Gemini
-export { 
-  GeminiProvider, 
-  gemini, 
-  type GeminiProviderOptions 
+export {
+  GeminiProvider,
+  gemini,
+  type GeminiProviderOptions
 } from './gemini';
 
 // Mistral AI
-export { 
-  MistralProvider, 
-  mistral, 
-  type MistralProviderOptions 
+export {
+  MistralProvider,
+  mistral,
+  type MistralProviderOptions
 } from './mistral';
 
 // Groq (ultra-fast inference)
-export { 
-  GroqProvider, 
-  groq, 
-  type GroqProviderOptions 
+export {
+  GroqProvider,
+  groq,
+  type GroqProviderOptions
 } from './groq';
 
 // Together AI
-export { 
-  TogetherProvider, 
-  together, 
-  type TogetherProviderOptions 
+export {
+  TogetherProvider,
+  together,
+  type TogetherProviderOptions
 } from './together';
 
 // OpenRouter (multi-provider gateway)
-export { 
-  OpenRouterProvider, 
-  openrouter, 
-  type OpenRouterProviderOptions 
+export {
+  OpenRouterProvider,
+  openrouter,
+  type OpenRouterProviderOptions
 } from './openrouter';
+
+// Hugging Face (Inference Providers router)
+export {
+  HuggingFaceProvider,
+  huggingface,
+  type HuggingFaceProviderOptions
+} from './huggingface';
 
 // -----------------------------------------------------------------------------
 // Local Inference
 // -----------------------------------------------------------------------------
 
 // Ollama (local models)
-export { 
-  OllamaProvider, 
-  ollama, 
-  type OllamaProviderOptions 
+export {
+  OllamaProvider,
+  ollama,
+  type OllamaProviderOptions
 } from './ollama';
 
 // -----------------------------------------------------------------------------
 // Provider Metadata
 // -----------------------------------------------------------------------------
 
-/** 
- * Provider metadata for UI display and configuration 
+/**
+ * Provider metadata for UI display and configuration
  */
 export const PROVIDER_METADATA = {
   anthropic: {
@@ -138,6 +145,14 @@ export const PROVIDER_METADATA = {
     requiresKey: true,
     keyPlaceholder: 'sk-or-...',
     docsUrl: 'https://openrouter.ai/docs',
+  },
+  huggingface: {
+    name: 'Hugging Face',
+    description: 'Open models via Inference Providers router, native CORS support',
+    supportsCORS: true,
+    requiresKey: true,
+    keyPlaceholder: 'hf_...',
+    docsUrl: 'https://huggingface.co/docs/inference-providers',
   },
   ollama: {
     name: 'Ollama',

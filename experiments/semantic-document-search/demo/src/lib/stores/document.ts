@@ -1,4 +1,4 @@
-import type { DocumentState, DocumentStatus, Page, Chunk } from '../types';
+import type { DocumentState, DocumentStatus, Page } from '../types';
 
 /**
  * Create initial document state
@@ -10,7 +10,8 @@ export function createInitialDocumentState(): DocumentState {
 		pages: [],
 		status: 'idle',
 		progress: 0,
-		error: null
+		error: null,
+		chunkCount: 0
 	};
 }
 
@@ -77,37 +78,16 @@ export function setPageThumbnail(
 }
 
 /**
- * Update chunks with embeddings
+ * Mark the active embedding set ready (embeddings now live in the worker; the
+ * main thread only tracks the chunk count for display).
  */
-export function setChunksWithEmbeddings(
-	state: DocumentState,
-	embeddedChunks: Chunk[]
-): DocumentState {
-	// Create a map of chunk id to embedded chunk
-	const chunkMap = new Map<string, Chunk>();
-	for (const chunk of embeddedChunks) {
-		chunkMap.set(chunk.id, chunk);
-	}
-
-	// Update pages with embedded chunks
-	const updatedPages = state.pages.map((page) => ({
-		...page,
-		chunks: page.chunks.map((chunk) => chunkMap.get(chunk.id) ?? chunk)
-	}));
-
+export function setActiveSetReady(state: DocumentState, chunkCount: number): DocumentState {
 	return {
 		...state,
-		pages: updatedPages,
 		status: 'ready',
-		progress: 100
+		progress: 100,
+		chunkCount
 	};
-}
-
-/**
- * Get all chunks from document state
- */
-export function getAllChunksFromState(state: DocumentState): Chunk[] {
-	return state.pages.flatMap((page) => page.chunks);
 }
 
 /**

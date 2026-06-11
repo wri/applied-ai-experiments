@@ -54,7 +54,7 @@ if (result.valid) {
     model: 'claude-sonnet-4-20250514',
     messages: [{ role: 'user', content: 'Hello!' }],
   });
-  
+
   console.log(response.content);
 }
 ```
@@ -94,7 +94,7 @@ export const byok = createBYOKStores(client);
   import { onMount } from 'svelte';
   import { byok } from '$lib/byok';
   import { setBYOKContext, initializeBYOK } from '@byo-keys/svelte';
-  
+
   setBYOKContext(byok);
   onMount(() => initializeBYOK(byok));
 </script>
@@ -106,11 +106,11 @@ export const byok = createBYOKStores(client);
 <!-- Any component -->
 <script>
   import { getBYOKContext } from '@byo-keys/svelte';
-  
+
   const { keys, setKey, chat } = getBYOKContext();
-  
+
   let apiKey = '';
-  
+
   async function saveKey() {
     const result = await setKey('anthropic', apiKey);
     if (!result.valid) alert(result.error);
@@ -133,6 +133,7 @@ export const byok = createBYOKStores(client);
 | OpenAI | ❌ (proxy needed) | Yes | GPT-4, o-series models |
 | Gemini | ✅ Native | Yes | Browser-first apps |
 | OpenRouter | ✅ Native | Yes | Multi-model access |
+| Hugging Face | ✅ Native | Yes | Open models, multi-provider routing |
 | Groq | ❌ (proxy needed) | Yes | Ultra-fast inference |
 | Together | ❌ (proxy needed) | Yes | Open-source models |
 | Mistral | ❌ (proxy needed) | Yes | European AI, efficiency |
@@ -146,7 +147,7 @@ import { anthropic } from '@byo-keys/providers';
 const provider = anthropic({
   // For development: enable direct browser access
   dangerouslyAllowBrowser: true,
-  
+
   // For production: use a proxy
   proxyUrl: '/api/proxy/anthropic',
 });
@@ -184,6 +185,24 @@ const provider = openrouter({
   siteName: 'Your App',
 });
 ```
+
+### Hugging Face
+
+```typescript
+import { huggingface } from '@byo-keys/providers';
+
+// The Inference Providers router supports CORS natively — no proxy needed!
+// Get a token at https://huggingface.co/settings/tokens
+const provider = huggingface();
+
+// Model ids are "org/model" with an optional routing suffix:
+//   "meta-llama/Llama-3.3-70B-Instruct"           → router default (:fastest)
+//   "meta-llama/Llama-3.3-70B-Instruct:cerebras"  → pin a specific provider
+//   "meta-llama/Llama-3.3-70B-Instruct:cheapest"  → cheapest available provider
+```
+
+Note: model pricing reported by `listModels()` reflects the cheapest available
+inference provider; the router's default `:fastest` route may cost more.
 
 ### Groq
 
@@ -257,7 +276,7 @@ Create a simple passthrough proxy on your server:
 export const POST = async ({ params, request }) => {
   const [provider, ...rest] = params.path.split('/');
   const baseUrl = { anthropic: 'https://api.anthropic.com' }[provider];
-  
+
   return fetch(`${baseUrl}/${rest.join('/')}`, {
     method: 'POST',
     headers: request.headers,
@@ -271,6 +290,7 @@ export const POST = async ({ params, request }) => {
 Some providers support CORS:
 - **Ollama**: Local, CORS configurable
 - **OpenRouter**: Designed for browser use
+- **Hugging Face**: Inference Providers router supports CORS
 - **Google AI (Gemini)**: Supports CORS
 
 ### 3. Development Mode (Anthropic Only)
@@ -535,9 +555,9 @@ session.commitAudio();
 session.interrupt();
 
 // Update configuration mid-session
-session.updateConfig({ 
+session.updateConfig({
   voice: 'shimmer',
-  temperature: 0.8 
+  temperature: 0.8
 });
 
 // Disconnect

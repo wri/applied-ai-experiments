@@ -703,7 +703,8 @@ var OpenRouterProvider = class extends OpenAICompatProvider {
     requiresKey: true,
     supportsCORS: true,
     // OpenRouter supports browser requests
-    baseUrl: "https://openrouter.ai/api"
+    baseUrl: "https://openrouter.ai/api",
+    apiKeyUrl: "https://openrouter.ai/keys"
   };
   capabilities = {
     chat: true,
@@ -736,21 +737,12 @@ var OpenRouterProvider = class extends OpenAICompatProvider {
       id: m.id,
       name: m.name,
       provider: "openrouter",
-      contextWindow: m.context_length,
+      contextWindow: m.context_length ?? m.top_provider?.context_length,
+      maxOutputTokens: m.top_provider?.max_completion_tokens,
+      inputPricePerMillion: parsePerTokenPrice(m.pricing?.prompt),
+      outputPricePerMillion: parsePerTokenPrice(m.pricing?.completion),
       capabilities: this.getModelCapabilities(m.id)
     }));
-  }
-  formatModelName(id) {
-    const [provider, model] = id.split("/");
-    return `${model} (${provider})`;
-  }
-  getContextWindow(id) {
-    if (id.includes("claude-3")) return 2e5;
-    if (id.includes("gpt-4")) return 128e3;
-    if (id.includes("gemini")) return 1e6;
-    if (id.includes("llama-3")) return 128e3;
-    if (id.includes("mistral")) return 32768;
-    return 4096;
   }
   getModelCapabilities(id) {
     const hasVision = id.includes("vision") || id.includes("claude-3") || id.includes("gpt-4o") || id.includes("gemini");
@@ -760,8 +752,99 @@ var OpenRouterProvider = class extends OpenAICompatProvider {
     };
   }
 };
+function parsePerTokenPrice(price) {
+  const perToken = Number(price);
+  if (!Number.isFinite(perToken) || perToken < 0) return void 0;
+  return perToken * 1e6;
+}
 function openrouter(options) {
   return new OpenRouterProvider(options);
+}
+
+// src/huggingface.ts
+var WHOAMI_URL = "https://huggingface.co/api/whoami-v2";
+var HuggingFaceProvider = class extends OpenAICompatProvider {
+  config = {
+    id: "huggingface",
+    name: "Hugging Face",
+    requiresKey: true,
+    supportsCORS: true,
+    // The router supports browser requests
+    baseUrl: "https://router.huggingface.co",
+    apiKeyUrl: "https://huggingface.co/settings/tokens"
+  };
+  capabilities = {
+    chat: true,
+    streaming: true,
+    embeddings: false,
+    images: false,
+    audio: false,
+    vision: true,
+    // Some models support vision
+    functionCalling: true,
+    extendedThinking: false
+  };
+  // The router's /v1/models endpoint is unauthenticated, so the inherited
+  // listModels-based validation would accept any key. Validate the token
+  // against the whoami endpoint (CORS-enabled) instead.
+  async validateKey(key) {
+    try {
+      const response = await this.fetchFn(WHOAMI_URL, {
+        headers: { Authorization: `Bearer ${key}` }
+      });
+      if (!response.ok) {
+        return {
+          valid: false,
+          providerId: this.config.id,
+          error: `HTTP ${response.status}: invalid Hugging Face token`,
+          errorCode: response.status === 401 ? "invalid_key" : "provider_error"
+        };
+      }
+      const originalKey = this.apiKey;
+      this.apiKey = key;
+      try {
+        const models = await this.listModels();
+        return {
+          valid: true,
+          providerId: this.config.id,
+          models
+        };
+      } finally {
+        this.apiKey = originalKey;
+      }
+    } catch (error) {
+      return {
+        valid: false,
+        providerId: this.config.id,
+        error: error instanceof Error ? error.message : "Network error",
+        errorCode: "network_error"
+      };
+    }
+  }
+  async listModels() {
+    const response = await this.request("/v1/models");
+    return response.data.map((m) => {
+      const live = (m.providers ?? []).filter((p) => p.status === "live");
+      const contexts = live.map((p) => p.context_length).filter((n) => typeof n === "number");
+      const priced = live.filter((p) => p.pricing);
+      const cheapest = priced.length ? priced.reduce((a, b) => a.pricing.output <= b.pricing.output ? a : b) : void 0;
+      return {
+        id: m.id,
+        name: m.id,
+        provider: this.config.id,
+        contextWindow: contexts.length ? Math.max(...contexts) : void 0,
+        inputPricePerMillion: cheapest?.pricing?.input,
+        outputPricePerMillion: cheapest?.pricing?.output,
+        capabilities: {
+          vision: m.architecture?.input_modalities?.includes("image") ?? false,
+          functionCalling: live.some((p) => p.supports_tools)
+        }
+      };
+    });
+  }
+};
+function huggingface(options) {
+  return new HuggingFaceProvider(options);
 }
 
 // src/index.ts
@@ -822,6 +905,14 @@ var PROVIDER_METADATA = {
     keyPlaceholder: "sk-or-...",
     docsUrl: "https://openrouter.ai/docs"
   },
+  huggingface: {
+    name: "Hugging Face",
+    description: "Open models via Inference Providers router, native CORS support",
+    supportsCORS: true,
+    requiresKey: true,
+    keyPlaceholder: "hf_...",
+    docsUrl: "https://huggingface.co/docs/inference-providers"
+  },
   ollama: {
     name: "Ollama",
     description: "Run models locally on your machine",
@@ -836,6 +927,7 @@ export {
   BaseProvider3 as BaseProvider,
   GeminiProvider,
   GroqProvider,
+  HuggingFaceProvider,
   MistralProvider,
   OllamaProvider,
   OpenAICompatProvider,
@@ -846,6 +938,7 @@ export {
   anthropic,
   gemini,
   groq,
+  huggingface,
   mistral,
   ollama,
   openai,

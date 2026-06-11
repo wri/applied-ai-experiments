@@ -1,8 +1,17 @@
-import type { SearchResult, ModelStatus } from '../types';
+import type {
+	SearchResult,
+	ChunkResult,
+	ChunkStripItem,
+	SearchMetrics,
+	ModelStatus
+} from '../types';
 
 export interface SearchState {
 	query: string;
 	results: SearchResult[];
+	rawChunkResults: ChunkResult[];
+	chunkStrip: ChunkStripItem[];
+	metrics: SearchMetrics | null;
 	modelStatus: ModelStatus;
 	modelProgress: number;
 	modelProgressMessage: string;
@@ -10,13 +19,13 @@ export interface SearchState {
 	selectedPage: number | null;
 }
 
-/**
- * Create initial search state
- */
 export function createInitialSearchState(): SearchState {
 	return {
 		query: '',
 		results: [],
+		rawChunkResults: [],
+		chunkStrip: [],
+		metrics: null,
 		modelStatus: 'idle',
 		modelProgress: 0,
 		modelProgressMessage: '',
@@ -25,104 +34,64 @@ export function createInitialSearchState(): SearchState {
 	};
 }
 
-/**
- * Set search query
- */
 export function setSearchQuery(state: SearchState, query: string): SearchState {
-	return {
-		...state,
-		query
-	};
+	return { ...state, query };
 }
 
-/**
- * Set search results
- */
-export function setSearchResults(state: SearchState, results: SearchResult[]): SearchState {
-	return {
-		...state,
-		results,
-		isSearching: false
-	};
+export function setSearchResults(
+	state: SearchState,
+	results: SearchResult[],
+	rawChunkResults: ChunkResult[],
+	chunkStrip: ChunkStripItem[],
+	metrics: SearchMetrics
+): SearchState {
+	return { ...state, results, rawChunkResults, chunkStrip, metrics, isSearching: false };
 }
 
-/**
- * Set searching state
- */
 export function setSearching(state: SearchState, isSearching: boolean): SearchState {
-	return {
-		...state,
-		isSearching
-	};
+	return { ...state, isSearching };
 }
 
-/**
- * Set model status
- */
 export function setModelStatus(
 	state: SearchState,
 	status: ModelStatus,
 	progress: number = 0,
 	message: string = ''
 ): SearchState {
-	return {
-		...state,
-		modelStatus: status,
-		modelProgress: progress,
-		modelProgressMessage: message
-	};
+	return { ...state, modelStatus: status, modelProgress: progress, modelProgressMessage: message };
 }
 
-/**
- * Set selected page for detail view
- */
 export function setSelectedPage(state: SearchState, pageNumber: number | null): SearchState {
-	return {
-		...state,
-		selectedPage: pageNumber
-	};
+	return { ...state, selectedPage: pageNumber };
 }
 
-/**
- * Clear search results
- */
+// Clear results but keep the loaded model status (used when the query empties).
 export function clearSearchResults(state: SearchState): SearchState {
 	return {
 		...state,
 		query: '',
 		results: [],
+		rawChunkResults: [],
+		chunkStrip: [],
+		metrics: null,
 		isSearching: false,
 		selectedPage: null
 	};
 }
 
-/**
- * Reset search state
- */
 export function resetSearchState(): SearchState {
 	return createInitialSearchState();
 }
 
-/**
- * Get score for a specific page
- */
 export function getPageScore(state: SearchState, pageNumber: number): number {
 	const result = state.results.find((r) => r.pageNumber === pageNumber);
 	return result?.score ?? 0;
 }
 
-/**
- * Get top N page numbers by score
- */
 export function getTopPages(state: SearchState, n: number = 3): number[] {
-	return state.results
-		.slice(0, n)
-		.map((r) => r.pageNumber);
+	return state.results.slice(0, n).map((r) => r.pageNumber);
 }
 
-/**
- * Check if a page is in top N results
- */
 export function isTopResult(state: SearchState, pageNumber: number, n: number = 3): boolean {
 	return getTopPages(state, n).includes(pageNumber);
 }

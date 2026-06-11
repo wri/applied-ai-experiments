@@ -1,4 +1,5 @@
 import type { MethodId, MethodAssumptions, TCOInputs, TCOBreakdown, MethodTCO, MethodTCOExpanded } from '../types.js';
+import { CURVE_VOLUME_POINTS } from '../data/defaults.js';
 
 /**
  * Calculate monthly TCO for a single method.
@@ -68,9 +69,7 @@ export function calculateTCOCurve(
   assumptions: Record<MethodId, MethodAssumptions>,
   volumePoints?: number[],
 ): { volume: number; methodId: MethodId; total: number; costPerRequest: number }[] {
-  const points = volumePoints ?? [
-    100, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 500_000, 1_000_000,
-  ];
+  const points = volumePoints ?? [...CURVE_VOLUME_POINTS];
 
   const data: { volume: number; methodId: MethodId; total: number; costPerRequest: number }[] = [];
 

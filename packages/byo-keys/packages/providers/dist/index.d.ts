@@ -149,11 +149,19 @@ declare class OpenRouterProvider extends OpenAICompatProvider {
     constructor(options?: OpenRouterProviderOptions);
     protected addAuthHeaders(headers: Headers): void;
     listModels(): Promise<ModelInfo[]>;
-    protected formatModelName(id: string): string;
-    protected getContextWindow(id: string): number;
     protected getModelCapabilities(id: string): Partial<ProviderCapabilities>;
 }
 declare function openrouter(options?: OpenRouterProviderOptions): OpenRouterProvider;
+
+interface HuggingFaceProviderOptions extends OpenAICompatProviderOptions {
+}
+declare class HuggingFaceProvider extends OpenAICompatProvider {
+    readonly config: ProviderConfig;
+    readonly capabilities: ProviderCapabilities;
+    validateKey(key: string): Promise<KeyValidationResult>;
+    listModels(): Promise<ModelInfo[]>;
+}
+declare function huggingface(options?: HuggingFaceProviderOptions): HuggingFaceProvider;
 
 /**
  * Provider metadata for UI display and configuration
@@ -215,6 +223,14 @@ declare const PROVIDER_METADATA: {
         readonly keyPlaceholder: "sk-or-...";
         readonly docsUrl: "https://openrouter.ai/docs";
     };
+    readonly huggingface: {
+        readonly name: "Hugging Face";
+        readonly description: "Open models via Inference Providers router, native CORS support";
+        readonly supportsCORS: true;
+        readonly requiresKey: true;
+        readonly keyPlaceholder: "hf_...";
+        readonly docsUrl: "https://huggingface.co/docs/inference-providers";
+    };
     readonly ollama: {
         readonly name: "Ollama";
         readonly description: "Run models locally on your machine";
@@ -226,4 +242,4 @@ declare const PROVIDER_METADATA: {
 };
 type ProviderType = keyof typeof PROVIDER_METADATA;
 
-export { GeminiProvider, type GeminiProviderOptions, GroqProvider, type GroqProviderOptions, MistralProvider, type MistralProviderOptions, OpenAICompatProvider, type OpenAICompatProviderOptions, OpenRouterProvider, type OpenRouterProviderOptions, PROVIDER_METADATA, type ProviderType, TogetherProvider, type TogetherProviderOptions, gemini, groq, mistral, openrouter, together };
+export { GeminiProvider, type GeminiProviderOptions, GroqProvider, type GroqProviderOptions, HuggingFaceProvider, type HuggingFaceProviderOptions, MistralProvider, type MistralProviderOptions, OpenAICompatProvider, type OpenAICompatProviderOptions, OpenRouterProvider, type OpenRouterProviderOptions, PROVIDER_METADATA, type ProviderType, TogetherProvider, type TogetherProviderOptions, gemini, groq, huggingface, mistral, openrouter, together };

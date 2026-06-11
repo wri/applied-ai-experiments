@@ -201,6 +201,7 @@ node_modules/
 .cursor/
 .claude/
 .idea/
+drafts/
 
 # ============================================
 # Monorepo-specific ignores

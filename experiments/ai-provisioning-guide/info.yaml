@@ -1,5 +1,6 @@
 # ---- Required ----
 slug: ai-provisioning-guide
+schema_version: 2
 title: "AI Provisioning Guide"
 type: prototype
 status: started

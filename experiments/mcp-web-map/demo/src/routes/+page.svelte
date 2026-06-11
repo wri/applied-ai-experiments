@@ -5,11 +5,12 @@
   import ChatPanel from '$lib/components/ChatPanel.svelte';
   import CommandPalette from '$lib/components/CommandPalette.svelte';
   import LayerList from '$lib/components/LayerList.svelte';
+  import EngineToggle from '$lib/components/EngineToggle.svelte';
   import { stores, initStores, storesReady, providerIds } from '$lib/stores';
   import { chatStore } from '$lib/stores/chat.svelte';
   import { mapStore } from '$lib/stores/map.svelte';
-  import { mcpBridge } from '$lib/mcp/bridge';
-  import { getToolsSystemPrompt } from '$lib/mcp/tools';
+  import { engineStore } from '$lib/stores/engine.svelte';
+  import { runAgent, type ApiMessage, type StreamChunk } from '$lib/agent/loop';
 
   // Track store initialization
   let isStoresReady = $state(false);
@@ -60,105 +61,44 @@
     }) as ProviderId | undefined
   );
 
-  // Handle chat submission
+  // Initialize WebMCP eagerly if it's the saved/active engine, so the toggle
+  // can show its status before the first message.
+  $effect(() => {
+    if (engineStore.current === 'webmcp' && !engineStore.webmcpReady && !engineStore.webmcpError) {
+      engineStore.initWebMCP();
+    }
+  });
+
+  // Dev-only debug hook (stripped from production builds) for manual verification
+  $effect(() => {
+    if (import.meta.env.DEV) {
+      (window as unknown as Record<string, unknown>).__mcp = {
+        engineStore,
+        mapStore,
+        chatStore,
+        runAgent,
+      };
+    }
+  });
+
+  // Handle chat submission — runs the multi-turn agentic loop with the active engine
   async function handleChatSubmit(message: string) {
     if (!readyProvider || chatStore.isStreaming) return;
 
-    // Add user message
-    chatStore.addUserMessage(message);
+    const provider = readyProvider;
+    const model = getDefaultModel(provider);
 
-    // Add assistant message placeholder
-    chatStore.addAssistantMessage();
-
-    try {
-      // Build messages with system prompt
-      const systemPrompt = getToolsSystemPrompt() + `\n\nCurrent map state:\n- Center: [${mapStore.view.center[0].toFixed(4)}, ${mapStore.view.center[1].toFixed(4)}]\n- Zoom: ${mapStore.view.zoom.toFixed(2)}\n- Bearing: ${mapStore.view.bearing}°\n- Pitch: ${mapStore.view.pitch}°`;
-
-      // Get chat history (excluding system messages - we pass system separately)
-      const chatHistory = chatStore.getMessagesForAPI().filter(m => m.role !== 'system');
-
-      const messages = [
-        ...chatHistory,
-        { role: 'user' as const, content: message },
-      ];
-
-      // Stream the response - pass system prompt as separate field for provider compatibility
-      const stream = stores.chatStream(readyProvider, {
-        model: getDefaultModel(readyProvider),
+    // Bridge the loop's ModelCaller to the BYOK streaming API
+    const callModel = (system: string, messages: ApiMessage[]): AsyncIterable<StreamChunk> =>
+      stores.chatStream(provider, {
+        model,
         messages,
-        system: systemPrompt,  // Pass as separate field, not in messages array
+        system,
         maxTokens: 2048,
         temperature: 0.7,
-      });
+      }) as AsyncIterable<StreamChunk>;
 
-      let fullContent = '';
-
-      for await (const chunk of stream) {
-        switch (chunk.type) {
-          case 'delta':
-            fullContent += chunk.content;
-            chatStore.appendContent(chunk.content);
-            break;
-
-          case 'thinking_delta':
-            // Could handle thinking display here
-            break;
-
-          case 'done':
-            // Process tool calls from the response
-            const toolCalls = mcpBridge.parseToolCalls(fullContent);
-
-            if (toolCalls.length > 0) {
-              // Execute each tool call
-              for (const tc of toolCalls) {
-                const toolCallEntry = chatStore.addToolCall({
-                  id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-                  name: tc.name,
-                  arguments: tc.arguments,
-                });
-
-                // Mark as running
-                chatStore.updateToolCall(toolCallEntry.id, { status: 'running' });
-
-                // Execute the tool
-                const result = await mcpBridge.execute(tc.name, tc.arguments, toolCallEntry.id);
-
-                // Update with result
-                if (result.success) {
-                  chatStore.updateToolCall(toolCallEntry.id, {
-                    status: 'completed',
-                    result: result.result,
-                  });
-                } else {
-                  chatStore.updateToolCall(toolCallEntry.id, {
-                    status: 'error',
-                    error: result.error,
-                  });
-                }
-              }
-
-              // Clean the content to remove tool call blocks
-              const cleanContent = mcpBridge.cleanContent(fullContent);
-              chatStore.updateLastAssistant({ content: cleanContent, status: 'complete' });
-            } else {
-              chatStore.updateLastAssistant({ status: 'complete' });
-            }
-            break;
-
-          case 'error':
-            chatStore.updateLastAssistant({
-              content: `Error: ${chunk.error.message}`,
-              status: 'error',
-            });
-            break;
-        }
-      }
-    } catch (error) {
-      chatStore.updateLastAssistant({
-        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        status: 'error',
-      });
-    }
+    await runAgent({ engine: engineStore.engine, userMessage: message, callModel });
   }
 
   // Get default model for provider
@@ -202,6 +142,10 @@
   showFooter={false}
   maxWidth="full"
 >
+  {#snippet headerActions()}
+    <EngineToggle />
+  {/snippet}
+
   <div class="map-layout">
     <div class="map-area">
       <MapView />

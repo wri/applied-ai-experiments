@@ -37,6 +37,23 @@ export interface ExperimentResults {
   lessons?: string[];
 }
 
+// Demo recordings — always external URLs (object storage, YouTube, Loom);
+// video files are never committed to the repo
+export interface MediaRecording {
+  src: string;
+  caption?: string;
+  type?: "video" | "youtube" | "loom";
+}
+
+export interface MediaConfig {
+  recordings?: MediaRecording[];
+}
+
+// Portfolio-view classification types
+export type Maturity = "L1" | "L2" | "L3";
+export type InvestmentType = "probe" | "spike" | "exploration";
+export type Origin = "team-driven" | "prospecting";
+
 // Experiment metadata (matches info.yaml schema)
 // Required fields: slug, title, type, status, description
 // Recommended fields: owner, created_at
@@ -57,6 +74,13 @@ export interface Experiment {
   demo?: DemoConfig;
   runtime?: string;
   results?: ExperimentResults;
+  media?: MediaConfig;
+  // Portfolio classification (optional, backwards-compatible)
+  maturity?: Maturity;
+  investment_type?: InvestmentType;
+  origin?: Origin;
+  depends_on?: string[];
+  surface?: string | null;
   // Links
   related_experiments?: string[];
   external_links?: { label: string; url: string }[];
@@ -64,6 +88,7 @@ export interface Experiment {
   _has_demo?: boolean;
   _is_notebook?: boolean;
   _has_brief?: boolean;
+  _has_media?: boolean;
 }
 
 // Experiment index structure (matches experiment-index.json)
@@ -73,6 +98,9 @@ export interface ExperimentIndex {
   by_type: Record<ExperimentType, string[]>;
   by_theme: Record<string, string[]>;
   by_status: Record<ExperimentStatus, string[]>;
+  by_maturity?: Record<Maturity, string[]>;
+  by_investment_type?: Record<InvestmentType, string[]>;
+  by_origin?: Record<Origin, string[]>;
   experiments: Experiment[];
 }
 

@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import svelte from '@astrojs/svelte';
 
 // Use LOCAL_DEV=true for local development (no base path)
 const isLocalDev = process.env.LOCAL_DEV === 'true';
@@ -9,5 +10,6 @@ export default defineConfig({
   outDir: '../dist',
   build: {
     assets: '_assets'
-  }
+  },
+  integrations: [svelte()]
 });

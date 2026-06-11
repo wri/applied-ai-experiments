@@ -14,6 +14,8 @@ export type ProviderId =
   | 'openrouter'
   | 'groq'
   | 'together'
+  | 'mistral'
+  | 'huggingface'
   | (string & {}); // Allow custom providers while preserving autocomplete
 
 export interface ProviderConfig {
