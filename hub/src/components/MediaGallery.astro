@@ -1,0 +1,93 @@
+---
+import type { MediaRecording } from '../utils/experiments';
+import { recordingType, embedUrl } from '../utils/experiments';
+
+interface Props {
+  recordings: MediaRecording[];
+}
+
+const { recordings } = Astro.props;
+const items = recordings.map((rec) => ({
+  rec,
+  kind: recordingType(rec),
+  embed: embedUrl(rec),
+}));
+---
+
+<section class="section media-gallery">
+  <h2>Recordings</h2>
+  <div class="media-grid">
+    {items.map(({ rec, kind, embed }) => (
+      <figure class="media-item">
+        {kind === 'video' ? (
+          <video controls preload="metadata" playsinline>
+            <source src={rec.src} />
+            Your browser can't play this video — <a href={rec.src}>download it</a> instead.
+          </video>
+        ) : (
+          <div class="embed-frame">
+            <iframe
+              src={embed}
+              loading="lazy"
+              title={rec.caption ?? 'Demo recording'}
+              allow="fullscreen; picture-in-picture"
+              allowfullscreen
+            />
+          </div>
+        )}
+        {rec.caption && <figcaption>{rec.caption}</figcaption>}
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .media-gallery h2 {
+    font-size: 0.875rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .media-item {
+    margin: 0;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .media-item video {
+    display: block;
+    width: 100%;
+    background: #000;
+  }
+
+  .embed-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+
+  .embed-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .media-item figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid var(--ui);
+  }
+</style>

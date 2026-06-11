@@ -1,0 +1,48 @@
+---
+import { getThemeConfig } from '../utils/experiments';
+
+interface Props {
+  /** Theme key, e.g. "cost-perf" */
+  theme: string;
+  /** Render as a link to the theme page (default true) */
+  link?: boolean;
+}
+
+const { theme, link = true } = Astro.props;
+const cfg = getThemeConfig(theme);
+const label = cfg?.short ?? theme;
+
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+---
+
+{link ? (
+  <a href={`${base}themes/${theme}/`} class="theme-tag theme-tag-link">{label}</a>
+) : (
+  <span class="theme-tag">{label}</span>
+)}
+
+<style>
+  .theme-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    background: var(--bg);
+    padding: var(--padding-badge);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  a.theme-tag-link:hover {
+    border-color: var(--ui-2);
+    color: var(--tx);
+    text-decoration: none;
+  }
+</style>

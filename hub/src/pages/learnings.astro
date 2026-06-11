@@ -1,0 +1,645 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import taxonomy from '../data/taxonomy.json';
+import { loadExperimentIndex, collectLessons, getThemeConfig, visibleInsights } from '../utils/experiments';
+
+const index = await loadExperimentIndex();
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const { byTheme, untagged, total: totalLessons, completed } = collectLessons(index);
+
+// Group themes under their pillars, ordered by lesson count within each pillar.
+const pillarGroups = taxonomy.pillars
+  .map((p) => ({
+    name: p.name,
+    themes: p.themes
+      .filter((t) => byTheme.has(t))
+      .sort((a, b) => (byTheme.get(b)?.length ?? 0) - (byTheme.get(a)?.length ?? 0)),
+  }))
+  .filter((g) => g.themes.length > 0);
+
+// Flat, count-ordered list of themes for the filter chips.
+const chipThemes = pillarGroups.flatMap((g) => g.themes);
+
+// Synthesised insights band (top published insights).
+const allInsights = await getCollection('insights');
+const allVisible = visibleInsights(allInsights, import.meta.env.DEV);
+const insights = allVisible.slice(0, 3);
+
+// Insight candidates: themes with a critical mass of lessons (≥4, from ≥2
+// experiments) that no published insight covers yet — a standing prompt to
+// synthesize. Capped at 2 so it stays a nudge, not a backlog.
+const coveredThemes = new Set(allVisible.flatMap((i) => i.data.themes));
+const insightCandidates = [...byTheme.entries()]
+  .map(([key, entries]) => ({
+    key,
+    cfg: getThemeConfig(key),
+    count: entries.length,
+    experimentCount: new Set(entries.map((e) => e.slug)).size,
+  }))
+  .filter((c) => c.count >= 4 && c.experimentCount >= 2 && !coveredThemes.has(c.key))
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 2);
+---
+
+<BaseLayout
+  title="Learnings"
+  description="Lessons harvested from completed WRI Applied AI Group experiments, organized by theme."
+>
+  <section class="learnings-intro">
+    <h1>Learnings</h1>
+    <p class="subtitle">
+      {totalLessons} {totalLessons === 1 ? 'lesson' : 'lessons'} from {completed.length} completed experiment{completed.length === 1 ? '' : 's'},
+      organized by theme. Each entry links back to the experiment it came from. For threads that run
+      across several experiments, see <a href={`${base}insights/`}>Insights</a>.
+    </p>
+  </section>
+
+  {insights.length > 0 && (
+    <section class="insights-band">
+      <div class="band-head">
+        <span class="eyebrow">Synthesised insights</span>
+        <a href={`${base}insights/`} class="see-all">All insights →</a>
+      </div>
+      <div class="band-grid">
+        {insights.map((insight) => (
+          <a href={`${base}insights/${insight.id}/`} class="band-card">
+            <span class="band-title">{insight.data.title}</span>
+            <span class="band-summary">{insight.data.summary}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {insightCandidates.length > 0 && (
+    <aside class="candidate-callouts">
+      {insightCandidates.map((c) => (
+        <div class="candidate-callout">
+          <span class="candidate-text">
+            <strong>{c.cfg?.name ?? c.key}</strong> has {c.count} lessons from {c.experimentCount} experiments
+            and no synthesized insight yet — a candidate for <code>insights/</code>.
+          </span>
+          <a
+            href="https://github.com/wri/applied-ai-experiments/blob/main/docs/insights.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="candidate-link"
+          >How to write one →</a>
+        </div>
+      ))}
+    </aside>
+  )}
+
+  {totalLessons === 0 ? (
+    <div class="empty">
+      <p>No completed experiments have lessons yet.</p>
+      <p class="empty-hint">
+        Lessons appear here when an experiment transitions to <code>status: completed</code>
+        with populated <code>results.lessons</code> in its <code>info.yaml</code>.
+      </p>
+    </div>
+  ) : (
+    <>
+      <div class="lesson-search">
+        <input
+          type="search"
+          id="lesson-search"
+          placeholder="Search lessons…"
+          aria-label="Search lessons"
+        />
+      </div>
+
+      <div class="filter-chips" id="theme-filter">
+        <button class="chip active" data-theme="all">All <span class="chip-count">{totalLessons}</span></button>
+        {chipThemes.map((themeKey) => {
+          const cfg = getThemeConfig(themeKey);
+          return (
+            <button class="chip" data-theme={themeKey}>
+              {cfg?.short ?? themeKey}
+              <span class="chip-count">{byTheme.get(themeKey)!.length}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div class="pillar-groups">
+        {pillarGroups.map((group) => (
+          <section class="pillar-group" data-pillar>
+            <h2 class="pillar-name">{group.name}</h2>
+            {group.themes.map((themeKey) => {
+              const theme = getThemeConfig(themeKey);
+              const entries = byTheme.get(themeKey)!;
+              return (
+                <section class="theme-section" data-theme={themeKey}>
+                  <header class="theme-header">
+                    <a href={`${base}themes/${themeKey}/`} class="theme-name">
+                      {theme?.name ?? themeKey}
+                    </a>
+                    <span class="theme-count">{entries.length}</span>
+                  </header>
+                  <div class="lesson-list">
+                    {entries.map((entry) => (
+                      <div class="lesson-card" id={`${entry.slug}-${entry.lessonIndex}`}>
+                        <p class="lesson-text">{entry.lesson}</p>
+                        <button
+                          class="copy-link"
+                          data-anchor={`${entry.slug}-${entry.lessonIndex}`}
+                          title="Copy link to this lesson"
+                          aria-label="Copy link to this lesson"
+                        >⧉</button>
+                        <a href={`${base}experiments/${entry.slug}/#lesson-${entry.lessonIndex}`} class="lesson-source">
+                          <span class="lesson-source-title">{entry.title}</span>
+                          <span class="lesson-type">{entry.type}</span>
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </section>
+        ))}
+
+        {untagged.length > 0 && (
+          <section class="pillar-group" data-pillar>
+            <section class="theme-section" data-theme="untagged">
+              <header class="theme-header">
+                <span class="theme-name theme-name-plain">Untagged</span>
+                <span class="theme-count">{untagged.length}</span>
+              </header>
+              <div class="lesson-list">
+                {untagged.map((entry) => (
+                  <div class="lesson-card" id={`${entry.slug}-${entry.lessonIndex}`}>
+                    <p class="lesson-text">{entry.lesson}</p>
+                    <button
+                      class="copy-link"
+                      data-anchor={`${entry.slug}-${entry.lessonIndex}`}
+                      title="Copy link to this lesson"
+                      aria-label="Copy link to this lesson"
+                    >⧉</button>
+                    <a href={`${base}experiments/${entry.slug}/#lesson-${entry.lessonIndex}`} class="lesson-source">
+                      <span class="lesson-source-title">{entry.title}</span>
+                      <span class="lesson-type">{entry.type}</span>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </section>
+        )}
+      </div>
+
+      <div class="no-match empty hidden" id="no-match">
+        <p>No lessons match.</p>
+      </div>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .learnings-intro {
+    margin-bottom: 1.5rem;
+  }
+  .learnings-intro h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 70ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .subtitle a {
+    color: var(--primary);
+  }
+
+  /* --- Insights band --- */
+  .insights-band {
+    margin-bottom: 1.5rem;
+  }
+  .band-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.625rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+  }
+  .see-all {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+  }
+  .see-all:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .band-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.625rem;
+  }
+  .band-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    text-decoration: none;
+  }
+  .band-card:hover {
+    background: var(--bg-3);
+    text-decoration: none;
+  }
+  .band-title {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--tx);
+  }
+  .band-summary {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--tx-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* --- Insight-candidate callouts --- */
+  .candidate-callouts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .candidate-callout {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.625rem 0.875rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-left: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+  }
+  .candidate-text {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--tx-2);
+  }
+  .candidate-text strong {
+    color: var(--tx);
+  }
+  .candidate-text code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--bg);
+    padding: 0.05rem 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+  .candidate-link {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+  }
+  .candidate-link:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  /* --- Lesson search --- */
+  .lesson-search {
+    margin-bottom: 0.75rem;
+  }
+  .lesson-search input {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.4rem 0.625rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--tx);
+  }
+  .lesson-search input::placeholder {
+    color: var(--tx-3);
+  }
+  .lesson-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  /* --- Filter chips --- */
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+  }
+  .chip:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .chip.active {
+    background: var(--bg-3);
+    color: var(--tx);
+    border-color: var(--ui-2);
+  }
+  .chip-count {
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .empty {
+    padding: 2rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+  .empty p {
+    font-family: var(--font-body);
+    color: var(--tx-2);
+    margin: 0 0 0.5rem;
+  }
+  .empty-hint {
+    font-size: 0.8125rem;
+    color: var(--tx-3);
+  }
+  .empty code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--bg);
+    padding: 0.05rem 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+  .hidden {
+    display: none;
+  }
+
+  /* --- Pillar groups & theme sections --- */
+  .pillar-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .pillar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pillar-group.hidden {
+    display: none;
+  }
+  .pillar-name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-section {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .theme-section.hidden {
+    display: none;
+  }
+  .theme-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-name {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    text-decoration: none;
+  }
+  .theme-name:hover {
+    text-decoration: underline;
+  }
+  .theme-name-plain {
+    color: var(--tx-2);
+  }
+  .theme-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    background: var(--bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .lesson-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+    padding: 0.75rem;
+  }
+  @media (min-width: 720px) {
+    .lesson-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .lesson-card {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    scroll-margin-top: calc(var(--header-height, 3rem) + 0.75rem);
+  }
+  .lesson-card.hidden {
+    display: none;
+  }
+  .lesson-card:target {
+    border-color: var(--primary);
+  }
+  .copy-link {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--tx-3);
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--transition-fast) ease;
+  }
+  .lesson-card:hover .copy-link,
+  .copy-link:focus-visible {
+    opacity: 1;
+  }
+  .copy-link:hover {
+    color: var(--primary);
+    border-color: var(--ui);
+    background: var(--bg-2);
+  }
+  .lesson-text {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--tx);
+    margin: 0;
+  }
+  .lesson-source {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    text-decoration: none;
+    padding-top: 0.375rem;
+    border-top: 1px dashed var(--ui);
+  }
+  .lesson-source:hover {
+    color: var(--primary);
+  }
+  .lesson-source-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lesson-type {
+    flex-shrink: 0;
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#theme-filter .chip');
+  const sections = document.querySelectorAll<HTMLElement>('.theme-section');
+  const groups = document.querySelectorAll<HTMLElement>('[data-pillar]');
+  const noMatch = document.getElementById('no-match');
+  const searchInput = document.getElementById('lesson-search') as HTMLInputElement | null;
+
+  let activeTheme = 'all';
+
+  function applyFilter() {
+    const query = (searchInput?.value ?? '').trim().toLowerCase();
+    let visibleCards = 0;
+    sections.forEach((section) => {
+      const themeMatch = activeTheme === 'all' || section.getAttribute('data-theme') === activeTheme;
+      let sectionVisible = 0;
+      section.querySelectorAll<HTMLElement>('.lesson-card').forEach((card) => {
+        const textMatch = !query || (card.textContent ?? '').toLowerCase().includes(query);
+        const show = themeMatch && textMatch;
+        card.classList.toggle('hidden', !show);
+        if (show) sectionVisible++;
+      });
+      section.classList.toggle('hidden', sectionVisible === 0);
+      visibleCards += sectionVisible;
+    });
+    // Hide a pillar group when none of its sections are visible.
+    groups.forEach((group) => {
+      const anyVisible = group.querySelector('.theme-section:not(.hidden)');
+      group.classList.toggle('hidden', !anyVisible);
+    });
+    noMatch?.classList.toggle('hidden', visibleCards > 0);
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeTheme = chip.getAttribute('data-theme') || 'all';
+      applyFilter();
+    });
+  });
+
+  searchInput?.addEventListener('input', applyFilter);
+
+  // Copy a stable deep link to an individual lesson.
+  document.querySelectorAll<HTMLButtonElement>('.copy-link').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const anchor = btn.getAttribute('data-anchor');
+      if (!anchor) return;
+      const url = `${location.origin}${location.pathname}#${anchor}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = '✓';
+        setTimeout(() => (btn.textContent = '⧉'), 1200);
+      } catch {
+        location.hash = anchor;
+      }
+    });
+  });
+</script>

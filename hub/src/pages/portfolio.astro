@@ -1,0 +1,357 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import taxonomy from '../data/taxonomy.json';
+import { loadExperimentIndex, getThemeConfig } from '../utils/experiments';
+import type { Experiment } from '../utils/experiments';
+
+const index = await loadExperimentIndex();
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Group experiments by theme. A multi-theme experiment appears under each of its
+// themes — this is a categorization view, so cross-cutting work shows up in every
+// place it belongs. Within a theme, order by lifecycle progress, then title.
+const STATUS_ORDER: Record<string, number> = {
+  completed: 0, started: 1, paused: 2, idea: 3, archived: 4,
+};
+const byTheme = new Map<string, Experiment[]>();
+const untagged: Experiment[] = [];
+for (const exp of index.experiments) {
+  const themes = exp.themes ?? [];
+  if (themes.length === 0) {
+    untagged.push(exp);
+  } else {
+    for (const t of themes) {
+      if (!byTheme.has(t)) byTheme.set(t, []);
+      byTheme.get(t)!.push(exp);
+    }
+  }
+}
+for (const list of byTheme.values()) {
+  list.sort((a, b) =>
+    (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9) ||
+    a.title.localeCompare(b.title));
+}
+
+// Pillar → themes (taxonomy order), keeping only themes that have experiments.
+const pillarGroups = taxonomy.pillars
+  .map((p) => ({ name: p.name, themes: p.themes.filter((t) => byTheme.has(t)) }))
+  .filter((g) => g.themes.length > 0);
+
+// Flat list of populated themes (taxonomy order) for the filter chips.
+const chipThemes = pillarGroups.flatMap((g) => g.themes);
+
+const displayType = (t: string) => (t === 'marimo' ? 'notebook' : t);
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="How WRI Applied AI Group experiments are categorized across the learning-agenda themes and pillars."
+>
+  <section class="portfolio-intro">
+    <h1>Portfolio</h1>
+    <p class="subtitle">
+      How all {index.experiments.length} experiments are categorized across the learning agenda —
+      {chipThemes.length} themes grouped into {pillarGroups.length} pillars. An experiment that
+      spans several themes appears under each. Select a theme to focus, or open any experiment for detail.
+    </p>
+  </section>
+
+  <div class="filter-chips" id="theme-filter">
+    <button class="chip active" data-theme="all">All <span class="chip-count">{index.experiments.length}</span></button>
+    {chipThemes.map((themeKey) => {
+      const cfg = getThemeConfig(themeKey);
+      return (
+        <button class="chip" data-theme={themeKey}>
+          {cfg?.short ?? themeKey}
+          <span class="chip-count">{byTheme.get(themeKey)!.length}</span>
+        </button>
+      );
+    })}
+  </div>
+
+  <div class="pillar-groups">
+    {pillarGroups.map((group) => (
+      <section class="pillar-group" data-pillar>
+        <h2 class="pillar-name">{group.name}</h2>
+        {group.themes.map((themeKey) => {
+          const theme = getThemeConfig(themeKey);
+          const exps = byTheme.get(themeKey)!;
+          return (
+            <section class="theme-section" data-theme={themeKey}>
+              <header class="theme-header">
+                <a href={`${base}themes/${themeKey}/`} class="theme-name">{theme?.name ?? themeKey}</a>
+                <span class="theme-count">{exps.length}</span>
+              </header>
+              <div class="exp-grid">
+                {exps.map((exp) => (
+                  <a href={`${base}experiments/${exp.slug}/`} class="exp-card">
+                    <div class="exp-card-head">
+                      <span class={`badge badge-type-${displayType(exp.type)}`}>{displayType(exp.type)}</span>
+                      <StatusBadge status={exp.status} />
+                    </div>
+                    <span class="exp-card-title">{exp.title}</span>
+                    <p class="exp-card-desc">{exp.description}</p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </section>
+    ))}
+
+    {untagged.length > 0 && (
+      <section class="pillar-group" data-pillar>
+        <section class="theme-section" data-theme="untagged">
+          <header class="theme-header">
+            <span class="theme-name theme-name-plain">Uncategorized</span>
+            <span class="theme-count">{untagged.length}</span>
+          </header>
+          <div class="exp-grid">
+            {untagged.map((exp) => (
+              <a href={`${base}experiments/${exp.slug}/`} class="exp-card">
+                <div class="exp-card-head">
+                  <span class={`badge badge-type-${displayType(exp.type)}`}>{displayType(exp.type)}</span>
+                  <StatusBadge status={exp.status} />
+                </div>
+                <span class="exp-card-title">{exp.title}</span>
+                <p class="exp-card-desc">{exp.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      </section>
+    )}
+  </div>
+
+  <div class="no-match empty hidden" id="no-match">
+    <p>No experiments in that theme.</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .portfolio-intro {
+    margin-bottom: 1.5rem;
+  }
+  .portfolio-intro h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 70ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Filter chips */
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+  }
+  .chip:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .chip.active {
+    background: var(--bg-3);
+    color: var(--tx);
+    border-color: var(--ui-2);
+  }
+  .chip-count {
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Pillar groups & theme sections (mirrors the Learnings page structure) */
+  .pillar-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .pillar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pillar-group.hidden {
+    display: none;
+  }
+  .pillar-name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-section {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .theme-section.hidden {
+    display: none;
+  }
+  .theme-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-name {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    text-decoration: none;
+  }
+  .theme-name:hover {
+    text-decoration: underline;
+  }
+  .theme-name-plain {
+    color: var(--tx-2);
+  }
+  .theme-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    background: var(--bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Experiment cards */
+  .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.625rem;
+    padding: 0.75rem;
+  }
+  .exp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    text-decoration: none;
+    transition: border-color var(--transition-fast) ease;
+  }
+  .exp-card:hover {
+    border-color: var(--ui-2);
+    text-decoration: none;
+  }
+  .exp-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .exp-card-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-title-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--tx);
+    line-height: 1.3;
+  }
+  .exp-card:hover .exp-card-title {
+    color: var(--primary);
+  }
+  .exp-card-desc {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--tx-2);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .empty {
+    padding: 2rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--tx-2);
+    font-family: var(--font-body);
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  // Read-only view aid: filter the categorization by theme. Nothing is persisted
+  // and nothing about the experiments changes — this only shows/hides sections.
+  const chips = document.querySelectorAll<HTMLButtonElement>('#theme-filter .chip');
+  const sections = document.querySelectorAll<HTMLElement>('.theme-section');
+  const groups = document.querySelectorAll<HTMLElement>('[data-pillar]');
+  const noMatch = document.getElementById('no-match');
+
+  function applyFilter(theme: string) {
+    let visible = 0;
+    sections.forEach((section) => {
+      const match = theme === 'all' || section.getAttribute('data-theme') === theme;
+      section.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    groups.forEach((group) => {
+      const anyVisible = group.querySelector('.theme-section:not(.hidden)');
+      group.classList.toggle('hidden', !anyVisible);
+    });
+    noMatch?.classList.toggle('hidden', visible > 0);
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilter(chip.getAttribute('data-theme') || 'all');
+    });
+  });
+</script>

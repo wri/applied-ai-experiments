@@ -1,0 +1,192 @@
+---
+import type { Experiment } from '../utils/experiments';
+import { getTypeColor } from '../utils/experiments';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  experiment: Experiment;
+  /** Compact variant for the hero spotlight (no description clamp tweaks). */
+  compact?: boolean;
+}
+
+const { experiment, compact = false } = Astro.props;
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
+const typeColor = getTypeColor(experiment.type);
+const demoHref = experiment._is_notebook
+  ? `${base}notebook/${experiment.slug}/`
+  : `${base}${experiment.slug}/`;
+const demoLabel = experiment._is_notebook ? 'Launch notebook' : 'Launch demo';
+---
+
+<article class:list={['demo-card', { compact }]}>
+  <a href={demoHref} class="visual" style={`--type-color: ${typeColor}`} aria-label={demoLabel}>
+    <span class="visual-meta">
+      <span class={`badge badge-type-${displayType}`}>{displayType}</span>
+      <StatusBadge status={experiment.status} />
+    </span>
+    <span class="visual-slug">{experiment.slug}</span>
+    <span class="visual-hints">
+      {experiment._has_media && <span class="rec-indicator">▶ recording</span>}
+      <span class="launch-hint">launch →</span>
+    </span>
+  </a>
+
+  <div class="demo-body">
+    <h3 class="demo-title">
+      <a href={`${base}experiments/${experiment.slug}/`}>{experiment.title}</a>
+    </h3>
+    <p class="demo-description">{experiment.description}</p>
+  </div>
+
+  <footer class="demo-footer">
+    <a href={`${base}experiments/${experiment.slug}/`} class="btn btn-sm btn-secondary">
+      Details
+    </a>
+    <a href={demoHref} class="btn btn-sm btn-primary">
+      {demoLabel}
+    </a>
+  </footer>
+</article>
+
+<style>
+  .demo-card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow var(--transition-fast) ease;
+  }
+
+  .demo-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Pure-CSS visual header: type-coloured wash + oversized mono slug.
+     Stands in for a thumbnail until experiments carry real preview media. */
+  .visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 16 / 7;
+    padding: var(--space-3);
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--type-color) 18%, var(--bg)) 0%,
+        var(--bg) 75%);
+    border-bottom: 1px solid var(--ui);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(color-mix(in srgb, var(--type-color) 25%, transparent) 1px, transparent 1px);
+    background-size: 14px 14px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .visual-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    z-index: 1;
+  }
+
+  .visual-slug {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--type-color) 70%, var(--tx));
+    word-break: break-all;
+    z-index: 1;
+  }
+
+  .visual-hints {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    z-index: 1;
+  }
+
+  .rec-indicator {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: 0.125rem 0.375rem;
+  }
+
+  .launch-hint {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    opacity: 0;
+    transition: opacity var(--transition-fast) ease;
+  }
+
+  .demo-card:hover .launch-hint {
+    opacity: 1;
+    color: var(--primary);
+  }
+
+  .demo-body {
+    flex: 1;
+    padding: var(--padding-panel-body);
+  }
+
+  .demo-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-title-md);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .demo-title a {
+    color: var(--tx);
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    color: var(--tx-2);
+    font-size: var(--text-body);
+    line-height: var(--font-lineHeight-normal);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .compact .demo-description {
+    -webkit-line-clamp: 2;
+  }
+
+  .demo-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    padding: var(--padding-panel-header);
+    border-top: 1px solid var(--ui);
+  }
+</style>

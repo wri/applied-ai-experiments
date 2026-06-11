@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoCard from '../components/DemoCard.astro';
+import { loadExperimentIndex } from '../utils/experiments';
+
+const index = await loadExperimentIndex();
+// Ensure base URL ends with a slash for proper path concatenation
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Completed-with-demo first, then by recency (same scoring as the home page).
+const recency = (e: { updated_at?: string; created_at?: string }) =>
+  new Date(e.updated_at || e.created_at || 0).getTime();
+const demos = index.experiments
+  .filter((e) => e._has_demo)
+  .sort((a, b) => {
+    const score = (e: typeof a) => (e.status === 'completed' ? 2 : 0) + (e._has_media ? 1 : 0);
+    return score(b) - score(a) || recency(b) - recency(a);
+  });
+
+// Type chips, count-ordered ("notebook" presents marimo + notebook together).
+const displayType = (e: { type: string }) => (e.type === 'marimo' ? 'notebook' : e.type);
+const typeCounts = new Map<string, number>();
+for (const e of demos) {
+  typeCounts.set(displayType(e), (typeCounts.get(displayType(e)) ?? 0) + 1);
+}
+const chipTypes = [...typeCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout
+  title="Demos"
+  description="Interactive demos and notebooks from WRI Applied AI Group experiments — try them in the browser."
+>
+  <section class="demos-intro">
+    <h1>Demos</h1>
+    <p class="subtitle">
+      {demos.length} interactive demo{demos.length === 1 ? '' : 's'} you can try in the browser,
+      straight from the experiments. Each links back to the experiment that produced it —
+      the brief, the results, and the lessons.
+    </p>
+  </section>
+
+  {demos.length === 0 ? (
+    <div class="empty">
+      <p>No built demos yet.</p>
+    </div>
+  ) : (
+    <>
+      <div class="filter-chips" id="type-filter">
+        <button class="chip active" data-type="all">All <span class="chip-count">{demos.length}</span></button>
+        {chipTypes.map(([type, count]) => (
+          <button class="chip" data-type={type}>
+            {type}
+            <span class="chip-count">{count}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="demos-grid">
+        {demos.map((exp) => (
+          <div class="demo-cell" data-type={displayType(exp)}>
+            <DemoCard experiment={exp} />
+          </div>
+        ))}
+      </div>
+
+      <div class="no-match empty hidden" id="no-match">
+        <p>No demos of that type.</p>
+      </div>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .demos-intro {
+    margin-bottom: 1.5rem;
+  }
+  .demos-intro h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 70ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+  }
+  .chip:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .chip.active {
+    background: var(--bg-3);
+    color: var(--tx);
+    border-color: var(--ui-2);
+  }
+  .chip-count {
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .demos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .demo-cell.hidden {
+    display: none;
+  }
+
+  .empty {
+    padding: 2rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+  .empty p {
+    font-family: var(--font-body);
+    color: var(--tx-2);
+    margin: 0;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#type-filter .chip');
+  const cells = document.querySelectorAll<HTMLElement>('.demo-cell');
+  const noMatch = document.getElementById('no-match');
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      const type = chip.getAttribute('data-type') || 'all';
+      let visible = 0;
+      cells.forEach((cell) => {
+        const match = type === 'all' || cell.getAttribute('data-type') === type;
+        cell.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      noMatch?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

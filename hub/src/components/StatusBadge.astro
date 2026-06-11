@@ -1,0 +1,47 @@
+---
+import type { ExperimentStatus } from '../utils/experiments';
+
+interface Props {
+  status: ExperimentStatus | string;
+  /** Show the textual label next to the dot (default true) */
+  label?: boolean;
+}
+
+const { status, label = true } = Astro.props;
+
+// Quiet by default. Per DESIGN.md, semantic colour is reserved for states that
+// genuinely carry meaning (completed = success, paused = warning); every other
+// state is neutral. No rainbow of hues on chrome.
+const STATUS_COLORS: Record<string, string> = {
+  completed: 'var(--success)',
+  paused: 'var(--warning)',
+};
+const color = STATUS_COLORS[status] ?? 'var(--tx-3)';
+---
+
+<span class="status-badge" style={`--status-color: ${color}`} title={`Status: ${status}`}>
+  <span class="status-dot"></span>
+  {label && <span class="status-label">{status}</span>}
+</span>
+
+<style>
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+  }
+
+  .status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--status-color);
+    flex-shrink: 0;
+  }
+</style>

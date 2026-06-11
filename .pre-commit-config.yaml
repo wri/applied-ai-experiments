@@ -22,8 +22,10 @@ repos:
     rev: v1.5.0
     hooks:
       - id: detect-secrets
-        args: ['--baseline', '.secrets.baseline']
-        exclude: pnpm-lock\.yaml$
+        # KeywordDetector disabled: too noisy in a BYOK-themed repo (flags any
+        # string near "apiKey"/"secret"); format- and entropy-based detectors stay on
+        args: ['--baseline', '.secrets.baseline', '--disable-plugin', 'KeywordDetector']
+        exclude: (pnpm-lock\.yaml$|/dist/)
 
   # General file hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
