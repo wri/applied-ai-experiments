@@ -25,7 +25,9 @@ repos:
         # KeywordDetector disabled: too noisy in a BYOK-themed repo (flags any
         # string near "apiKey"/"secret"); format- and entropy-based detectors stay on
         args: ['--baseline', '.secrets.baseline', '--disable-plugin', 'KeywordDetector']
-        exclude: (pnpm-lock\.yaml$|/dist/)
+        # /dist/ and /exports/ are bundled build output (minified JS is full of
+        # high-entropy false positives); their sources are scanned directly
+        exclude: (pnpm-lock\.yaml$|/dist/|/exports/)
 
   # General file hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -39,4 +41,6 @@ repos:
       - id: check-json
       - id: check-added-large-files
         args: ['--maxkb=1000']
+        # marimo exports bundle large vendored assets (plotly, wasm) by design
+        exclude: /exports/
       - id: check-merge-conflict
