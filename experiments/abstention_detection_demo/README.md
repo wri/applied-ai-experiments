@@ -1,6 +1,25 @@
-# {Experiment Title}
+# Abstention Detection Demos
 
-> One to three sentences on what this does and what it produces. See [brief.md](./brief.md) for the full context and findings.
+> Abstention is an LLM's refusal — or failure — to answer a question. 
+
+LLMs often provide a text response to the user without answering the question
+the user asked, with an apology, or requesting a clarification, or by
+explaining why it can't perform a particular action. These can be hard to
+detect. 
+
+Abstention is not inherently good or bad; the interpretation depends on
+context. A positive intepretation might be the model is refusing the answer
+a malicious query. A negative interpretation might be an inability for the
+LLM to answer when it should be able to. 
+
+Product teams want to detect abstention to help understand, evaluate and
+improve the LLM systems. 
+
+This experiment looks at different ways to detect abstention. We will start
+with two approaches: 
+* stop word detection: A simple approach that just detects for the presence
+  of certain trigger words. 
+* the Wang method using a fine-tuned model.  
 
 ## Setup
 
