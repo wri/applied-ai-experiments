@@ -13,14 +13,30 @@
 </script>
 
 <section>
-  <h3>Header Only</h3>
+  <h3>Header (the standard shape)</h3>
   <div style="border: 1px solid var(--ui); border-radius: 0.25rem; overflow: hidden;">
-    <DemoHeader title="Text Classifier" subtitle="Classify text using AI models" />
+    <DemoHeader
+      title="Text Classifier"
+      description="Classify text using AI models, then compare how each label held up."
+    />
+  </div>
+</section>
+
+<section>
+  <h3>Header with a live/mock badge</h3>
+  <div style="border: 1px solid var(--ui); border-radius: 0.25rem; overflow: hidden;">
+    <DemoHeader title="Text Classifier" mode="mock" />
+  </div>
+  <div style="border: 1px solid var(--ui); border-radius: 0.25rem; overflow: hidden; margin-top: 0.5rem;">
+    <DemoHeader title="Text Classifier" mode="live" modeLabel="claude-sonnet-4-6" />
   </div>
 </section>
 
 <section>
   <h3>Header with Custom Actions</h3>
+  <p style="font-size: 0.8125rem; color: var(--tx-2); margin: 0 0 0.5rem 0;">
+    Icon chrome only. Labelled controls belong in DemoLayout's <code>banner</code> row.
+  </p>
   <div style="border: 1px solid var(--ui); border-radius: 0.25rem; overflow: hidden;">
     <DemoHeader title="Image Analyzer">
       {#snippet actions()}

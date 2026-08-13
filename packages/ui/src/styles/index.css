@@ -16,6 +16,30 @@
 @import './prototype-light.css';
 @import './prototype-high-contrast.css';
 
+/* Document reset.
+ *
+ * Unscoped on purpose: the UA's default 8px body margin has to go before any
+ * `data-variant` wrapper exists, and a wrapper selector can't reach <body>
+ * from inside. Demos that mount the variant on a <div> (rather than on <html>
+ * via app.html) were each shipping a stray 8px gutter around the whole app —
+ * five of them at once. Fixing it here means no demo has to remember to.
+ *
+ * border-box is the assumption every component in this library is written
+ * against; stating it once keeps a demo that forgets its own reset from
+ * rendering subtly wrong padding.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 /* Base styles for prototype variant */
 [data-variant="prototype"] {
   font-family: var(--font-body);
@@ -23,6 +47,18 @@
   line-height: var(--text-body-line-height);
   color: var(--tx);
   background-color: var(--bg);
+}
+
+/* When the variant root is <html> (hub, demo app.html theme bootstrap), the
+   base rule above must not shrink the root font-size — that would deflate
+   every rem-based token to 81% of its intended size. Body text still gets
+   --text-body-font-size via inheritance from the rule below. */
+html[data-variant="prototype"] {
+  font-size: 100%;
+}
+
+html[data-variant="prototype"] body {
+  font-size: var(--text-body-font-size);
 }
 
 /* Global focus-visible styles for interactive elements */

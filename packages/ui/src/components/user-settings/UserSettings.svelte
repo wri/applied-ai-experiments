@@ -12,6 +12,11 @@
     position?: 'bottom-left' | 'bottom-right' | 'bottom-center';
     showTheme?: boolean;
     showApiKeys?: boolean;
+    /**
+     * Bindable so a sibling can open this popover — the header's live/mock
+     * badge is a shortcut into the keys panel, which needs to reach in here.
+     */
+    open?: boolean;
     class?: string;
   }
 
@@ -21,10 +26,10 @@
     position = 'bottom-right',
     showTheme = true,
     showApiKeys = true,
+    open: isOpen = $bindable(false),
     class: className = '',
   }: Props = $props();
 
-  let isOpen = $state(false);
   let triggerElement: HTMLElement | null = $state(null);
 
   function handleTriggerClick(event: MouseEvent) {

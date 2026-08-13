@@ -24,8 +24,8 @@
   {...rest}
 >
   <svg
-    width="18"
-    height="18"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -43,41 +43,42 @@
 </button>
 
 <style>
+  /* Matches the HeaderButton/ThemeSwitcher header chrome. */
   .ui-user-settings-trigger {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
+    font-size: var(--text-ui);
     font-weight: 500;
-    border-radius: var(--radius-md);
-    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ui);
     cursor: pointer;
-    transition: all var(--transition-fast, 0.15s) ease;
-    background-color: transparent;
+    transition: all var(--transition-fast, 100ms) ease;
+    background-color: var(--bg);
     color: var(--tx-2);
   }
 
   .ui-user-settings-trigger.variant-icon {
-    padding: 0.5rem;
-    min-width: 2.25rem;
-    min-height: 2.25rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
   }
 
   .ui-user-settings-trigger.variant-icon-label {
-    padding: 0.5rem 0.75rem;
+    height: 2rem;
+    padding: 0 0.5rem;
   }
 
   .ui-user-settings-trigger:hover {
-    background-color: var(--bg-2);
-    border-color: var(--ui);
+    border-color: var(--ui-2);
     color: var(--tx);
   }
 
   .ui-user-settings-trigger.active {
     background-color: var(--bg-3);
-    border-color: var(--ui);
+    border-color: var(--primary);
     color: var(--tx);
   }
 

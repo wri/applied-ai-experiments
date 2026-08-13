@@ -94,12 +94,18 @@
 
   // Get models for a provider
   function getModelsForProvider(id: ProviderId): ModelInfo[] {
-    if (config?.providers[id]) {
-      // Config mode: convert ModelConfig to ModelInfo
-      return config.providers[id]!.models.map(m => ({
+    const providerConfig = config?.providers[id];
+    if (providerConfig) {
+      // Config mode: curated models from the static config.
+      const curated: ModelInfo[] = providerConfig.models.map(m => ({
         ...m,
         provider: id,
       }));
+      if (!providerConfig.allowDynamic) return curated;
+      // Hybrid: append live-discovered models not already curated (by id).
+      const seen = new Set(curated.map(m => m.id));
+      const live = (dynamicModels[id] ?? []).filter(m => !seen.has(m.id));
+      return [...curated, ...live];
     }
     // Dynamic mode: use models from BYOK stores
     return dynamicModels[id] ?? [];
@@ -156,6 +162,12 @@
 
   // Check if the active provider needs a key
   const activeProviderNeedsKey = $derived(activeProviderId ? providerNeedsKey(activeProviderId) : false);
+
+  // Optional per-provider note shown when it has no models (e.g. a local
+  // provider like Ollama that couldn't be reached).
+  const activeEmptyNote = $derived(
+    activeProviderId ? config?.providers[activeProviderId]?.emptyNote ?? '' : ''
+  );
 
   function handleOpen() {
     isOpen = true;
@@ -426,6 +438,8 @@
             >
               {#if searchQuery}
                 No models found matching "{searchQuery}"
+              {:else if activeEmptyNote}
+                {activeEmptyNote}
               {:else}
                 No models available
               {/if}

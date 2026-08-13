@@ -48,6 +48,15 @@
 </section>
 
 <section>
+  <h3>Sizes</h3>
+  <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px;">
+    <SearchInput size="sm" placeholder="Small" />
+    <SearchInput size="md" placeholder="Medium (default)" />
+    <SearchInput size="lg" placeholder="Large" />
+  </div>
+</section>
+
+<section>
   <h3>Different Widths</h3>
   <div style="display: flex; flex-direction: column; gap: 1rem;">
     <div style="width: 200px;">

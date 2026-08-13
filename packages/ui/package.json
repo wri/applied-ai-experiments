@@ -30,7 +30,7 @@
   "dependencies": {
     "@byo-keys/core": "workspace:*",
     "@byo-keys/svelte": "workspace:*",
-    "marked": "^12.0.0",
+    "marked": "^16.0.0",
     "shiki": "^3.0.0"
   },
   "devDependencies": {

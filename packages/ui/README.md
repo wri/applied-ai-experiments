@@ -32,8 +32,11 @@ Use the `ThemeSwitcher` component for interactive switching (persists to localSt
 
 ## Components
 
+**Full props for every component → [COMPONENTS.md](./COMPONENTS.md)** (includes bindable
+markers, snippets, and gotchas). The list below is the inventory by category.
+
 ### Core UI
-`Button` · `Card` · `Panel` · `Badge` · `Alert` · `Input` · `Select` · `Textarea` · `Toggle` · `Slider` · `Spinner` · `Skeleton` · `SearchInput` · `Tabs` · `Modal` · `CopyButton` · `EmptyState` · `StepIndicator` · `ThemeSwitcher`
+`Button` · `Card` · `Panel` · `Badge` · `Alert` · `Input` · `Select` · `Textarea` · `Toggle` · `Slider` · `Spinner` · `Skeleton` · `SearchInput` · `Tabs` · `Tooltip` · `Modal` · `CopyButton` · `EmptyState` · `StepIndicator` · `ThemeSwitcher`
 
 ### AI / LLM
 `ChatMessage` · `StreamingText` · `StreamingMarkdown` · `TokenCounter` · `LatencyBadge` · `ThinkingSummary` · `CostDisplay` · `ComparisonTable`
@@ -45,7 +48,7 @@ Use the `ThemeSwitcher` component for interactive switching (persists to localSt
 `ApiKeyManager` · `ProviderSelector` · `ModelSelector`
 
 ### Layout
-`DemoLayout` · `DemoHeader` · `DemoFooter`
+`DemoLayout` · `DemoHeader` · `DemoFooter` · `HeaderButton` (icon/text header control matching the theme/settings chrome; requires a sentence-case `label`) · `HeaderNav` (data-driven sub-view nav for the `headerNav` slot)
 
 ### Feedback
 `Toast` · `ToastContainer` · `toast.success()` / `toast.error()` / `toast.info()` / `toast.warning()`
@@ -76,7 +79,10 @@ The design system uses CSS custom properties organized in layers:
 2. **Theme** (`prototype.css`, `prototype-light.css`, `prototype-high-contrast.css`) — semantic tokens (`--bg`, `--tx`, `--primary`, `--ui`, etc.)
 3. **Component** — per-component tokens (`--component-button-*`, `--component-input-*`, etc.)
 
-Typography: IBM Plex Mono (UI/headings/code) + IBM Plex Sans (body).
+Typography: IBM Plex Mono (UI/headings/code) + IBM Plex Sans (body). Two type scales — a
+**compact UI scale** for chrome (labels, buttons, panel titles) and a larger **reading
+scale** (`--text-prose-*`) for long-form content rendered by `Markdown` / `StreamingMarkdown`.
+See `DESIGN.md` §3 (repo root; not tracked in git yet).
 
 ## Development
 

@@ -8,7 +8,7 @@
   interface Props {
     items: TabItem[];
     active?: string;
-    size?: 'sm' | 'md';
+    size?: 'sm' | 'md' | 'lg';
     class?: string;
     onchange?: (id: string) => void;
   }
@@ -63,6 +63,10 @@
     md: {
       padding: 'var(--space-2) var(--space-4)',
       fontSize: 'var(--text-ui)',
+    },
+    lg: {
+      padding: 'var(--space-3) var(--space-5)',
+      fontSize: 'var(--text-body)',
     },
   };
 </script>

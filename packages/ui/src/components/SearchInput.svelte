@@ -3,6 +3,7 @@
     value?: string;
     placeholder?: string;
     disabled?: boolean;
+    size?: 'sm' | 'md' | 'lg';
     class?: string;
     onchange?: (value: string) => void;
     oninput?: (value: string) => void;
@@ -13,6 +14,7 @@
     value = $bindable(''),
     placeholder = 'Search...',
     disabled = false,
+    size = 'md',
     class: className = '',
     onchange,
     oninput,
@@ -46,7 +48,7 @@
   }
 </script>
 
-<div class="ui-search-input {className}">
+<div class="ui-search-input {className}" data-size={size}>
   <div class="search-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
@@ -126,6 +128,17 @@
 
   .search-field::-webkit-search-cancel-button {
     display: none;
+  }
+
+  /* Size variants — md is the default (component-input tokens above). */
+  .ui-search-input[data-size='sm'] .search-field {
+    height: 1.75rem;
+    font-size: var(--text-ui, 0.75rem);
+  }
+
+  .ui-search-input[data-size='lg'] .search-field {
+    height: 2.5rem;
+    font-size: 0.875rem;
   }
 
   .search-clear {

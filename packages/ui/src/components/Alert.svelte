@@ -2,7 +2,7 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
-    variant?: 'info' | 'success' | 'warning' | 'error';
+    variant?: 'default' | 'info' | 'success' | 'warning' | 'error';
     dismissible?: boolean;
     ondismiss?: () => void;
     children: Snippet;
@@ -22,6 +22,7 @@
   let visible = $state(true);
 
   const icons = {
+    default: '\u2022',
     info: '\u2139',
     success: '\u2713',
     warning: '\u26A0',
@@ -71,6 +72,12 @@
     padding: 0.75rem 1rem;
     border-radius: var(--radius-md);
     border-left: 3px solid;
+  }
+
+  .ui-alert.variant-default {
+    background-color: var(--bg-2);
+    border-color: var(--ui);
+    color: var(--tx-2);
   }
 
   .ui-alert.variant-info {
