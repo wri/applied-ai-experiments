@@ -1,0 +1,98 @@
+Facility Name,Latitude,Longitude,Country,Sector
+Long Xuyên Cold Storage 1,8.8389,105.0631,Vietnam,Logistics
+Hà Tiên Data Center 2,10.7359,105.0160,Cambodia,Technology
+Phnom Penh Cold Storage 3,11.2486,104.5828,Cambodia,Logistics
+Hà Tiên Brewery 4,11.3887,104.8116,Cambodia,Food & Beverage
+Hà Tiên Bottling Plant 5,9.1412,105.2894,Vietnam,Food & Beverage
+Rạch Giá Sugar Refinery 6,106.4594,11.5435,Vietnam,Food & Beverage
+Cần Thơ Bottling Plant 7,11.0955,105.8725,Cambodia,Food & Beverage
+Vĩnh Long Cannery 8,9.9020,105.8614,Vietnam,Food & Beverage
+Cao Lãnh Cold Storage 9,10.7497,107.0732,Vietnam,Logistics
+Rạch Giá Feed Mill 10,"10°30'45""N","106°40'58""E",Vietnam,Agriculture
+Rạch Giá Cannery 11,10.7562,107.0772,Vietnam,Food & Beverage
+Phnom Penh Bottling Plant 12,10.5458,105.7508,Vietnam,Food & Beverage
+Rạch Giá Brewery 13,11.3374,106.6882,Vietnam,Food & Beverage
+Bạc Liêu Garment Factory 14,106.4116,9.9157,Vietnam,Textiles
+Trà Vinh Cold Storage 15,9.6703,106.0790,Vietnam,Logistics
+Takeo Aquafarm 16,10.3540,105.0662,Vietnam,Agriculture
+Cà Mau Rice Mill 17,"10,0574","106,0509",Vietnam,Agriculture
+Sóc Trăng Feed Mill 18,10.6515,106.8393,Vietnam,Agriculture
+Cao Lãnh Textile Mill 19,9.8686,106.0020,Vietnam,Textiles
+Cao Lãnh Cold Storage 20,10.9238,104.4754,Cambodia,Logistics
+Mỹ Tho Rice Mill 21,,,Vietnam,Agriculture
+Bến Tre Rice Mill 22,10.3379,105.5326,Vietnam,Agriculture
+Bến Tre Cold Storage 23,105.0281,10.3438,Vietnam,Logistics
+Phnom Penh Bottling Plant 24,10.7348,106.7542,Vietnam,Food & Beverage
+Bạc Liêu Cannery 25,9.2569,105.2994,Vietnam,Food & Beverage
+Sóc Trăng Brewery 26,10.5438,104.7881,Cambodia,Food & Beverage
+Takeo Feed Mill 27,10.4767,105.8931,Vietnam,Agriculture
+Hà Tiên Feed Mill 28,"9°58'06""N","105°12'27""E",Vietnam,Agriculture
+Bạc Liêu Data Center 29,10.5854,106.8482,Vietnam,Technology
+Bến Tre Aquafarm 30,10.1135,105.4953,Vietnam,Agriculture
+Cần Thơ Brewery 31,10.3915,106.9262,Vietnam,Food & Beverage
+Vĩnh Long Feed Mill 32,105.4276,9.0621,Vietnam,Agriculture
+Vĩnh Long Feed Mill 33,9.3325,105.7435,Vietnam,Agriculture
+Long XuyÃªn Aquafarm 34,11.2103,106.2663,Vietnam,Agriculture
+Kampot Brewery 35,10.6552,105.3694,Vietnam,Food & Beverage
+Bạc Liêu Textile Mill 36,9.9152,106.4531,Vietnam,Textiles
+Cà Mau Cold Storage 37,10.5589,104.1843,Cambodia,Logistics
+Rạch Giá Textile Mill 38,10.8916,106.4572,Vietnam,Textiles
+Kampot Cold Storage 39,"9,9240","105,8139",Vietnam,Logistics
+Cà Mau Shrimp Processing 40,10.6693,106.7747,Vietnam,Food & Beverage
+Cao Lãnh Feed Mill 41,11.5172,105.0623,Cambodia,Agriculture
+Trà Vinh Sugar Refinery 42,8.9942,105.0509,Vietnam,Food & Beverage
+Châu Đốc Brewery 43,9.6869,106.1214,Vietnam,Food & Beverage
+Kampot Brewery 44,10.0138,105.6833,Vietnam,Food & Beverage
+Takeo Aquafarm 45,106.8565,10.9550,Vietnam,Agriculture
+Vĩnh Long Feed Mill 46,10.5585,106.8452,Vietnam,Agriculture
+Bến Tre Textile Mill 47,10.5311,104.8303,Cambodia,Textiles
+Phnom Penh Cannery 48,,,Cambodia,Food & Beverage
+Kampot Textile Mill 49,10.2598,106.5650,Vietnam,Textiles
+Cao Lãnh Aquafarm 50,"9°23'36""N","105°36'43""E",Vietnam,Agriculture
+Trà Vinh Shrimp Processing 51,10.2019,106.7910,Vietnam,Food & Beverage
+Hà Tiên Shrimp Processing 52,10.2517,106.6881,Vietnam,Food & Beverage
+Bạc Liêu Sugar Refinery 53,10.5510,104.3561,Cambodia,Food & Beverage
+Rạch Giá Data Center 54,9.9575,105.9030,Vietnam,Technology
+Hà Tiên Garment Factory 55,10.8423,104.6115,Cambodia,Textiles
+Takeo Rice Mill 56,"9,2084","105,7285",Vietnam,Agriculture
+Rạch Giá Bottling Plant 57,11.5005,104.3806,Cambodia,Food & Beverage
+Trà Vinh Cold Storage 58,9.4903,105.3545,Vietnam,Logistics
+Trà Vinh Data Center 59,107.0413,10.8461,Vietnam,Technology
+Hà Tiên Textile Mill 60,9.5876,106.2896,Vietnam,Textiles
+Long Xuyên Feed Mill 61,10.6384,106.7967,Vietnam,Agriculture
+Kampot Garment Factory 62,10.5113,106.9515,Vietnam,Textiles
+Cao LÃ£nh Sugar Refinery 63,9.9075,105.7717,Vietnam,Food & Beverage
+Mỹ Tho Sugar Refinery 64,10.0970,105.1225,Vietnam,Food & Beverage
+Sóc Trăng Rice Mill 65,9.5928,106.2813,Vietnam,Agriculture
+Rạch Giá Cannery 66,10.4729,106.6920,Vietnam,Food & Beverage
+Mỹ Tho Rice Mill 67,9.5067,106.2142,Vietnam,Agriculture
+Phnom Penh Sugar Refinery 68,106.9239,10.6977,Vietnam,Food & Beverage
+Bến Tre Data Center 69,9.4979,106.2447,Vietnam,Technology
+Trà Vinh Shrimp Processing 70,9.3662,105.4968,Vietnam,Food & Beverage
+Cần Thơ Feed Mill 71,9.5724,106.2864,Vietnam,Agriculture
+Hà Tiên Feed Mill 72,"10°44'47""N","107°03'19""E",Vietnam,Agriculture
+Cần Thơ Feed Mill 73,9.6760,106.1882,Vietnam,Agriculture
+Phnom Penh Cannery 74,9.4003,105.2162,Vietnam,Food & Beverage
+Rạch Giá Textile Mill 75,10.6202,104.2309,Cambodia,Textiles
+Mỹ Tho Textile Mill 76,9.4225,106.0511,Vietnam,Textiles
+Cà Mau Sugar Refinery 77,,,Cambodia,Food & Beverage
+Trà Vinh Brewery 78,10.9073,106.9052,Vietnam,Food & Beverage
+Long Xuyên Garment Factory 79,11.1851,106.7385,Vietnam,Textiles
+Rạch Giá Brewery 80,9.9700,105.6376,Vietnam,Food & Beverage
+Rạch Giá Brewery 81,106.8519,10.6273,Vietnam,Food & Beverage
+Phnom Penh Aquafarm 82,10.5231,104.9190,Vietnam,Agriculture
+Phnom Penh Shrimp Processing 83,9.9826,105.5107,Vietnam,Food & Beverage
+Long Xuyên Textile Mill 84,9.9999,105.2239,Vietnam,Textiles
+Bến Tre Textile Mill 85,"9,9690","105,5116",Vietnam,Textiles
+Long Xuyên Textile Mill 86,10.5057,104.3170,Cambodia,Textiles
+Kampot Cold Storage 87,10.7835,105.4117,Vietnam,Logistics
+Bến Tre Bottling Plant 88,10.5135,105.5159,Vietnam,Food & Beverage
+Vĩnh Long Data Center 89,10.6304,104.8230,Cambodia,Technology
+Hà Tiên Rice Mill 90,10.3041,105.7148,Vietnam,Agriculture
+Mỹ Tho Aquafarm 91,10.8154,106.8431,Vietnam,Agriculture
+Cần Thơ Garment Factory 92,10.3463,105.3718,Vietnam,Textiles
+Đà Nẵng Cold Storage 93,16.0678,108.2208,Vietnam,Logistics
+Nha Trang Cannery 94,12.2451,109.1943,Vietnam,Food & Beverage
+Hải Phòng Textile Mill 95,20.8651,106.6838,Vietnam,Textiles
+Hà Tiên Brewery 4,11.3887,104.8116,Cambodia,Food & Beverage
+Cần Thơ Brewery 31,10.3915,106.9262,Vietnam,Food & Beverage

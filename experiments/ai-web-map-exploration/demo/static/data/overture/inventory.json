@@ -1,0 +1,497 @@
+{
+	"release": "2026-06-17.0",
+	"bbox": {
+		"xmin": 105.6,
+		"ymin": 9.95,
+		"xmax": 105.9,
+		"ymax": 10.15
+	},
+	"extractedAt": "2026-07-06T23:01:42.461Z",
+	"places_file_extents": [
+		{
+			"file": "part-00000-6c973aba-862d-590f-a178-70bcd31cde1c-c000.zstd.parquet",
+			"xmin": -179.998,
+			"xmax": -76.632,
+			"ymin": -84.838,
+			"ymax": 28.473
+		},
+		{
+			"file": "part-00001-ddbf8ca5-c261-5b5f-b256-7c40face457a-c000.zstd.parquet",
+			"xmin": -176.888,
+			"xmax": -76.632,
+			"ymin": 28.473,
+			"ymax": 34.832
+		},
+		{
+			"file": "part-00002-85d36905-50d8-5942-afcd-d2023ce6f0f4-c000.zstd.parquet",
+			"xmin": -179.817,
+			"xmax": -88.891,
+			"ymin": 34.832,
+			"ymax": 81.752
+		},
+		{
+			"file": "part-00003-75b82572-735d-583c-96ed-02855140d06a-c000.zstd.parquet",
+			"xmin": -88.891,
+			"xmax": -76.632,
+			"ymin": 34.832,
+			"ymax": 82.717
+		},
+		{
+			"file": "part-00004-b0dde21c-44b9-5d05-b241-b7564f8a1cfb-c000.zstd.parquet",
+			"xmin": -75.938,
+			"xmax": 3.528,
+			"ymin": -84.928,
+			"ymax": -21.119
+		},
+		{
+			"file": "part-00005-d4b9467d-61b3-5509-90bd-2a4bb0f392fb-c000.zstd.parquet",
+			"xmin": -76.632,
+			"xmax": 4.155,
+			"ymin": -21.119,
+			"ymax": 39.595
+		},
+		{
+			"file": "part-00006-69fa6c57-1b3b-5f37-98ba-da6c075020be-c000.zstd.parquet",
+			"xmin": -76.632,
+			"xmax": -2.538,
+			"ymin": 39.595,
+			"ymax": 83.571
+		},
+		{
+			"file": "part-00007-2aa05b02-fb39-5684-84f8-0809b022962c-c000.zstd.parquet",
+			"xmin": -2.538,
+			"xmax": 4.155,
+			"ymin": 39.595,
+			"ymax": 66.515
+		},
+		{
+			"file": "part-00008-9948bcca-a3ba-57bc-b8c5-5be66a334798-c000.zstd.parquet",
+			"xmin": 4.155,
+			"xmax": 72.542,
+			"ymin": -84.738,
+			"ymax": 40.753
+		},
+		{
+			"file": "part-00009-2ac6726c-52ad-5fb6-8dd8-f57fb773f9c2-c000.zstd.parquet",
+			"xmin": 4.155,
+			"xmax": 72.522,
+			"ymin": 40.753,
+			"ymax": 47.05
+		},
+		{
+			"file": "part-00010-dcfd1843-7c1b-534c-b477-ed80dbbb5ad3-c000.zstd.parquet",
+			"xmin": 4.155,
+			"xmax": 11.759,
+			"ymin": 47.05,
+			"ymax": 79.856
+		},
+		{
+			"file": "part-00011-bfc558ea-f8d3-5948-b8fa-451c7311e005-c000.zstd.parquet",
+			"xmin": 11.759,
+			"xmax": 72.542,
+			"ymin": 47.05,
+			"ymax": 82.327
+		},
+		{
+			"file": "part-00012-09d51a62-b2e8-5a1a-a8f5-0cedf1b1d6c8-c000.zstd.parquet",
+			"xmin": 72.6,
+			"xmax": 106.739,
+			"ymin": -84.98,
+			"ymax": 17.247
+		},
+		{
+			"file": "part-00013-2c19a775-e79a-5ef4-a6f4-3d940428b192-c000.zstd.parquet",
+			"xmin": 106.739,
+			"xmax": 179.998,
+			"ymin": -84.125,
+			"ymax": 17.247
+		},
+		{
+			"file": "part-00014-2ab6d75c-0e1b-53e0-b09a-b2a6352dd8c7-c000.zstd.parquet",
+			"xmin": 72.542,
+			"xmax": 114.119,
+			"ymin": 17.247,
+			"ymax": 81.083
+		},
+		{
+			"file": "part-00015-0027dc1a-a5a9-54b5-9b90-bb721c5264fd-c000.zstd.parquet",
+			"xmin": 114.119,
+			"xmax": 179.956,
+			"ymin": 17.248,
+			"ymax": 77.1
+		}
+	],
+	"land_use": [
+		{
+			"subtype": "agriculture",
+			"class": "farmland",
+			"count": 373
+		},
+		{
+			"subtype": "managed",
+			"class": "grass",
+			"count": 282
+		},
+		{
+			"subtype": "residential",
+			"class": "residential",
+			"count": 281
+		},
+		{
+			"subtype": "horticulture",
+			"class": "orchard",
+			"count": 128
+		},
+		{
+			"subtype": "recreation",
+			"class": "pitch",
+			"count": 101
+		},
+		{
+			"subtype": "education",
+			"class": "school",
+			"count": 86
+		},
+		{
+			"subtype": "park",
+			"class": "park",
+			"count": 56
+		},
+		{
+			"subtype": "developed",
+			"class": "industrial",
+			"count": 54
+		},
+		{
+			"subtype": "horticulture",
+			"class": "garden",
+			"count": 47
+		},
+		{
+			"subtype": "medical",
+			"class": "hospital",
+			"count": 29
+		},
+		{
+			"subtype": "aquaculture",
+			"class": "aquaculture",
+			"count": 29
+		},
+		{
+			"subtype": "pedestrian",
+			"class": "pedestrian",
+			"count": 23
+		},
+		{
+			"subtype": "developed",
+			"class": "commercial",
+			"count": 16
+		},
+		{
+			"subtype": "education",
+			"class": "college",
+			"count": 14
+		},
+		{
+			"subtype": "agriculture",
+			"class": "farmyard",
+			"count": 13
+		},
+		{
+			"subtype": "cemetery",
+			"class": "cemetery",
+			"count": 12
+		},
+		{
+			"subtype": "education",
+			"class": "university",
+			"count": 11
+		},
+		{
+			"subtype": "education",
+			"class": "kindergarten",
+			"count": 10
+		},
+		{
+			"subtype": "construction",
+			"class": "construction",
+			"count": 10
+		},
+		{
+			"subtype": "cemetery",
+			"class": "grave_yard",
+			"count": 8
+		},
+		{
+			"subtype": "religious",
+			"class": "religious",
+			"count": 8
+		},
+		{
+			"subtype": "recreation",
+			"class": "stadium",
+			"count": 6
+		},
+		{
+			"subtype": "recreation",
+			"class": "resort",
+			"count": 6
+		},
+		{
+			"subtype": "military",
+			"class": "military",
+			"count": 6
+		},
+		{
+			"subtype": "medical",
+			"class": "clinic",
+			"count": 4
+		},
+		{
+			"subtype": "recreation",
+			"class": "playground",
+			"count": 3
+		},
+		{
+			"subtype": "military",
+			"class": "base",
+			"count": 2
+		},
+		{
+			"subtype": "education",
+			"class": "schoolyard",
+			"count": 2
+		},
+		{
+			"subtype": "developed",
+			"class": "retail",
+			"count": 2
+		},
+		{
+			"subtype": "recreation",
+			"class": "track",
+			"count": 2
+		},
+		{
+			"subtype": "developed",
+			"class": "works",
+			"count": 2
+		},
+		{
+			"subtype": "horticulture",
+			"class": "plant_nursery",
+			"count": 2
+		},
+		{
+			"subtype": "medical",
+			"class": "doctors",
+			"count": 2
+		},
+		{
+			"subtype": "education",
+			"class": "driving_school",
+			"count": 2
+		},
+		{
+			"subtype": "agriculture",
+			"class": "meadow",
+			"count": 1
+		},
+		{
+			"subtype": "golf",
+			"class": "golf_course",
+			"count": 1
+		},
+		{
+			"subtype": "entertainment",
+			"class": "theme_park",
+			"count": 1
+		},
+		{
+			"subtype": "residential",
+			"class": "garages",
+			"count": 1
+		},
+		{
+			"subtype": "protected",
+			"class": "national_park",
+			"count": 1
+		},
+		{
+			"subtype": "military",
+			"class": "barracks",
+			"count": 1
+		},
+		{
+			"subtype": "recreation",
+			"class": "recreation_ground",
+			"count": 1
+		},
+		{
+			"subtype": "pedestrian",
+			"class": "plaza",
+			"count": 1
+		}
+	],
+	"place_basic_categories": {
+		"restaurant": 494,
+		"coffee_shop": 421,
+		"personal_or_beauty_service": 416,
+		"uncategorized": 396,
+		"fashion_and_apparel_store": 268,
+		"hotel": 241,
+		"electronics_store": 207,
+		"cafe": 200,
+		"casual_eatery": 177,
+		"professional_service": 126,
+		"wellness_service": 115,
+		"hardware_home_and_garden_store": 97,
+		"real_estate_service": 76,
+		"elementary_school": 74,
+		"food_and_beverage_store": 62,
+		"non_alcoholic_beverage_venue": 59,
+		"dental_clinic": 58,
+		"auto_dealer": 56,
+		"vehicle_dealer": 55,
+		"flowers_and_gifts_store": 52,
+		"hospital": 50,
+		"gym": 50,
+		"specialty_school": 49,
+		"preschool": 39,
+		"place_of_learning": 37,
+		"vehicle_service": 37,
+		"event_or_party_service": 36,
+		"travel_service": 35,
+		"automotive_service": 34,
+		"bar": 33,
+		"home_service": 31,
+		"music_venue": 30,
+		"buddhist_place_of_worship": 30,
+		"fast_food_restaurant": 28,
+		"bank_or_credit_union": 27,
+		"lodging": 26,
+		"technical_service": 26,
+		"manufacturer": 25,
+		"college_university": 25,
+		"fitness_studio": 24,
+		"pharmacy_and_drug_store": 23,
+		"building_or_construction_service": 23,
+		"corporate_or_business_office": 22,
+		"animal_or_pet_service": 21,
+		"supplier_or_distributor": 20,
+		"personal_care_and_beauty_store": 20,
+		"vehicle_parts_store": 19,
+		"shopping_mall": 16,
+		"sporting_goods_store": 16,
+		"government_office": 16,
+		"financial_service": 16,
+		"sport_or_fitness_facility": 15,
+		"convenience_store": 15,
+		"family_service": 15,
+		"specialty_store": 15,
+		"printing_service": 14,
+		"animal_and_pet_store": 14,
+		"musical_instrument_and_pro_audio_store": 13,
+		"high_school": 12,
+		"arts_crafts_and_hobby_store": 12,
+		"warehouse_club_store": 12,
+		"historic_site": 12,
+		"laundry_service": 11,
+		"christian_place_of_worship": 10,
+		"social_or_community_service": 10,
+		"religious_organization": 10,
+		"second_hand_store": 9,
+		"agricultural_service": 9,
+		"campus_building": 9,
+		"resort": 8,
+		"ground_transport_facility_or_service": 8,
+		"stadium_arena": 7,
+		"middle_school": 7,
+		"design_service": 7,
+		"sport_or_recreation_club": 7,
+		"books_music_and_video_store": 7,
+		"b2b_service": 6,
+		"alcoholic_beverage_venue": 6,
+		"rental_service": 6,
+		"b2b_transportation_and_storage_service": 6,
+		"smoothie_juice_bar": 6,
+		"medical_service": 6,
+		"bridge": 6,
+		"media_service": 5,
+		"department_store": 5,
+		"attorney_or_law_firm": 5,
+		"tutoring_service": 5,
+		"specialized_health_care": 5,
+		"police_station": 5,
+		"research_institute": 4,
+		"surgery": 4,
+		"movie_theater": 4,
+		"farm": 4,
+		"legal_service": 4,
+		"office_supply_store": 4,
+		"amusement_park": 4,
+		"airport": 4,
+		"courthouse": 4,
+		"toys_and_games_store": 4,
+		"gaming_venue": 3,
+		"reproductive_perinatal_and_womens_care": 3,
+		"swimming_pool": 3,
+		"park": 3,
+		"physical_medicine_and_rehabilitation": 3,
+		"shipping_or_delivery_service": 3,
+		"dance_club": 3,
+		"complementary_and_alternative_medicine": 3,
+		"atm": 2,
+		"pediatric_clinic": 2,
+		"private_lodging": 2,
+		"gas_station": 2,
+		"b2b_industrial_and_machine_service": 2,
+		"bed_and_breakfast": 2,
+		"specialized_medical_facility": 2,
+		"sport_team": 2,
+		"parking": 2,
+		"museum": 2,
+		"public_transit_facility_or_service": 2,
+		"sport_court": 2,
+		"civic_organization": 2,
+		"lounge": 2,
+		"primary_care_or_general_clinic": 2,
+		"military_site": 2,
+		"b2b_energy_and_utility_service": 2,
+		"wholesaler": 2,
+		"art_gallery": 1,
+		"theatre_venue": 1,
+		"cultural_center": 1,
+		"educational_service": 1,
+		"water_utility_provider": 1,
+		"sculpture_statue": 1,
+		"library": 1,
+		"outpatient_care_facility": 1,
+		"arcade": 1,
+		"winery": 1,
+		"food_bank": 1,
+		"public_plaza": 1,
+		"political_organization": 1,
+		"beach": 1,
+		"market": 1,
+		"food_truck_stand": 1,
+		"performing_arts_venue": 1,
+		"environmental_or_ecological_service": 1,
+		"fairgrounds": 1,
+		"inn": 1,
+		"electric_utility_provider": 1,
+		"government_department": 1,
+		"skate_park": 1,
+		"farmers_market": 1,
+		"skating_rink": 1,
+		"community_center": 1
+	},
+	"building_height_m": {
+		"total": 395131,
+		"with_height": 9,
+		"p50": 5,
+		"p90": 21.4,
+		"p99": 69.5,
+		"max": 74.8
+	}
+}

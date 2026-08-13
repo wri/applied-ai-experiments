@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-variant="prototype">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+		<script>
+			// Pre-paint theme restore; same "prototype-theme" key as the hub. Falls
+			// back to the hub's legacy "theme" key, then system preference.
+			(function () {
+				var VALID = ['light', 'dark', 'high-contrast'];
+				var t = null;
+				try {
+					t = localStorage.getItem('prototype-theme') || localStorage.getItem('theme');
+				} catch (e) {}
+				if (VALID.indexOf(t) === -1) {
+					t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				}
+				document.documentElement.setAttribute('data-theme', t);
+			})();
+		</script>
+		<!-- SEO:START (generated from brief.md by sync-demo-meta.py — do not edit by hand) -->
+		<title>AI Web Map Exploration | Applied AI Experiments</title>
+		<meta name="description" content="A single web-map app that bundles several self-contained designprobes for AI-powered features in a map UI — command palettes and context surfaces, structured-output cartography, in-browser cloud-native querying, and simulated agents." />
+		<link rel="canonical" href="https://wri.github.io/applied-ai-experiments/ai-web-map-exploration/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="AI Web Map Exploration | Applied AI Experiments" />
+		<meta property="og:description" content="A single web-map app that bundles several self-contained designprobes for AI-powered features in a map UI — command palettes and context surfaces, structured-output cartography, in-browser cloud-native querying, and simulated agents." />
+		<meta property="og:url" content="https://wri.github.io/applied-ai-experiments/ai-web-map-exploration/" />
+		<meta property="og:site_name" content="WRI Applied AI Experiments" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:image" content="https://wri.github.io/applied-ai-experiments/og/ai-web-map-exploration.png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="AI Web Map Exploration — WRI Applied AI Experiments" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="AI Web Map Exploration | Applied AI Experiments" />
+		<meta name="twitter:description" content="A single web-map app that bundles several self-contained designprobes for AI-powered features in a map UI — command palettes and context surfaces, structured-output cartography, in-browser cloud-native querying, and simulated agents." />
+		<meta name="twitter:image" content="https://wri.github.io/applied-ai-experiments/og/ai-web-map-exploration.png" />
+		<meta name="twitter:image:alt" content="AI Web Map Exploration — WRI Applied AI Experiments" />
+		<!-- SEO:END -->
+		%sveltekit.head%
+	</head>
+	<body data-variant="prototype">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
