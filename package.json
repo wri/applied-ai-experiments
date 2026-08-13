@@ -1,0 +1,10 @@
+{
+  "name": "applied-ai-experiments",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Workspace root. Exists to pin the toolchain in one place — pnpm reads packageManager from the root project only, so a nested copy is ignored and drifts.",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=24"
+  }
+}
