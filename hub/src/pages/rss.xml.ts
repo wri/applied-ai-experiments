@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
-import { loadExperimentIndex, visibleInsights } from '../utils/experiments';
+import { loadExperimentIndex, visibleInsights, aggregatable } from '../utils/experiments';
 
 const SITE = 'https://wri.github.io';
 
@@ -10,8 +10,10 @@ export async function GET(context: APIContext) {
   const rawBase = import.meta.env.BASE_URL;
   const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-  const completed = index.experiments
-    .filter((e) => e.status === 'completed')
+  // "Completed: <a reference scaffold>" is not news about applied AI, and the
+  // feed is the one surface a reader can't scope for themselves.
+  const done = aggregatable(index.experiments)
+    .filter((e) => e.status === 'done')
     .map((e) => ({
       title: `Completed: ${e.title}`,
       description: [e.description, e.results?.summary].filter(Boolean).join(' — '),
@@ -27,7 +29,7 @@ export async function GET(context: APIContext) {
     pubDate: i.data.date,
   }));
 
-  const items = [...completed, ...insights].sort(
+  const items = [...done, ...insights].sort(
     (a, b) => b.pubDate.getTime() - a.pubDate.getTime()
   );
 

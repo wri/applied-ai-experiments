@@ -2,118 +2,127 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import taxonomy from '../data/taxonomy.json';
-import { loadExperimentIndex, collectLessons, getThemeConfig, visibleInsights } from '../utils/experiments';
+import { loadExperimentIndex, collectLearnings, getThemeConfig, displayType, visibleInsights, renderLearningInline, assertInsightsPresent } from '../utils/experiments';
 
 const index = await loadExperimentIndex();
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-const { byTheme, untagged, total: totalLessons, completed } = collectLessons(index);
+// Two groupings, on purpose:
+//   byPrimaryTheme — where a learning is *listed*. Its experiment's first theme,
+//     per the content guide, so each learning renders exactly once instead of
+//     repeating under every theme its experiment carries.
+//   byTheme — what a chip *matches*. A learning tagged prototyping+geospatial is
+//     listed under prototyping but still turns up under the geospatial filter,
+//     so a secondary theme doesn't hide half its learnings.
+const { byTheme, byPrimaryTheme, untagged, total: totalLearnings, sources } = collectLearnings(index);
 
-// Group themes under their pillars, ordered by lesson count within each pillar.
+// Group themes under their pillars, ordered by learning count within each pillar.
 const pillarGroups = taxonomy.pillars
   .map((p) => ({
     name: p.name,
     themes: p.themes
-      .filter((t) => byTheme.has(t))
-      .sort((a, b) => (byTheme.get(b)?.length ?? 0) - (byTheme.get(a)?.length ?? 0)),
+      .filter((t) => byPrimaryTheme.has(t))
+      .sort((a, b) => (byPrimaryTheme.get(b)?.length ?? 0) - (byPrimaryTheme.get(a)?.length ?? 0)),
   }))
   .filter((g) => g.themes.length > 0);
 
-// Flat, count-ordered list of themes for the filter chips.
-const chipThemes = pillarGroups.flatMap((g) => g.themes);
+// Chips cover every theme that any learning carries — including themes that are
+// never a primary and so have no section of their own.
+const chipThemes = taxonomy.pillars
+  .flatMap((p) => p.themes)
+  .filter((t) => byTheme.has(t))
+  .sort((a, b) => (byTheme.get(b)?.length ?? 0) - (byTheme.get(a)?.length ?? 0));
 
-// Synthesised insights band (top published insights).
+// Synthesised insights — this page is their home now, so show them all,
+// featured first (visibleInsights already sorts by date desc).
 const allInsights = await getCollection('insights');
 const allVisible = visibleInsights(allInsights, import.meta.env.DEV);
-const insights = allVisible.slice(0, 3);
+// A production build with no insights means the `insights/` directory wasn't in
+// the checkout — fail loudly rather than publish an empty knowledge layer.
+assertInsightsPresent(allVisible.length);
+const insights = [...allVisible].sort(
+  (a, b) => Number(b.data.featured) - Number(a.data.featured),
+);
 
-// Insight candidates: themes with a critical mass of lessons (≥4, from ≥2
-// experiments) that no published insight covers yet — a standing prompt to
-// synthesize. Capped at 2 so it stays a nudge, not a backlog.
-const coveredThemes = new Set(allVisible.flatMap((i) => i.data.themes));
-const insightCandidates = [...byTheme.entries()]
-  .map(([key, entries]) => ({
-    key,
-    cfg: getThemeConfig(key),
-    count: entries.length,
-    experimentCount: new Set(entries.map((e) => e.slug)).size,
-  }))
-  .filter((c) => c.count >= 4 && c.experimentCount >= 2 && !coveredThemes.has(c.key))
-  .sort((a, b) => b.count - a.count)
-  .slice(0, 2);
+// UTC: insight `date` frontmatter coerces to UTC midnight, which formats as the
+// previous day for any viewer west of UTC.
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Learnings | WRI Applied AI Experiments',
+  description: 'What the WRI Applied AI Group has learned — curated cross-experiment insights and per-experiment learnings, organized by theme.',
+  url: `https://wri.github.io${base}learnings/`,
+  isPartOf: { '@type': 'WebSite', name: 'WRI Applied AI Experiments', url: `https://wri.github.io${base}` },
+};
 ---
 
 <BaseLayout
   title="Learnings"
-  description="Lessons harvested from completed WRI Applied AI Group experiments, organized by theme."
+  description="What the WRI Applied AI Group has learned — curated cross-experiment insights and per-experiment learnings, organized by theme."
+  jsonLd={jsonLd}
 >
   <section class="learnings-intro">
     <h1>Learnings</h1>
     <p class="subtitle">
-      {totalLessons} {totalLessons === 1 ? 'lesson' : 'lessons'} from {completed.length} completed experiment{completed.length === 1 ? '' : 's'},
-      organized by theme. Each entry links back to the experiment it came from. For threads that run
-      across several experiments, see <a href={`${base}insights/`}>Insights</a>.
+      What we've learned so far: curated insights that synthesize threads across several
+      experiments, followed by {totalLearnings} individual learning{totalLearnings === 1 ? '' : 's'} from
+      {sources.length} experiment{sources.length === 1 ? '' : 's'}, organized by theme. Each learning
+      links back to the experiment it came from.
     </p>
   </section>
 
   {insights.length > 0 && (
-    <section class="insights-band">
+    <section class="insights-band" id="insights">
       <div class="band-head">
         <span class="eyebrow">Synthesised insights</span>
-        <a href={`${base}insights/`} class="see-all">All insights →</a>
       </div>
       <div class="band-grid">
         {insights.map((insight) => (
           <a href={`${base}insights/${insight.id}/`} class="band-card">
             <span class="band-title">{insight.data.title}</span>
             <span class="band-summary">{insight.data.summary}</span>
+            <span class="band-meta">
+              {fmtDate(insight.data.date)}
+              {insight.data.related_experiments.length > 0 &&
+                ` · ${insight.data.related_experiments.length} experiment${insight.data.related_experiments.length === 1 ? '' : 's'}`}
+            </span>
           </a>
         ))}
       </div>
     </section>
   )}
 
-  {insightCandidates.length > 0 && (
-    <aside class="candidate-callouts">
-      {insightCandidates.map((c) => (
-        <div class="candidate-callout">
-          <span class="candidate-text">
-            <strong>{c.cfg?.name ?? c.key}</strong> has {c.count} lessons from {c.experimentCount} experiments
-            and no synthesized insight yet — a candidate for <code>insights/</code>.
-          </span>
-          <a
-            href="https://github.com/wri/applied-ai-experiments/blob/main/docs/insights.md"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="candidate-link"
-          >How to write one →</a>
-        </div>
-      ))}
-    </aside>
-  )}
-
-  {totalLessons === 0 ? (
+  {totalLearnings === 0 ? (
     <div class="empty">
-      <p>No completed experiments have lessons yet.</p>
+      <p>No experiments have learnings yet.</p>
       <p class="empty-hint">
-        Lessons appear here when an experiment transitions to <code>status: completed</code>
-        with populated <code>results.lessons</code> in its <code>info.yaml</code>.
+        Learnings appear here as soon as an experiment adds a bullet to the
+        <code>## Learnings</code> section of its <code>brief.md</code> — at any status,
+        not just <code>done</code>.
       </p>
     </div>
   ) : (
     <>
-      <div class="lesson-search">
+      <div class="learning-search">
         <input
           type="search"
-          id="lesson-search"
-          placeholder="Search lessons…"
-          aria-label="Search lessons"
+          id="learning-search"
+          placeholder="Search learnings…"
+          aria-label="Search learnings"
         />
       </div>
 
       <div class="filter-chips" id="theme-filter">
-        <button class="chip active" data-theme="all">All <span class="chip-count">{totalLessons}</span></button>
+        <button class="chip active" data-theme="all">All <span class="chip-count">{totalLearnings}</span></button>
         {chipThemes.map((themeKey) => {
           const cfg = getThemeConfig(themeKey);
           return (
@@ -131,28 +140,31 @@ const insightCandidates = [...byTheme.entries()]
             <h2 class="pillar-name">{group.name}</h2>
             {group.themes.map((themeKey) => {
               const theme = getThemeConfig(themeKey);
-              const entries = byTheme.get(themeKey)!;
+              const entries = byPrimaryTheme.get(themeKey)!;
               return (
                 <section class="theme-section" data-theme={themeKey}>
                   <header class="theme-header">
                     <a href={`${base}themes/${themeKey}/`} class="theme-name">
                       {theme?.name ?? themeKey}
                     </a>
-                    <span class="theme-count">{entries.length}</span>
+                    <span class="theme-count" data-total={entries.length}>{entries.length}</span>
                   </header>
-                  <div class="lesson-list">
+                  <div class="learning-list">
                     {entries.map((entry) => (
-                      <div class="lesson-card" id={`${entry.slug}-${entry.lessonIndex}`}>
-                        <p class="lesson-text">{entry.lesson}</p>
+                      <div class="learning-card" id={`${entry.slug}-${entry.learningIndex}`} data-themes={entry.themes.join(' ')}>
+                        <p class="learning-text" set:html={renderLearningInline(entry.learning)} />
                         <button
                           class="copy-link"
-                          data-anchor={`${entry.slug}-${entry.lessonIndex}`}
-                          title="Copy link to this lesson"
-                          aria-label="Copy link to this lesson"
+                          data-anchor={`${entry.slug}-${entry.learningIndex}`}
+                          title="Copy link to this learning"
+                          aria-label="Copy link to this learning"
                         >⧉</button>
-                        <a href={`${base}experiments/${entry.slug}/#lesson-${entry.lessonIndex}`} class="lesson-source">
-                          <span class="lesson-source-title">{entry.title}</span>
-                          <span class="lesson-type">{entry.type}</span>
+                        <a href={`${base}experiments/${entry.slug}/#learning-${entry.learningIndex}`} class="learning-source">
+                          <span class="learning-source-title">{entry.title}</span>
+                          <span class="learning-badges">
+                            {entry.status !== 'done' && <span class="learning-status">{entry.status}</span>}
+                            <span class="learning-type">{displayType(entry.type)}</span>
+                          </span>
                         </a>
                       </div>
                     ))}
@@ -168,21 +180,24 @@ const insightCandidates = [...byTheme.entries()]
             <section class="theme-section" data-theme="untagged">
               <header class="theme-header">
                 <span class="theme-name theme-name-plain">Untagged</span>
-                <span class="theme-count">{untagged.length}</span>
+                <span class="theme-count" data-total={untagged.length}>{untagged.length}</span>
               </header>
-              <div class="lesson-list">
+              <div class="learning-list">
                 {untagged.map((entry) => (
-                  <div class="lesson-card" id={`${entry.slug}-${entry.lessonIndex}`}>
-                    <p class="lesson-text">{entry.lesson}</p>
+                  <div class="learning-card" id={`${entry.slug}-${entry.learningIndex}`} data-themes="">
+                    <p class="learning-text" set:html={renderLearningInline(entry.learning)} />
                     <button
                       class="copy-link"
-                      data-anchor={`${entry.slug}-${entry.lessonIndex}`}
-                      title="Copy link to this lesson"
-                      aria-label="Copy link to this lesson"
+                      data-anchor={`${entry.slug}-${entry.learningIndex}`}
+                      title="Copy link to this learning"
+                      aria-label="Copy link to this learning"
                     >⧉</button>
-                    <a href={`${base}experiments/${entry.slug}/#lesson-${entry.lessonIndex}`} class="lesson-source">
-                      <span class="lesson-source-title">{entry.title}</span>
-                      <span class="lesson-type">{entry.type}</span>
+                    <a href={`${base}experiments/${entry.slug}/#learning-${entry.learningIndex}`} class="learning-source">
+                      <span class="learning-source-title">{entry.title}</span>
+                      <span class="learning-badges">
+                        {entry.status !== 'done' && <span class="learning-status">{entry.status}</span>}
+                        <span class="learning-type">{displayType(entry.type)}</span>
+                      </span>
                     </a>
                   </div>
                 ))}
@@ -193,7 +208,7 @@ const insightCandidates = [...byTheme.entries()]
       </div>
 
       <div class="no-match empty hidden" id="no-match">
-        <p>No lessons match.</p>
+        <p>No learnings match.</p>
       </div>
     </>
   )}
@@ -287,59 +302,22 @@ const insightCandidates = [...byTheme.entries()]
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  /* --- Insight-candidate callouts --- */
-  .candidate-callouts {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .candidate-callout {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.625rem 0.875rem;
-    background: var(--bg-2);
-    border: 1px solid var(--ui);
-    border-left: 2px solid var(--primary);
-    border-radius: var(--radius-sm);
-  }
-  .candidate-text {
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--tx-2);
-  }
-  .candidate-text strong {
-    color: var(--tx);
-  }
-  .candidate-text code {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    background: var(--bg);
-    padding: 0.05rem 0.25rem;
-    border-radius: var(--radius-sm);
-  }
-  .candidate-link {
-    flex-shrink: 0;
+  .band-meta {
+    margin-top: auto;
+    padding-top: 0.375rem;
+    border-top: 1px dashed var(--ui);
     font-family: var(--font-mono);
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--tx-3);
   }
-  .candidate-link:hover {
-    color: var(--primary);
-    text-decoration: none;
-  }
 
-  /* --- Lesson search --- */
-  .lesson-search {
+  /* --- Learning search --- */
+  .learning-search {
     margin-bottom: 0.75rem;
   }
-  .lesson-search input {
+  .learning-search input {
     width: 100%;
     max-width: 28rem;
     padding: 0.4rem 0.625rem;
@@ -350,10 +328,10 @@ const insightCandidates = [...byTheme.entries()]
     font-size: 0.8125rem;
     color: var(--tx);
   }
-  .lesson-search input::placeholder {
+  .learning-search input::placeholder {
     color: var(--tx-3);
   }
-  .lesson-search input:focus {
+  .learning-search input:focus {
     outline: none;
     border-color: var(--primary);
   }
@@ -492,18 +470,18 @@ const insightCandidates = [...byTheme.entries()]
     padding: 0.125rem 0.5rem;
     border-radius: var(--radius-sm);
   }
-  .lesson-list {
+  .learning-list {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.625rem;
     padding: 0.75rem;
   }
   @media (min-width: 720px) {
-    .lesson-list {
+    .learning-list {
       grid-template-columns: 1fr 1fr;
     }
   }
-  .lesson-card {
+  .learning-card {
     position: relative;
     background: var(--bg);
     border: 1px solid var(--ui);
@@ -514,10 +492,10 @@ const insightCandidates = [...byTheme.entries()]
     gap: 0.5rem;
     scroll-margin-top: calc(var(--header-height, 3rem) + 0.75rem);
   }
-  .lesson-card.hidden {
+  .learning-card.hidden {
     display: none;
   }
-  .lesson-card:target {
+  .learning-card:target {
     border-color: var(--primary);
   }
   .copy-link {
@@ -535,7 +513,7 @@ const insightCandidates = [...byTheme.entries()]
     opacity: 0;
     transition: opacity var(--transition-fast) ease;
   }
-  .lesson-card:hover .copy-link,
+  .learning-card:hover .copy-link,
   .copy-link:focus-visible {
     opacity: 1;
   }
@@ -544,14 +522,14 @@ const insightCandidates = [...byTheme.entries()]
     border-color: var(--ui);
     background: var(--bg-2);
   }
-  .lesson-text {
+  .learning-text {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    line-height: 1.55;
+    font-size: var(--text-prose-size);
+    line-height: 1.6;
     color: var(--tx);
     margin: 0;
   }
-  .lesson-source {
+  .learning-source {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -565,22 +543,30 @@ const insightCandidates = [...byTheme.entries()]
     padding-top: 0.375rem;
     border-top: 1px dashed var(--ui);
   }
-  .lesson-source:hover {
+  .learning-source:hover {
     color: var(--primary);
   }
-  .lesson-source-title {
+  .learning-source-title {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .lesson-type {
+  .learning-badges {
     flex-shrink: 0;
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+  .learning-type,
+  .learning-status {
     font-size: 0.6rem;
     color: var(--tx-3);
     background: var(--bg-2);
     padding: 0.05rem 0.3rem;
     border-radius: var(--radius-sm);
+  }
+  .learning-status {
+    color: var(--warning);
   }
 </style>
 
@@ -589,23 +575,35 @@ const insightCandidates = [...byTheme.entries()]
   const sections = document.querySelectorAll<HTMLElement>('.theme-section');
   const groups = document.querySelectorAll<HTMLElement>('[data-pillar]');
   const noMatch = document.getElementById('no-match');
-  const searchInput = document.getElementById('lesson-search') as HTMLInputElement | null;
+  const searchInput = document.getElementById('learning-search') as HTMLInputElement | null;
 
   let activeTheme = 'all';
 
   function applyFilter() {
     const query = (searchInput?.value ?? '').trim().toLowerCase();
+    const filtering = activeTheme !== 'all' || query !== '';
     let visibleCards = 0;
     sections.forEach((section) => {
-      const themeMatch = activeTheme === 'all' || section.getAttribute('data-theme') === activeTheme;
       let sectionVisible = 0;
-      section.querySelectorAll<HTMLElement>('.lesson-card').forEach((card) => {
+      section.querySelectorAll<HTMLElement>('.learning-card').forEach((card) => {
+        // Cards are grouped under their experiment's *primary* theme but carry
+        // every theme it has, so a secondary-theme chip still finds them.
+        const themes = (card.getAttribute('data-themes') ?? '').split(' ').filter(Boolean);
+        const themeMatch = activeTheme === 'all' || themes.includes(activeTheme);
         const textMatch = !query || (card.textContent ?? '').toLowerCase().includes(query);
         const show = themeMatch && textMatch;
         card.classList.toggle('hidden', !show);
         if (show) sectionVisible++;
       });
       section.classList.toggle('hidden', sectionVisible === 0);
+      // While filtering, the header badge counts what's on screen — otherwise a
+      // section reading "14" above 3 visible cards looks broken.
+      const badge = section.querySelector<HTMLElement>('.theme-count');
+      if (badge) {
+        badge.textContent = filtering
+          ? String(sectionVisible)
+          : (badge.getAttribute('data-total') ?? String(sectionVisible));
+      }
       visibleCards += sectionVisible;
     });
     // Hide a pillar group when none of its sections are visible.
@@ -627,7 +625,7 @@ const insightCandidates = [...byTheme.entries()]
 
   searchInput?.addEventListener('input', applyFilter);
 
-  // Copy a stable deep link to an individual lesson.
+  // Copy a stable deep link to an individual learning.
   document.querySelectorAll<HTMLButtonElement>('.copy-link').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const anchor = btn.getAttribute('data-anchor');
