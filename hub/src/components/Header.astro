@@ -5,9 +5,6 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const navLinks = [
   { href: base, label: 'Home' },
   { href: `${base}experiments/`, label: 'Experiments' },
-  { href: `${base}demos/`, label: 'Demos' },
-  { href: `${base}portfolio/`, label: 'Portfolio' },
-  { href: `${base}insights/`, label: 'Insights' },
   { href: `${base}learnings/`, label: 'Learnings' },
   { href: 'https://github.com/wri/applied-ai-experiments', label: 'GitHub', external: true },
 ];
@@ -180,21 +177,21 @@ const navLinks = [
       if (current === 'high-contrast') {
         // Exit high-contrast → return to dark (default)
         document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('prototype-theme', 'dark');
       } else {
         // Enter high-contrast
         document.documentElement.setAttribute('data-theme', 'high-contrast');
-        localStorage.setItem('theme', 'high-contrast');
+        localStorage.setItem('prototype-theme', 'high-contrast');
       }
     } else {
       // Regular click: Cycle light ↔ dark
       if (current === 'light') {
         document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('prototype-theme', 'dark');
       } else {
         // From dark OR high-contrast → light
         document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
+        localStorage.setItem('prototype-theme', 'light');
       }
     }
   });
