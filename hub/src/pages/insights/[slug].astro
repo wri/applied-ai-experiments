@@ -1,0 +1,343 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ThemeTag from '../../components/ThemeTag.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { loadExperimentIndex, visibleInsights } from '../../utils/experiments';
+
+export async function getStaticPaths() {
+  const all = await getCollection('insights');
+  const insights = visibleInsights(all, import.meta.env.DEV);
+
+  const index = await loadExperimentIndex();
+  const bySlug = new Map(index.experiments.map((e) => [e.slug, e]));
+
+  return insights.map((insight) => {
+    const related = insight.data.related_experiments
+      .map((slug) => bySlug.get(slug))
+      .filter(Boolean)
+      .map((e: any) => ({ slug: e.slug, title: e.title, status: e.status }));
+    return { params: { slug: insight.id }, props: { insight, related } };
+  });
+}
+
+const { insight, related } = Astro.props;
+const { Content } = await render(insight);
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+// UTC: a `date: 2026-08-11` frontmatter value coerces to UTC midnight, which formats
+// as the previous day for any viewer west of UTC.
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const insightUrl = `https://wri.github.io${base}insights/${insight.id}/`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: insight.data.title,
+  description: insight.data.summary,
+  datePublished: insight.data.date.toISOString(),
+  url: insightUrl,
+  author: { '@type': 'Organization', name: 'World Resources Institute', url: 'https://www.wri.org' },
+  publisher: { '@type': 'Organization', name: 'World Resources Institute', url: 'https://www.wri.org' },
+};
+---
+
+<BaseLayout
+  title={insight.data.title}
+  description={insight.data.summary}
+  type="article"
+  image={`og/insights/${insight.id}.png`}
+  jsonLd={jsonLd}
+>
+  <article class="insight-detail">
+    <header class="insight-header">
+      <div class="breadcrumb">
+        <a href={base}>Home</a>
+        <span>/</span>
+        <a href={`${base}learnings/#insights`}>Insights</a>
+        <span>/</span>
+        <span>{insight.id}</span>
+      </div>
+
+      <h1>{insight.data.title}</h1>
+      <p class="summary">{insight.data.summary}</p>
+
+      <div class="header-meta">
+        <div class="themes">
+          {insight.data.themes.map((t) => <ThemeTag theme={t} />)}
+        </div>
+        <span class="byline">
+          {fmtDate(insight.data.date)}
+          {insight.data.status === 'draft' && <span class="draft-flag">Draft</span>}
+        </span>
+      </div>
+    </header>
+
+    <div class="content-grid">
+      <main class="prose">
+        <Content />
+      </main>
+
+      {related.length > 0 && (
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <h3>Related experiments</h3>
+            <ul class="related-list">
+              {related.map((r: any) => (
+                <li>
+                  <a href={`${base}experiments/${r.slug}/`}>{r.title}</a>
+                  <StatusBadge status={r.status} label={false} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .insight-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .insight-header {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--ui);
+  }
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    margin-bottom: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+  }
+  .breadcrumb a {
+    color: var(--tx-3);
+    transition: color 150ms ease;
+  }
+  .breadcrumb a:hover {
+    color: var(--primary);
+  }
+  .insight-header h1 {
+    font-size: 1.375rem;
+    margin-bottom: var(--space-3);
+  }
+  .summary {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--tx-2);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+    max-width: 75ch;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .themes {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+  }
+  .draft-flag {
+    color: var(--warning);
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-6);
+  }
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .sidebar-card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .sidebar-card h3 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+    margin: 0;
+  }
+  .related-list {
+    list-style: none;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .related-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+  }
+  .related-list a {
+    color: var(--tx);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .related-list a:hover {
+    color: var(--primary);
+  }
+
+  /* Markdown body — long-form reading scale (see DESIGN.md §3).
+     This is a nested <main>, so it inherits global.css's `margin: 0 auto` and page
+     padding; both are cancelled here so the column lines up with the header above. */
+  .prose {
+    max-width: var(--text-prose-measure);
+    margin-left: 0;
+    padding: 0;
+  }
+  .prose :global(h1) {
+    font-family: var(--font-mono);
+    font-size: var(--text-prose-h1);
+    font-weight: var(--font-weight-semibold);
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--tx);
+  }
+  .prose :global(h2) {
+    font-family: var(--font-mono);
+    font-size: var(--text-prose-h2);
+    font-weight: var(--font-weight-semibold);
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--tx);
+  }
+  .prose :global(h3),
+  .prose :global(h4) {
+    font-family: var(--font-mono);
+    font-size: var(--text-prose-h3);
+    font-weight: var(--font-weight-semibold);
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-2);
+    color: var(--tx);
+  }
+  .prose :global(h1:first-child),
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .prose :global(p) {
+    font-family: var(--font-body);
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
+    color: var(--tx);
+    margin-bottom: var(--text-prose-gap);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    font-family: var(--font-body);
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
+    color: var(--tx);
+    margin-bottom: var(--text-prose-gap);
+    padding-left: 1.5rem;
+  }
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+  .prose :global(strong) {
+    font-weight: var(--font-weight-semibold);
+  }
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--ui);
+    margin: var(--space-6) 0;
+  }
+  .prose :global(em) {
+    color: var(--tx-2);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--bg-2);
+    padding: 0.125rem 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Tables. Three columns of prose fit the reading measure comfortably — cells wrap
+     rather than scroll, so keep tables narrow (four columns is already too many). */
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    margin-bottom: var(--text-prose-gap);
+    font-size: var(--text-prose-size);
+  }
+  .prose :global(th) {
+    font-family: var(--component-table-font-family);
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    background: var(--component-table-header-background);
+    border-bottom: 1px solid var(--ui);
+  }
+  .prose :global(td) {
+    font-family: var(--font-body);
+    line-height: var(--text-prose-line-height);
+    color: var(--tx);
+    border-bottom: 1px solid var(--ui);
+    vertical-align: top;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    padding: var(--component-table-cell-padding-y) var(--component-table-cell-padding-x);
+    text-align: left;
+    overflow-wrap: break-word;
+  }
+  .prose :global(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+</style>

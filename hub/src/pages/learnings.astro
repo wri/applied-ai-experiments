@@ -1,0 +1,643 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import taxonomy from '../data/taxonomy.json';
+import { loadExperimentIndex, collectLearnings, getThemeConfig, displayType, visibleInsights, renderLearningInline, assertInsightsPresent } from '../utils/experiments';
+
+const index = await loadExperimentIndex();
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Two groupings, on purpose:
+//   byPrimaryTheme — where a learning is *listed*. Its experiment's first theme,
+//     per the content guide, so each learning renders exactly once instead of
+//     repeating under every theme its experiment carries.
+//   byTheme — what a chip *matches*. A learning tagged prototyping+geospatial is
+//     listed under prototyping but still turns up under the geospatial filter,
+//     so a secondary theme doesn't hide half its learnings.
+const { byTheme, byPrimaryTheme, untagged, total: totalLearnings, sources } = collectLearnings(index);
+
+// Group themes under their pillars, ordered by learning count within each pillar.
+const pillarGroups = taxonomy.pillars
+  .map((p) => ({
+    name: p.name,
+    themes: p.themes
+      .filter((t) => byPrimaryTheme.has(t))
+      .sort((a, b) => (byPrimaryTheme.get(b)?.length ?? 0) - (byPrimaryTheme.get(a)?.length ?? 0)),
+  }))
+  .filter((g) => g.themes.length > 0);
+
+// Chips cover every theme that any learning carries — including themes that are
+// never a primary and so have no section of their own.
+const chipThemes = taxonomy.pillars
+  .flatMap((p) => p.themes)
+  .filter((t) => byTheme.has(t))
+  .sort((a, b) => (byTheme.get(b)?.length ?? 0) - (byTheme.get(a)?.length ?? 0));
+
+// Synthesised insights — this page is their home now, so show them all,
+// featured first (visibleInsights already sorts by date desc).
+const allInsights = await getCollection('insights');
+const allVisible = visibleInsights(allInsights, import.meta.env.DEV);
+// A production build with no insights means the `insights/` directory wasn't in
+// the checkout — fail loudly rather than publish an empty knowledge layer.
+assertInsightsPresent(allVisible.length);
+const insights = [...allVisible].sort(
+  (a, b) => Number(b.data.featured) - Number(a.data.featured),
+);
+
+// UTC: insight `date` frontmatter coerces to UTC midnight, which formats as the
+// previous day for any viewer west of UTC.
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Learnings | WRI Applied AI Experiments',
+  description: 'What the WRI Applied AI Group has learned — curated cross-experiment insights and per-experiment learnings, organized by theme.',
+  url: `https://wri.github.io${base}learnings/`,
+  isPartOf: { '@type': 'WebSite', name: 'WRI Applied AI Experiments', url: `https://wri.github.io${base}` },
+};
+---
+
+<BaseLayout
+  title="Learnings"
+  description="What the WRI Applied AI Group has learned — curated cross-experiment insights and per-experiment learnings, organized by theme."
+  jsonLd={jsonLd}
+>
+  <section class="learnings-intro">
+    <h1>Learnings</h1>
+    <p class="subtitle">
+      What we've learned so far: curated insights that synthesize threads across several
+      experiments, followed by {totalLearnings} individual learning{totalLearnings === 1 ? '' : 's'} from
+      {sources.length} experiment{sources.length === 1 ? '' : 's'}, organized by theme. Each learning
+      links back to the experiment it came from.
+    </p>
+  </section>
+
+  {insights.length > 0 && (
+    <section class="insights-band" id="insights">
+      <div class="band-head">
+        <span class="eyebrow">Synthesised insights</span>
+      </div>
+      <div class="band-grid">
+        {insights.map((insight) => (
+          <a href={`${base}insights/${insight.id}/`} class="band-card">
+            <span class="band-title">{insight.data.title}</span>
+            <span class="band-summary">{insight.data.summary}</span>
+            <span class="band-meta">
+              {fmtDate(insight.data.date)}
+              {insight.data.related_experiments.length > 0 &&
+                ` · ${insight.data.related_experiments.length} experiment${insight.data.related_experiments.length === 1 ? '' : 's'}`}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {totalLearnings === 0 ? (
+    <div class="empty">
+      <p>No experiments have learnings yet.</p>
+      <p class="empty-hint">
+        Learnings appear here as soon as an experiment adds a bullet to the
+        <code>## Learnings</code> section of its <code>brief.md</code> — at any status,
+        not just <code>done</code>.
+      </p>
+    </div>
+  ) : (
+    <>
+      <div class="learning-search">
+        <input
+          type="search"
+          id="learning-search"
+          placeholder="Search learnings…"
+          aria-label="Search learnings"
+        />
+      </div>
+
+      <div class="filter-chips" id="theme-filter">
+        <button class="chip active" data-theme="all">All <span class="chip-count">{totalLearnings}</span></button>
+        {chipThemes.map((themeKey) => {
+          const cfg = getThemeConfig(themeKey);
+          return (
+            <button class="chip" data-theme={themeKey}>
+              {cfg?.short ?? themeKey}
+              <span class="chip-count">{byTheme.get(themeKey)!.length}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div class="pillar-groups">
+        {pillarGroups.map((group) => (
+          <section class="pillar-group" data-pillar>
+            <h2 class="pillar-name">{group.name}</h2>
+            {group.themes.map((themeKey) => {
+              const theme = getThemeConfig(themeKey);
+              const entries = byPrimaryTheme.get(themeKey)!;
+              return (
+                <section class="theme-section" data-theme={themeKey}>
+                  <header class="theme-header">
+                    <a href={`${base}themes/${themeKey}/`} class="theme-name">
+                      {theme?.name ?? themeKey}
+                    </a>
+                    <span class="theme-count" data-total={entries.length}>{entries.length}</span>
+                  </header>
+                  <div class="learning-list">
+                    {entries.map((entry) => (
+                      <div class="learning-card" id={`${entry.slug}-${entry.learningIndex}`} data-themes={entry.themes.join(' ')}>
+                        <p class="learning-text" set:html={renderLearningInline(entry.learning)} />
+                        <button
+                          class="copy-link"
+                          data-anchor={`${entry.slug}-${entry.learningIndex}`}
+                          title="Copy link to this learning"
+                          aria-label="Copy link to this learning"
+                        >⧉</button>
+                        <a href={`${base}experiments/${entry.slug}/#learning-${entry.learningIndex}`} class="learning-source">
+                          <span class="learning-source-title">{entry.title}</span>
+                          <span class="learning-badges">
+                            {entry.status !== 'done' && <span class="learning-status">{entry.status}</span>}
+                            <span class="learning-type">{displayType(entry.type)}</span>
+                          </span>
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </section>
+        ))}
+
+        {untagged.length > 0 && (
+          <section class="pillar-group" data-pillar>
+            <section class="theme-section" data-theme="untagged">
+              <header class="theme-header">
+                <span class="theme-name theme-name-plain">Untagged</span>
+                <span class="theme-count" data-total={untagged.length}>{untagged.length}</span>
+              </header>
+              <div class="learning-list">
+                {untagged.map((entry) => (
+                  <div class="learning-card" id={`${entry.slug}-${entry.learningIndex}`} data-themes="">
+                    <p class="learning-text" set:html={renderLearningInline(entry.learning)} />
+                    <button
+                      class="copy-link"
+                      data-anchor={`${entry.slug}-${entry.learningIndex}`}
+                      title="Copy link to this learning"
+                      aria-label="Copy link to this learning"
+                    >⧉</button>
+                    <a href={`${base}experiments/${entry.slug}/#learning-${entry.learningIndex}`} class="learning-source">
+                      <span class="learning-source-title">{entry.title}</span>
+                      <span class="learning-badges">
+                        {entry.status !== 'done' && <span class="learning-status">{entry.status}</span>}
+                        <span class="learning-type">{displayType(entry.type)}</span>
+                      </span>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </section>
+        )}
+      </div>
+
+      <div class="no-match empty hidden" id="no-match">
+        <p>No learnings match.</p>
+      </div>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .learnings-intro {
+    margin-bottom: 1.5rem;
+  }
+  .learnings-intro h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 70ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .subtitle a {
+    color: var(--primary);
+  }
+
+  /* --- Insights band --- */
+  .insights-band {
+    margin-bottom: 1.5rem;
+  }
+  .band-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.625rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+  }
+  .see-all {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+  }
+  .see-all:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .band-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.625rem;
+  }
+  .band-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    text-decoration: none;
+  }
+  .band-card:hover {
+    background: var(--bg-3);
+    text-decoration: none;
+  }
+  .band-title {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--tx);
+  }
+  .band-summary {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--tx-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .band-meta {
+    margin-top: auto;
+    padding-top: 0.375rem;
+    border-top: 1px dashed var(--ui);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+  }
+
+  /* --- Learning search --- */
+  .learning-search {
+    margin-bottom: 0.75rem;
+  }
+  .learning-search input {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.4rem 0.625rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--tx);
+  }
+  .learning-search input::placeholder {
+    color: var(--tx-3);
+  }
+  .learning-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  /* --- Filter chips --- */
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+  }
+  .chip:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .chip.active {
+    background: var(--bg-3);
+    color: var(--tx);
+    border-color: var(--ui-2);
+  }
+  .chip-count {
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .empty {
+    padding: 2rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+  .empty p {
+    font-family: var(--font-body);
+    color: var(--tx-2);
+    margin: 0 0 0.5rem;
+  }
+  .empty-hint {
+    font-size: 0.8125rem;
+    color: var(--tx-3);
+  }
+  .empty code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--bg);
+    padding: 0.05rem 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+  .hidden {
+    display: none;
+  }
+
+  /* --- Pillar groups & theme sections --- */
+  .pillar-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .pillar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pillar-group.hidden {
+    display: none;
+  }
+  .pillar-name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-section {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .theme-section.hidden {
+    display: none;
+  }
+  .theme-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-name {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    text-decoration: none;
+  }
+  .theme-name:hover {
+    text-decoration: underline;
+  }
+  .theme-name-plain {
+    color: var(--tx-2);
+  }
+  .theme-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+    background: var(--bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .learning-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+    padding: 0.75rem;
+  }
+  @media (min-width: 720px) {
+    .learning-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .learning-card {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    scroll-margin-top: calc(var(--header-height, 3rem) + 0.75rem);
+  }
+  .learning-card.hidden {
+    display: none;
+  }
+  .learning-card:target {
+    border-color: var(--primary);
+  }
+  .copy-link {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--tx-3);
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--transition-fast) ease;
+  }
+  .learning-card:hover .copy-link,
+  .copy-link:focus-visible {
+    opacity: 1;
+  }
+  .copy-link:hover {
+    color: var(--primary);
+    border-color: var(--ui);
+    background: var(--bg-2);
+  }
+  .learning-text {
+    font-family: var(--font-body);
+    font-size: var(--text-prose-size);
+    line-height: 1.6;
+    color: var(--tx);
+    margin: 0;
+  }
+  .learning-source {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-2);
+    text-decoration: none;
+    padding-top: 0.375rem;
+    border-top: 1px dashed var(--ui);
+  }
+  .learning-source:hover {
+    color: var(--primary);
+  }
+  .learning-source-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .learning-badges {
+    flex-shrink: 0;
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+  .learning-type,
+  .learning-status {
+    font-size: 0.6rem;
+    color: var(--tx-3);
+    background: var(--bg-2);
+    padding: 0.05rem 0.3rem;
+    border-radius: var(--radius-sm);
+  }
+  .learning-status {
+    color: var(--warning);
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#theme-filter .chip');
+  const sections = document.querySelectorAll<HTMLElement>('.theme-section');
+  const groups = document.querySelectorAll<HTMLElement>('[data-pillar]');
+  const noMatch = document.getElementById('no-match');
+  const searchInput = document.getElementById('learning-search') as HTMLInputElement | null;
+
+  let activeTheme = 'all';
+
+  function applyFilter() {
+    const query = (searchInput?.value ?? '').trim().toLowerCase();
+    const filtering = activeTheme !== 'all' || query !== '';
+    let visibleCards = 0;
+    sections.forEach((section) => {
+      let sectionVisible = 0;
+      section.querySelectorAll<HTMLElement>('.learning-card').forEach((card) => {
+        // Cards are grouped under their experiment's *primary* theme but carry
+        // every theme it has, so a secondary-theme chip still finds them.
+        const themes = (card.getAttribute('data-themes') ?? '').split(' ').filter(Boolean);
+        const themeMatch = activeTheme === 'all' || themes.includes(activeTheme);
+        const textMatch = !query || (card.textContent ?? '').toLowerCase().includes(query);
+        const show = themeMatch && textMatch;
+        card.classList.toggle('hidden', !show);
+        if (show) sectionVisible++;
+      });
+      section.classList.toggle('hidden', sectionVisible === 0);
+      // While filtering, the header badge counts what's on screen — otherwise a
+      // section reading "14" above 3 visible cards looks broken.
+      const badge = section.querySelector<HTMLElement>('.theme-count');
+      if (badge) {
+        badge.textContent = filtering
+          ? String(sectionVisible)
+          : (badge.getAttribute('data-total') ?? String(sectionVisible));
+      }
+      visibleCards += sectionVisible;
+    });
+    // Hide a pillar group when none of its sections are visible.
+    groups.forEach((group) => {
+      const anyVisible = group.querySelector('.theme-section:not(.hidden)');
+      group.classList.toggle('hidden', !anyVisible);
+    });
+    noMatch?.classList.toggle('hidden', visibleCards > 0);
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeTheme = chip.getAttribute('data-theme') || 'all';
+      applyFilter();
+    });
+  });
+
+  searchInput?.addEventListener('input', applyFilter);
+
+  // Copy a stable deep link to an individual learning.
+  document.querySelectorAll<HTMLButtonElement>('.copy-link').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const anchor = btn.getAttribute('data-anchor');
+      if (!anchor) return;
+      const url = `${location.origin}${location.pathname}#${anchor}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = '✓';
+        setTimeout(() => (btn.textContent = '⧉'), 1200);
+      } catch {
+        location.hash = anchor;
+      }
+    });
+  });
+</script>

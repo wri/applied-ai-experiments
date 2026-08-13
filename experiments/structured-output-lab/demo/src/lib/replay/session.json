@@ -1,0 +1,41 @@
+{
+  "experiment": "structured-output-lab",
+  "title": "No API key? Watch a recorded extraction",
+  "description": "A real recorded extraction of risks from a messy memo into validated JSON. Replaces live calls when you have no key.",
+  "recordedAt": 1749500000000,
+  "config": {
+    "sourceText": "Subject: Q3 grant program — status\n\nHey team, quick brain-dump before I log off. The reviewer panel is still short two people and we promised the board a shortlist by Sept 30, so that's getting tight. Also nobody has confirmed the cloud budget for the scoring pipeline — if that slips we can't run the automated pre-screen at all. One more thing: the data-sharing agreement with the partner uni hasn't been signed, legal flagged it weeks ago and it's just sitting there. Oh and the public announcement is already drafted and scheduled, which feels premature given the above.\n\n— M.",
+    "schemaMode": "template",
+    "templateId": "risks",
+    "rawSchemaText": "{\n  \"type\": \"object\",\n  \"required\": [\"title\", \"risks\"],\n  \"properties\": {\n    \"title\": { \"type\": \"string\" },\n    \"deadline\": { \"type\": [\"string\", \"null\"] },\n    \"risks\": { \"type\": \"array\" }\n  }\n}"
+  },
+  "calls": [
+    {
+      "label": "extract",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "system": "Extract structured data from the source text. Return ONLY JSON conforming to the given schema.",
+        "messages": [{ "role": "user", "content": "Subject: Q3 grant program — status ... (messy memo about reviewer shortfall, unconfirmed budget, unsigned data agreement, and a prematurely scheduled announcement)" }],
+        "params": { "temperature": 0, "maxTokens": 4096 },
+        "schema": {
+          "type": "object",
+          "required": ["title", "risks"],
+          "properties": {
+            "title": { "type": "string" },
+            "deadline": { "type": ["string", "null"] },
+            "risks": { "type": "array" }
+          }
+        },
+        "label": "extract",
+        "sentAt": 1749500000000
+      },
+      "response": {
+        "content": "{\n  \"title\": \"Q3 Grant Program Status\",\n  \"deadline\": \"2026-09-30\",\n  \"risks\": [\n    {\n      \"risk\": \"Reviewer panel is understaffed, threatening the shortlist deadline\",\n      \"severity\": \"high\",\n      \"evidence\": \"The reviewer panel is still short two people and we promised the board a shortlist by Sept 30\"\n    },\n    {\n      \"risk\": \"Cloud budget for the scoring pipeline is unconfirmed\",\n      \"severity\": \"high\",\n      \"evidence\": \"nobody has confirmed the cloud budget for the scoring pipeline — if that slips we can't run the automated pre-screen at all\"\n    },\n    {\n      \"risk\": \"Data-sharing agreement with partner university is unsigned\",\n      \"severity\": \"medium\",\n      \"evidence\": \"the data-sharing agreement with the partner uni hasn't been signed, legal flagged it weeks ago\"\n    },\n    {\n      \"risk\": \"Public announcement is scheduled before dependencies are resolved\",\n      \"severity\": \"medium\",\n      \"evidence\": \"the public announcement is already drafted and scheduled, which feels premature given the above\"\n    }\n  ]\n}",
+        "usage": { "inputTokens": 312, "outputTokens": 214, "totalTokens": 526 },
+        "latencyMs": 3260,
+        "finishReason": "stop"
+      }
+    }
+  ]
+}

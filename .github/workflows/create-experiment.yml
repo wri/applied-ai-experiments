@@ -45,10 +45,10 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git checkout -b "experiment/${SLUG}"
+          git checkout -b "exp/${SLUG}"
           git add "experiments/${SLUG}"
           git commit -m "feat: scaffold ${SLUG} experiment"
-          git push -u origin "experiment/${SLUG}"
+          git push -u origin "exp/${SLUG}"
 
       - name: Create pull request
         env:
@@ -97,9 +97,9 @@ jobs:
 
           **Next steps:**
           1. Review and merge the PR linked above
-          2. Clone the branch and start building: \`git checkout experiment/${SLUG}\`
-          3. Update \`brief.md\` with your experiment plan
-          4. Add implementation code and update \`info.yaml\` as you progress
+          2. Clone the branch and start building: \`git checkout exp/${SLUG}\`
+          3. Fill in \`brief.md\`'s **Before** section — the question, the signals, the boundaries
+          4. Capture learnings as you go: \`just learning ${SLUG} "what you learned"\`
           EOF
           )"
 

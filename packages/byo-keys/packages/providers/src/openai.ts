@@ -24,14 +24,17 @@ interface OpenAIMessage {
   content: string | OpenAIContent[];
 }
 
-type OpenAIContent = 
+type OpenAIContent =
   | { type: 'text'; text: string }
   | { type: 'image_url'; image_url: { url: string; detail?: 'low' | 'high' | 'auto' } };
 
 interface OpenAIRequest {
   model: string;
   messages: OpenAIMessage[];
+  /** Pre-reasoning models only — rejected by the o-series and GPT-5 family. */
   max_tokens?: number;
+  /** Reasoning models (o-series, GPT-5.x) use this instead of `max_tokens`. */
+  max_completion_tokens?: number;
   temperature?: number;
   top_p?: number;
   stop?: string[];
@@ -168,7 +171,7 @@ export class OpenAIProvider extends BaseProvider {
     supportsCORS: false,
     baseUrl: 'https://api.openai.com',
   };
-  
+
   readonly capabilities: ProviderCapabilities = {
     chat: true,
     streaming: true,
@@ -179,9 +182,9 @@ export class OpenAIProvider extends BaseProvider {
     functionCalling: true,
     extendedThinking: true,
   };
-  
+
   private openaiOptions: OpenAIProviderOptions;
-  
+
   constructor(options: OpenAIProviderOptions = {}) {
     super(options);
     this.openaiOptions = {
@@ -189,22 +192,22 @@ export class OpenAIProvider extends BaseProvider {
       ...options,
     };
   }
-  
+
   protected addAuthHeaders(headers: Headers): void {
     headers.set('Authorization', `Bearer ${this.getApiKey()}`);
-    
+
     if (this.openaiOptions.organization) {
       headers.set('OpenAI-Organization', this.openaiOptions.organization);
     }
   }
-  
+
   async validateKey(key: string): Promise<KeyValidationResult> {
     const originalKey = this.apiKey;
     this.apiKey = key;
-    
+
     try {
       const models = await this.listModels();
-      
+
       return {
         valid: true,
         providerId: 'openai',
@@ -212,10 +215,10 @@ export class OpenAIProvider extends BaseProvider {
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      const isAuthError = message.includes('401') || 
+      const isAuthError = message.includes('401') ||
                           message.includes('invalid') ||
                           message.includes('Incorrect API key');
-      
+
       return {
         valid: false,
         providerId: 'openai',
@@ -226,10 +229,10 @@ export class OpenAIProvider extends BaseProvider {
       this.apiKey = originalKey;
     }
   }
-  
+
   async listModels(): Promise<ModelInfo[]> {
     const response = await this.request<OpenAIModelsResponse>('/v1/models');
-    
+
     // Filter to chat models and map to our format
     const chatModels = response.data
       .filter(m => m.id.includes('gpt') || m.id.includes('o1') || m.id.includes('o3'))
@@ -240,16 +243,16 @@ export class OpenAIProvider extends BaseProvider {
         contextWindow: this.getContextWindow(m.id),
         capabilities: this.getCapabilities(m.id),
       }));
-    
+
     // Sort by preference
     return chatModels.sort((a, b) => {
-      const order = ['gpt-4o', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo', 'o1', 'o3'];
+      const order = ['gpt-5.6', 'gpt-5', 'gpt-4.1', 'gpt-4o', 'gpt-4-turbo', 'gpt-4', 'o3', 'o1'];
       const aIndex = order.findIndex(p => a.id.includes(p));
       const bIndex = order.findIndex(p => b.id.includes(p));
       return aIndex - bIndex;
     });
   }
-  
+
   async chat(request: ChatRequest): Promise<ChatResponse> {
     // Route to Responses API for reasoning models with thinking enabled
     if (this.isReasoningModel(request.model) && request.thinking?.enabled) {
@@ -279,7 +282,7 @@ export class OpenAIProvider extends BaseProvider {
 
     return this.fromResponsesResponse(response);
   }
-  
+
   async *chatStream(request: ChatRequest): AsyncIterable<ChatStreamChunk> {
     // Route to Responses API streaming for reasoning models with thinking enabled
     if (this.isReasoningModel(request.model) && request.thinking?.enabled) {
@@ -423,33 +426,45 @@ export class OpenAIProvider extends BaseProvider {
       }
     }
   }
-  
+
   // ---------------------------------------------------------------------------
   // Conversion Helpers
   // ---------------------------------------------------------------------------
-  
+
   private toOpenAIRequest(request: ChatRequest): OpenAIRequest {
     const messages = this.convertMessages(request);
-    
-    return {
+    const maxTokens = request.maxTokens ?? this.openaiOptions.defaultMaxTokens;
+    const isReasoning = this.isReasoningModel(request.model);
+
+    const openaiRequest: OpenAIRequest = {
       model: request.model,
       messages,
-      max_tokens: request.maxTokens ?? this.openaiOptions.defaultMaxTokens,
-      temperature: request.temperature,
-      top_p: request.topP,
       stop: request.stopSequences,
       stream: request.stream,
     };
+
+    // Reasoning models (o-series, GPT-5.x) reject `max_tokens` outright and
+    // reject any non-default `temperature`/`top_p`. Drop them rather than 400 —
+    // a demo's sampling control goes inert instead of failing the call.
+    if (isReasoning) {
+      openaiRequest.max_completion_tokens = maxTokens;
+    } else {
+      openaiRequest.max_tokens = maxTokens;
+      openaiRequest.temperature = request.temperature;
+      openaiRequest.top_p = request.topP;
+    }
+
+    return openaiRequest;
   }
-  
+
   private convertMessages(request: ChatRequest): OpenAIMessage[] {
     const messages: OpenAIMessage[] = [];
-    
+
     // Add system message if present
     if (request.system) {
       messages.push({ role: 'system', content: request.system });
     }
-    
+
     // Convert each message
     for (const msg of request.messages) {
       messages.push({
@@ -457,35 +472,35 @@ export class OpenAIProvider extends BaseProvider {
         content: this.convertContent(msg.content),
       });
     }
-    
+
     return messages;
   }
-  
+
   private convertContent(content: string | ContentPart[]): string | OpenAIContent[] {
     if (typeof content === 'string') {
       return content;
     }
-    
+
     return content.map(part => {
       if (part.type === 'text') {
         return { type: 'text' as const, text: part.text };
       }
-      
+
       if (part.type === 'image') {
         const url = part.source.type === 'base64'
           ? `data:${part.source.mediaType};base64,${part.source.data}`
           : part.source.url;
-        
+
         return {
           type: 'image_url' as const,
           image_url: { url },
         };
       }
-      
+
       throw new Error(`Unsupported content type: ${(part as ContentPart).type}`);
     });
   }
-  
+
   private fromOpenAIResponse(response: OpenAIResponse): ChatResponse {
     const choice = response.choices[0];
     if (!choice) {
@@ -505,7 +520,7 @@ export class OpenAIProvider extends BaseProvider {
       raw: response,
     };
   }
-  
+
   private mapFinishReason(reason: string): FinishReason {
     switch (reason) {
       case 'stop': return 'stop';
@@ -515,15 +530,21 @@ export class OpenAIProvider extends BaseProvider {
       default: return 'unknown';
     }
   }
-  
+
   private formatModelName(id: string): string {
     return id
       .replace('gpt-', 'GPT-')
+      .replace('-sol', ' Sol')
+      .replace('-terra', ' Terra')
+      .replace('-luna', ' Luna')
       .replace('-turbo', ' Turbo')
       .replace('-preview', ' Preview');
   }
-  
+
   private getContextWindow(id: string): number {
+    if (id.startsWith('gpt-5.6')) return 1050000;
+    if (id.startsWith('gpt-5')) return 400000;
+    if (id.startsWith('gpt-4.1')) return 1047576;
     if (id.includes('gpt-4o')) return 128000;
     if (id.includes('gpt-4-turbo')) return 128000;
     if (id.includes('gpt-4-32k')) return 32768;
@@ -533,9 +554,13 @@ export class OpenAIProvider extends BaseProvider {
     if (id.includes('o1') || id.includes('o3')) return 200000;
     return 4096;
   }
-  
+
   private getCapabilities(id: string): Partial<ProviderCapabilities> {
-    const isVisionModel = id.includes('gpt-4o') || id.includes('gpt-4-vision');
+    const isVisionModel =
+      id.startsWith('gpt-5') ||
+      id.startsWith('gpt-4.1') ||
+      id.includes('gpt-4o') ||
+      id.includes('gpt-4-vision');
     const isReasoningModel = this.isReasoningModel(id);
     return {
       vision: isVisionModel,
@@ -545,10 +570,17 @@ export class OpenAIProvider extends BaseProvider {
   }
 
   /**
-   * Check if model is a reasoning model (o1, o3, o4-mini)
+   * Reasoning models — the o-series and the GPT-5 family. These take
+   * `max_completion_tokens` rather than `max_tokens` and reject any non-default
+   * `temperature`/`top_p`; see `toOpenAIRequest`.
    */
   private isReasoningModel(model: string): boolean {
-    return model.startsWith('o1') || model.startsWith('o3') || model.startsWith('o4');
+    return (
+      model.startsWith('o1') ||
+      model.startsWith('o3') ||
+      model.startsWith('o4') ||
+      model.startsWith('gpt-5')
+    );
   }
 
   /**
@@ -561,11 +593,16 @@ export class OpenAIProvider extends BaseProvider {
       model: request.model,
       input: messages as OpenAIResponsesMessage[],
       max_output_tokens: request.maxTokens ?? this.openaiOptions.defaultMaxTokens,
-      temperature: request.temperature,
-      top_p: request.topP,
       stop: request.stopSequences,
       stream: request.stream,
     };
+
+    // Same sampling-parameter rule as the completions path — and this path is
+    // only ever taken by reasoning models, so they are always stripped.
+    if (!this.isReasoningModel(request.model)) {
+      responsesRequest.temperature = request.temperature;
+      responsesRequest.top_p = request.topP;
+    }
 
     // Add reasoning configuration if thinking is enabled
     if (request.thinking?.enabled) {

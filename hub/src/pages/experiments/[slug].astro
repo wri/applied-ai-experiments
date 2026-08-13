@@ -1,48 +1,94 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { loadExperimentIndex, loadBriefContent, transformBriefMarkdown } from '../../utils/experiments';
+import { loadExperimentIndex, loadBriefContent, splitBriefMarkdown, visibleInsights, renderLearningInline } from '../../utils/experiments';
+import { getCollection } from 'astro:content';
+import taxonomy from '../../data/taxonomy.json';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
   const index = await loadExperimentIndex();
+
+  // Curated insights that reference each experiment
+  const allInsights = await getCollection('insights');
+  const insights = visibleInsights(allInsights, import.meta.env.DEV);
+
   const paths = await Promise.all(
     index.experiments.map(async (exp) => {
-      let briefHtml: string | null = null;
+      let beforeHtml: string | null = null;
+      let afterHtml: string | null = null;
       if (exp._has_brief) {
         const md = await loadBriefContent(exp.slug);
         if (md) {
-          const cleaned = transformBriefMarkdown(md);
-          briefHtml = cleaned ? await marked(cleaned) : null;
+          const { before, after } = splitBriefMarkdown(md);
+          beforeHtml = before ? await marked(before) : null;
+          afterHtml = after ? await marked(after) : null;
         }
       }
+
+      const relatedInsights = insights
+        .filter((i) => i.data.related_experiments.includes(exp.slug))
+        .map((i) => ({ id: i.id, title: i.data.title }));
+
       return {
         params: { slug: exp.slug },
-        props: { experiment: exp, briefHtml },
+        props: { experiment: exp, beforeHtml, afterHtml, relatedInsights },
       };
     })
   );
   return paths;
 }
 
-const { experiment, briefHtml } = Astro.props;
+const { experiment, beforeHtml, afterHtml, relatedInsights } = Astro.props;
 // Ensure base URL ends with a slash for proper path concatenation
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
+// What the experiment targets (capability / infra / feature)
+const targetsConfig = experiment.targets
+  ? (taxonomy.targets as any)[experiment.targets]
+  : null;
+
 // Check if sidebar has any content
 const hasThemes = experiment.themes && experiment.themes.length > 0;
 const hasTags = experiment.tags && experiment.tags.length > 0;
-const hasRelated = experiment.related_experiments && experiment.related_experiments.length > 0;
-const hasSidebarContent = hasThemes || hasTags || hasRelated;
+const hasInsights = relatedInsights.length > 0;
+const hasSidebarContent = hasThemes || hasTags || hasInsights || !!targetsConfig;
 
 // Check for main content sections
-const hasResultsSummary = experiment.results?.summary && experiment.results.summary.trim();
-const hasLessons = experiment.results?.lessons && experiment.results.lessons.length > 0;
-const hasBrief = !!briefHtml;
-const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
+const isDone = experiment.status === 'done';
+const hasResultsSummary = !!(experiment.results?.summary && experiment.results.summary.trim());
+const hasLearnings = experiment.results?.learnings && experiment.results.learnings.length > 0;
+const hasBrief = !!beforeHtml;
+const hasAfter = !!afterHtml;
+// For done experiments, lead with an "outcome at a glance" callout instead of
+// burying the summary in a late section.
+const showOutcomeCallout = isDone && hasResultsSummary;
+const showSummarySection = hasResultsSummary && !showOutcomeCallout;
+const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLearnings;
+
+// Structured data: demos are web apps, everything else is a creative work.
+const detailUrl = `https://wri.github.io${base}experiments/${experiment.slug}/`;
+const isApp = experiment._has_demo && !experiment._is_notebook;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': isApp ? 'WebApplication' : 'CreativeWork',
+  name: experiment.title,
+  description: experiment.description,
+  url: detailUrl,
+  ...(isApp ? { applicationCategory: 'DeveloperApplication', operatingSystem: 'Web', browserRequirements: 'Requires JavaScript' } : {}),
+  author: { '@type': 'Organization', name: 'World Resources Institute', url: 'https://www.wri.org' },
+  ...(experiment.created_at ? { dateCreated: String(experiment.created_at) } : {}),
+  ...(experiment.updated_at ? { dateModified: String(experiment.updated_at) } : {}),
+};
 ---
 
-<BaseLayout title={experiment.title} description={experiment.description}>
+<BaseLayout
+  title={experiment.title}
+  description={experiment.description}
+  image={`og/${experiment.slug}.png`}
+  type="article"
+  jsonLd={jsonLd}
+>
   <article class="experiment-detail">
     <header class="experiment-header">
       <div class="breadcrumb">
@@ -55,6 +101,8 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
 
       <h1>{experiment.title}</h1>
 
+      {/* Status is a fact about the work, not a headline about it — it lives in
+          the Details panel. The header carries what the thing *is*. */}
       <div class="meta">
         <span class={`badge badge-type-${experiment.type}`}>
           {experiment.type}
@@ -92,27 +140,41 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
           </div>
         )}
 
+        {showOutcomeCallout && (
+          <section class="section outcome-callout">
+            <span class="outcome-label">Outcome at a glance</span>
+            <p class="outcome-summary">{experiment.results?.summary}</p>
+          </section>
+        )}
+
         {hasBrief && (
           <section class="section brief-content">
-            <div set:html={briefHtml} />
+            <div set:html={beforeHtml} />
           </section>
         )}
 
-        {hasResultsSummary && (
+        {hasAfter && (
+          <section class="section after-section brief-content">
+            <div class="after-label">Outcome</div>
+            <div set:html={afterHtml} />
+          </section>
+        )}
+
+        {showSummarySection && (
           <section class="section">
             <h2>Results Summary</h2>
-            <p>{experiment.results.summary}</p>
+            <p>{experiment.results?.summary}</p>
           </section>
         )}
 
-        {hasLessons && (
-          <section class="section">
-            <h2>Lessons Learned</h2>
-            <ul>
-              {experiment.results.lessons.map((lesson: string) => (
-                <li>{lesson}</li>
+        {hasLearnings && (
+          <section class="section" id="learnings">
+            <h2>Learnings</h2>
+            <div class="learnings-grid">
+              {(experiment.results?.learnings ?? []).map((learning: string, i: number) => (
+                <div class="learning-card" id={`learning-${i}`} set:html={renderLearningInline(learning)} />
               ))}
-            </ul>
+            </div>
           </section>
         )}
       </main>
@@ -124,11 +186,13 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
             <dl class="details-list">
               <dt>Type</dt>
               <dd>{experiment.type}</dd>
+              <dt>Status</dt>
+              <dd>{experiment.status}</dd>
 
-              {experiment.runtime && (
+              {targetsConfig && (
                 <>
-                  <dt>Runtime</dt>
-                  <dd>{experiment.runtime}</dd>
+                  <dt>Targets</dt>
+                  <dd title={targetsConfig.question}>{targetsConfig.label}</dd>
                 </>
               )}
             </dl>
@@ -138,9 +202,17 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
             <div class="sidebar-card">
               <h3>Themes</h3>
               <div class="tags">
-                {experiment.themes.map((theme: string) => (
-                  <span class="tag">{theme}</span>
-                ))}
+                {(experiment.themes ?? []).map((themeKey: string) => {
+                  const cfg = (taxonomy.themes as any)[themeKey];
+                  return (
+                    <a
+                      href={`${base}themes/${themeKey}/`}
+                      class="tag tag-link"
+                    >
+                      {cfg?.short ?? themeKey}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -149,20 +221,20 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
             <div class="sidebar-card">
               <h3>Tags</h3>
               <div class="tags">
-                {experiment.tags.map((tag: string) => (
+                {(experiment.tags ?? []).map((tag: string) => (
                   <span class="tag">{tag}</span>
                 ))}
               </div>
             </div>
           )}
 
-          {hasRelated && (
+          {hasInsights && (
             <div class="sidebar-card">
-              <h3>Related</h3>
-              <ul class="related-list">
-                {experiment.related_experiments.map((slug: string) => (
+              <h3>Insights</h3>
+              <ul class="related-list insight-links">
+                {relatedInsights.map((i: any) => (
                   <li>
-                    <a href={`${base}experiments/${slug}/`}>{slug}</a>
+                    <a href={`${base}insights/${i.id}/`}>{i.title}</a>
                   </li>
                 ))}
               </ul>
@@ -274,6 +346,69 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
     font-size: 0.875rem;
   }
 
+  .outcome-callout {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+  }
+
+  .outcome-label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tx-3);
+  }
+
+  .outcome-summary {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--tx);
+    margin: 0;
+  }
+
+  .learnings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .learnings-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .learning-card {
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--tx);
+    scroll-margin-top: calc(var(--header-height) + var(--space-3));
+  }
+
+  .learning-card:target {
+    border-color: var(--primary);
+  }
+
+  .insight-links a {
+    color: var(--tx);
+    display: block;
+    padding: 0.25rem 0;
+  }
+  .insight-links a:hover {
+    color: var(--primary);
+  }
+
   .sidebar-card {
     background: var(--bg-2);
     border: 1px solid var(--ui);
@@ -333,34 +468,110 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
     color: var(--tx-2);
     padding: 0.125rem 0.375rem;
     border-radius: var(--radius-sm);
+    text-decoration: none;
   }
 
+  .tag-link {
+    color: var(--tx-2);
+  }
+
+  .tag-link:hover {
+    background: var(--bg-3);
+    border-color: var(--ui-2);
+  }
+
+
+
+
+  /* Matches the 0.75rem inset the other sidebar-card bodies (.tags,
+     .details-list) use — without it the text butts against the card border. */
   .related-list {
     list-style: none;
+    margin: 0;
     padding: 0.5rem 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
   }
 
   .related-list li {
-    padding: var(--space-1) 0;
-    border-bottom: 1px solid var(--ui);
-  }
-
-  .related-list li:last-child {
-    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
   }
 
   .related-list a {
-    color: var(--tx-2);
+    color: var(--tx);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .related-list a:hover {
     color: var(--primary);
   }
 
+
+
+
+
+  .after-section {
+    position: relative;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.25rem 0.25rem;
+    margin-top: var(--space-6);
+  }
+
+  .after-label {
+    position: absolute;
+    top: -0.625rem;
+    left: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tx-3);
+    background: var(--bg);
+    padding: 0 0.5rem;
+  }
+
+  /* A close-out section that can't be answered yet, with the reason the author
+     gave. Deliberately quiet — it's an honest status line, not a warning. Empty
+     sections with no stated reason are dropped upstream and never reach the page. */
+  :global(.after-section .pending-note) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    border-left: 2px solid var(--ui-2);
+    padding-left: 0.75rem;
+    color: var(--tx-2);
+    font-style: italic;
+  }
+
+  :global(.after-section .pending-label) {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-style: normal;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tx-3);
+  }
+
+  /* Long-form reading scale — see DESIGN.md §3 "Reading vs UI type scales". */
+  .brief-content {
+    max-width: var(--text-prose-measure);
+  }
+
   .brief-content :global(h1) {
-    font-size: 1.125rem;
+    font-size: var(--text-prose-h1);
     font-weight: var(--font-weight-semibold);
     margin-top: 0;
     margin-bottom: var(--space-3);
@@ -370,29 +581,29 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
   .brief-content :global(h2),
   .brief-content :global(h3),
   .brief-content :global(h4) {
-    font-size: 0.8125rem;
+    font-size: var(--text-prose-h3);
     font-weight: var(--font-weight-semibold);
-    margin-top: var(--space-4);
+    margin-top: var(--space-5);
     margin-bottom: var(--space-2);
     color: var(--tx);
   }
 
   .brief-content :global(p) {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
     color: var(--tx);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--text-prose-gap);
   }
 
   .brief-content :global(ul),
   .brief-content :global(ol) {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
     color: var(--tx);
-    margin-bottom: var(--space-3);
-    padding-left: var(--space-4);
+    margin-bottom: var(--text-prose-gap);
+    padding-left: 1.5rem;
   }
 
   .brief-content :global(li) {
@@ -415,5 +626,41 @@ const hasMainContent = hasBrief || hasResultsSummary || hasLessons;
     background: var(--bg-2);
     padding: 0.125rem 0.25rem;
     border-radius: var(--radius-sm);
+  }
+
+  /* Tables — mirrors the insight prose rules in pages/insights/[slug].astro.
+     Cells wrap rather than scroll, so keep tables to about three columns. */
+  .brief-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    margin-bottom: var(--text-prose-gap);
+    font-size: var(--text-prose-size);
+  }
+  .brief-content :global(th) {
+    font-family: var(--component-table-font-family);
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    background: var(--component-table-header-background);
+    border-bottom: 1px solid var(--ui);
+  }
+  .brief-content :global(td) {
+    font-family: var(--font-body);
+    line-height: var(--text-prose-line-height);
+    color: var(--tx);
+    border-bottom: 1px solid var(--ui);
+    vertical-align: top;
+  }
+  .brief-content :global(th),
+  .brief-content :global(td) {
+    padding: var(--component-table-cell-padding-y) var(--component-table-cell-padding-x);
+    text-align: left;
+    overflow-wrap: break-word;
+  }
+  .brief-content :global(tbody tr:last-child td) {
+    border-bottom: none;
   }
 </style>

@@ -1,0 +1,35 @@
+{
+  "name": "ai-web-map-exploration-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@byo-keys/core": "workspace:*",
+    "@byo-keys/providers": "workspace:*",
+    "@byo-keys/svelte": "workspace:*",
+    "@duckdb/duckdb-wasm": "1.32.0",
+    "@fontsource/ibm-plex-mono": "^5.2.0",
+    "@fontsource/ibm-plex-sans": "^5.2.0",
+    "@wri-datalab/llm-lab": "workspace:*",
+    "@wri-datalab/ui": "workspace:*",
+    "maplibre-gl": "^5.0.0",
+    "marked": "^16.0.0",
+    "pmtiles": "^4.4.1"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "catalog:",
+    "@sveltejs/kit": "catalog:",
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "@types/geojson": "^7946.0.16",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

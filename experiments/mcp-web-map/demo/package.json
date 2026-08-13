@@ -13,6 +13,15 @@
     "@byo-keys/core": "workspace:*",
     "@byo-keys/providers": "workspace:*",
     "@byo-keys/svelte": "workspace:*",
+    "@mcp-b/webmcp-polyfill": "^3.0.0",
+    "@turf/area": "^7.3.5",
+    "@turf/bbox": "^7.3.5",
+    "@turf/boolean-point-in-polygon": "^7.3.5",
+    "@turf/centroid": "^7.3.5",
+    "@turf/distance": "^7.3.5",
+    "@turf/helpers": "^7.3.5",
+    "@turf/nearest-point": "^7.3.5",
+    "@wri-datalab/llm-lab": "workspace:*",
     "@wri-datalab/ui": "workspace:*",
     "maplibre-gl": "^5.0.0"
   },
@@ -22,7 +31,6 @@
     "@sveltejs/vite-plugin-svelte": "catalog:",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
-    "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

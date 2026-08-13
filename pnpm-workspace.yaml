@@ -23,9 +23,25 @@ catalog:
   vite: ^7.3.1
   typescript: ^5.9.3
   svelte-check: ^4.3.5
+  vitest: ^3.2.4
 
 overrides:
   lodash: '>=4.17.23'
 
+# Postinstall scripts run only for these. esbuild needs its platform binary;
+# nothing else in the tree does, and onnxruntime/sharp/protobufjs work fine
+# without theirs (semantic-document-search runs onnxruntime in the browser via
+# WASM, not the native node binding).
 onlyBuiltDependencies:
   - esbuild
+
+# Every dependency with a build script needs an explicit verdict here. pnpm 11
+# treats an undeclared one as a question it cannot answer: it appends a
+# `set this to true or false` stub to this file and exits 1. That is invisible
+# locally, where node_modules already exists, and fatal in CI, where every
+# install is a fresh one.
+allowBuilds:
+  esbuild: true
+  onnxruntime-node: false
+  protobufjs: false
+  sharp: false

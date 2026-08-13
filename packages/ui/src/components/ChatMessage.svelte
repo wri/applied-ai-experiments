@@ -13,11 +13,8 @@
     tokens?: { input?: number; output?: number };
     latency?: number;
     status?: 'streaming' | 'complete' | 'error';
-    /** Thinking/reasoning content */
     thinking?: string;
-    /** Whether thinking content is still streaming */
     thinkingStreaming?: boolean;
-    /** Whether thinking panel is collapsed */
     thinkingCollapsed?: boolean;
     class?: string;
   }
@@ -40,24 +37,6 @@
   const isSystem = $derived(role === 'system');
   const isAssistant = $derived(role === 'assistant');
 
-  const roleStyles = $derived({
-    user: {
-      bg: 'oklch(from var(--primary) l c h / 0.1)',
-      align: 'flex-end',
-      borderColor: 'var(--primary)',
-    },
-    assistant: {
-      bg: 'var(--bg-2)',
-      align: 'flex-start',
-      borderColor: 'var(--ui)',
-    },
-    system: {
-      bg: 'var(--info-subtle)',
-      align: 'center',
-      borderColor: 'var(--info)',
-    },
-  }[role]);
-
   const roleLabel = $derived({
     user: 'You',
     assistant: model || 'Assistant',
@@ -72,36 +51,21 @@
 </script>
 
 <div
-  class="ui-chat-message {className}"
-  style="
-    display: flex;
-    flex-direction: column;
-    align-items: {roleStyles.align};
-    max-width: {isSystem ? '100%' : '85%'};
-    align-self: {roleStyles.align};
-  "
+  class="ui-chat-message role-{role} {className}"
 >
   <!-- Header with role label -->
-  <div style="
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
-    font-family: var(--font-ui);
-    font-size: 0.75rem;
-    color: var(--tx-3);
-  ">
+  <div class="message-header">
     <span>{roleIcon}</span>
     <span>{roleLabel}</span>
     {#if timestamp}
-      <span style="color: var(--tx-3);">·</span>
+      <span class="header-separator">&middot;</span>
       <span>{formatTimestamp(timestamp)}</span>
     {/if}
   </div>
 
   <!-- Thinking/Reasoning Summary (for assistant messages) -->
   {#if isAssistant && (thinking || thinkingStreaming)}
-    <div style="width: 100%; margin-bottom: 0.5rem;">
+    <div class="thinking-wrapper">
       <ThinkingSummary
         content={thinking ?? ''}
         streaming={thinkingStreaming}
@@ -111,63 +75,21 @@
   {/if}
 
   <!-- Message bubble -->
-  <div style="
-    padding: 0.75rem 1rem;
-    background: {roleStyles.bg};
-    border: 1px solid {roleStyles.borderColor};
-    border-radius: var(--radius-md);
-    {isUser ? 'border-top-right-radius: var(--radius-sm);' : ''}
-    {isAssistant ? 'border-top-left-radius: var(--radius-sm);' : ''}
-    width: 100%;
-    position: relative;
-  ">
+  <div class="message-bubble role-{role}">
     {#if status === 'streaming'}
-      <div style="
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        width: 8px;
-        height: 8px;
-        background: var(--primary);
-        border-radius: 50%;
-        animation: pulse 1.5s ease-in-out infinite;
-      "></div>
+      <div class="streaming-dot"></div>
     {/if}
 
     {#if status === 'error'}
-      <div style="
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
-        background: var(--error-subtle);
-        border-radius: var(--radius-sm);
-        color: var(--error-text);
-        font-size: 0.875rem;
-      ">
+      <div class="error-banner">
         Error generating response
       </div>
     {/if}
 
     {#if isUser}
-      <p style="
-        margin: 0;
-        font-family: var(--font-body);
-        font-size: var(--text-body-font-size);
-        line-height: 1.5;
-        color: var(--tx);
-        white-space: pre-wrap;
-      ">
-        {content}
-      </p>
+      <p class="user-content">{content}</p>
     {:else if isSystem}
-      <p style="
-        margin: 0;
-        font-family: var(--font-ui);
-        font-size: 0.875rem;
-        color: var(--info-text);
-        text-align: center;
-      ">
-        {content}
-      </p>
+      <p class="system-content">{content}</p>
     {:else}
       <Markdown {content} />
     {/if}
@@ -175,14 +97,7 @@
 
   <!-- Metadata footer -->
   {#if (tokens || latency) && isAssistant && status === 'complete'}
-    <div style="
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.25rem;
-      font-family: var(--font-ui);
-      font-size: 0.75rem;
-      color: var(--tx-3);
-    ">
+    <div class="message-meta">
       {#if tokens}
         <TokenCounter {tokens} size="sm" showBreakdown />
       {/if}
@@ -194,6 +109,118 @@
 </div>
 
 <style>
+  .ui-chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+  }
+
+  .ui-chat-message.role-user {
+    align-items: flex-end;
+    align-self: flex-end;
+  }
+
+  .ui-chat-message.role-assistant {
+    align-items: flex-start;
+    align-self: flex-start;
+  }
+
+  .ui-chat-message.role-system {
+    align-items: center;
+    align-self: center;
+    max-width: 100%;
+  }
+
+  .message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--tx-3);
+  }
+
+  .header-separator {
+    color: var(--tx-3);
+  }
+
+  .thinking-wrapper {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .message-bubble {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-md);
+    width: 100%;
+    position: relative;
+  }
+
+  .message-bubble.role-user {
+    background: oklch(from var(--primary) l c h / 0.1);
+    border-color: var(--primary);
+    border-top-right-radius: var(--radius-sm);
+  }
+
+  .message-bubble.role-assistant {
+    background: var(--bg-2);
+    border-color: var(--ui);
+    border-top-left-radius: var(--radius-sm);
+  }
+
+  .message-bubble.role-system {
+    background: var(--info-subtle);
+    border-color: var(--info);
+  }
+
+  .streaming-dot {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .error-banner {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: var(--error-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--error-text);
+    font-size: 0.875rem;
+  }
+
+  .user-content {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-body-font-size);
+    line-height: 1.5;
+    color: var(--tx);
+    white-space: pre-wrap;
+  }
+
+  .system-content {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--info-text);
+    text-align: center;
+  }
+
+  .message-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--tx-3);
+  }
+
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(1.2); }

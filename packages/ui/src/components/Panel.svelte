@@ -27,61 +27,97 @@
   }
 </script>
 
-<div
-  class="ui-panel {className}"
-  style="
-    background-color: var(--bg-2);
-    border: 1px solid var(--ui);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-  "
-  {...rest}
->
+<div class="ui-panel {className}" {...rest}>
   {#if title}
-    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-    <div
-      class="panel-header"
-      style="
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: var(--component-panel-header-background);
-        padding: var(--component-panel-header-padding);
-        border-bottom: {collapsed ? 'none' : '1px solid var(--ui)'};
-        cursor: {collapsible ? 'pointer' : 'default'};
-      "
-      onclick={toggle}
-      onkeydown={(e) => e.key === 'Enter' && toggle()}
-      role={collapsible ? 'button' : undefined}
-      tabindex={collapsible ? 0 : undefined}
-    >
-      <span
-        style="
-          font-family: var(--text-panel-title-font-family);
-          font-size: var(--text-panel-title-font-size);
-          font-weight: var(--text-panel-title-font-weight);
-          text-transform: var(--text-panel-title-text-transform);
-          color: var(--tx-2);
-        "
+    {#if collapsible}
+      <button
+        type="button"
+        class="panel-header collapsible"
+        class:collapsed
+        onclick={toggle}
       >
-        {#if collapsible}
-          <span style="margin-right: 0.5rem; display: inline-block; transform: rotate({collapsed ? '0deg' : '90deg'}); transition: transform 0.2s;">&#9654;</span>
+        <span class="panel-title">
+          <span class="panel-chevron" class:collapsed>&#9654;</span>
+          {title}
+        </span>
+        {#if actions}
+          <div class="panel-actions" role="presentation" onclick={(e) => e.stopPropagation()}>
+            {@render actions()}
+          </div>
         {/if}
-        {title}
-      </span>
-      {#if actions}
-        <div class="panel-actions" role="presentation" onclick={(e) => e.stopPropagation()}>
-          {@render actions()}
-        </div>
-      {/if}
-    </div>
+      </button>
+    {:else}
+      <div class="panel-header">
+        <span class="panel-title">{title}</span>
+        {#if actions}
+          <div class="panel-actions">
+            {@render actions()}
+          </div>
+        {/if}
+      </div>
+    {/if}
   {/if}
   {#if !collapsed}
-    <div
-      class="panel-body"
-      style="padding: var(--component-panel-body-padding);"
-    >
+    <div class="panel-body">
       {@render children()}
     </div>
   {/if}
 </div>
+
+<style>
+  .ui-panel {
+    background-color: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--component-panel-header-background);
+    padding: var(--component-panel-header-padding);
+    border-bottom: 1px solid var(--ui);
+    width: 100%;
+    font: inherit;
+  }
+
+  button.panel-header {
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .panel-header.collapsed {
+    border-bottom: none;
+  }
+
+  .panel-header:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  .panel-title {
+    font-family: var(--text-panel-title-font-family);
+    font-size: var(--text-panel-title-font-size);
+    font-weight: var(--text-panel-title-font-weight);
+    text-transform: var(--text-panel-title-text-transform);
+    color: var(--tx-2);
+  }
+
+  .panel-chevron {
+    display: inline-block;
+    margin-right: 0.5rem;
+    transform: rotate(90deg);
+    transition: transform 0.2s;
+  }
+
+  .panel-chevron.collapsed {
+    transform: rotate(0deg);
+  }
+
+  .panel-body {
+    padding: var(--component-panel-body-padding);
+  }
+</style>

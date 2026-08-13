@@ -1,0 +1,57 @@
+name: Propose an Experiment (backlog candidate)
+description: Pitch an experiment idea without scaffolding anything yet
+labels: ["experiment-candidate"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea but aren't ready to build? Pitch it here — no slug, no scaffold.
+        Candidates are triaged into the team's `docs/backlog.md`.
+        Ready to start instead? Use the **New Experiment** form.
+
+  - type: input
+    id: title
+    attributes:
+      label: Working title
+      placeholder: "e.g. Evidence rail for report review"
+    validations:
+      required: true
+
+  - type: textarea
+    id: pitch
+    attributes:
+      label: One-line pitch
+      description: What question would this answer, and who cares?
+      placeholder: "Reviewers spend hours tracing claims back to sources — could an evidence rail cut that to minutes?"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: themes
+    attributes:
+      label: Themes
+      options:
+        - label: cost-perf
+        - label: evals
+        - label: patterns
+        - label: geospatial
+        - label: reliability
+        - label: agents
+        - label: scouting
+        - label: prototyping
+
+  - type: textarea
+    id: falsifiable_signal
+    attributes:
+      label: Falsifiable success signal (optional at this stage)
+      description: If you already know what measurable result would change your mind, include it — with a number.
+      placeholder: "e.g. reviewers verify >=80% of claims in under 2 minutes each"
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Prior art / links
+    validations:
+      required: false

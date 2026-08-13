@@ -1,24 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-variant="prototype">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
-		<title>AI Provisioning Guide | Applied AI Experiments</title>
-		<meta name="description" content="Interactive tool for navigating AI provisioning decisions with constraint-based wizard, TCO calculator, and side-by-side comparison." />
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content="AI Provisioning Guide | Applied AI Experiments" />
-		<meta property="og:description" content="Interactive tool for navigating AI provisioning decisions with constraint-based wizard, TCO calculator, and side-by-side comparison." />
-		<meta property="og:url" content="https://wri.github.io/applied-ai-experiments/ai-provisioning-guide/" />
-		<meta property="og:site_name" content="WRI Applied AI Experiments" />
+		<script>
+			// Pre-paint theme restore; same "prototype-theme" key as the hub. Falls
+			// back to the hub's legacy "theme" key, then system preference.
+			(function () {
+				var VALID = ['light', 'dark', 'high-contrast'];
+				var t = null;
+				try {
+					t = localStorage.getItem('prototype-theme') || localStorage.getItem('theme');
+				} catch (e) {}
+				if (VALID.indexOf(t) === -1) {
+					t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				}
+				document.documentElement.setAttribute('data-theme', t);
+			})();
+		</script>
 		<script
 			id="counterscale-script"
 			data-site-id="applied-ai-experiments"
 			src="https://counterscale.tilers.workers.dev/tracker.js"
 			defer></script>
+		<!-- SEO:START (generated from brief.md by sync-demo-meta.py — do not edit by hand) -->
+		<title>AI Provisioning Guide | Applied AI Experiments</title>
+		<meta name="description" content="Interactive tool for navigating AI provisioning decisions. Includes a constraint-based decision wizard, TCO calculator with adjustable assumptions, side-by-side method comparison, and a basic reference guide." />
+		<link rel="canonical" href="https://wri.github.io/applied-ai-experiments/ai-provisioning-guide/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="AI Provisioning Guide | Applied AI Experiments" />
+		<meta property="og:description" content="Interactive tool for navigating AI provisioning decisions. Includes a constraint-based decision wizard, TCO calculator with adjustable assumptions, side-by-side method comparison, and a basic reference guide." />
+		<meta property="og:url" content="https://wri.github.io/applied-ai-experiments/ai-provisioning-guide/" />
+		<meta property="og:site_name" content="WRI Applied AI Experiments" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:image" content="https://wri.github.io/applied-ai-experiments/og/ai-provisioning-guide.png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="AI Provisioning Guide — WRI Applied AI Experiments" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="AI Provisioning Guide | Applied AI Experiments" />
+		<meta name="twitter:description" content="Interactive tool for navigating AI provisioning decisions. Includes a constraint-based decision wizard, TCO calculator with adjustable assumptions, side-by-side method comparison, and a basic reference guide." />
+		<meta name="twitter:image" content="https://wri.github.io/applied-ai-experiments/og/ai-provisioning-guide.png" />
+		<meta name="twitter:image:alt" content="AI Provisioning Guide — WRI Applied AI Experiments" />
+		<!-- SEO:END -->
 		%sveltekit.head%
 	</head>
-	<body data-theme="light" data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

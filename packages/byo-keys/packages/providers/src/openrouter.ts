@@ -28,6 +28,7 @@ interface OpenRouterModelsResponse {
     top_provider?: {
       is_moderated: boolean;
       context_length?: number;
+      max_completion_tokens?: number;
     };
     per_request_limits?: {
       prompt_tokens?: number;
@@ -58,8 +59,9 @@ export class OpenRouterProvider extends OpenAICompatProvider {
     requiresKey: true,
     supportsCORS: true, // OpenRouter supports browser requests
     baseUrl: 'https://openrouter.ai/api',
+    apiKeyUrl: 'https://openrouter.ai/keys',
   };
-  
+
   readonly capabilities: ProviderCapabilities = {
     chat: true,
     streaming: true,
@@ -70,17 +72,17 @@ export class OpenRouterProvider extends OpenAICompatProvider {
     functionCalling: true,
     extendedThinking: false,
   };
-  
+
   private openRouterOptions: OpenRouterProviderOptions;
-  
+
   constructor(options: OpenRouterProviderOptions = {}) {
     super(options);
     this.openRouterOptions = options;
   }
-  
+
   protected addAuthHeaders(headers: Headers): void {
     super.addAuthHeaders(headers);
-    
+
     // Add OpenRouter-specific headers
     if (this.openRouterOptions.siteUrl) {
       headers.set('HTTP-Referer', this.openRouterOptions.siteUrl);
@@ -89,46 +91,41 @@ export class OpenRouterProvider extends OpenAICompatProvider {
       headers.set('X-Title', this.openRouterOptions.siteName);
     }
   }
-  
+
   async listModels(): Promise<ModelInfo[]> {
     const response = await this.request<OpenRouterModelsResponse>('/v1/models');
-    
+
     return response.data.map(m => ({
       id: m.id,
       name: m.name,
       provider: 'openrouter',
-      contextWindow: m.context_length,
+      contextWindow: m.context_length ?? m.top_provider?.context_length,
+      maxOutputTokens: m.top_provider?.max_completion_tokens,
+      inputPricePerMillion: parsePerTokenPrice(m.pricing?.prompt),
+      outputPricePerMillion: parsePerTokenPrice(m.pricing?.completion),
       capabilities: this.getModelCapabilities(m.id),
     }));
   }
-  
-  protected formatModelName(id: string): string {
-    // OpenRouter model IDs are like "anthropic/claude-3-opus"
-    const [provider, model] = id.split('/');
-    return `${model} (${provider})`;
-  }
-  
-  protected getContextWindow(id: string): number {
-    // Common context windows by model family
-    if (id.includes('claude-3')) return 200000;
-    if (id.includes('gpt-4')) return 128000;
-    if (id.includes('gemini')) return 1000000;
-    if (id.includes('llama-3')) return 128000;
-    if (id.includes('mistral')) return 32768;
-    return 4096;
-  }
-  
+
   protected getModelCapabilities(id: string): Partial<ProviderCapabilities> {
-    const hasVision = id.includes('vision') || 
-                      id.includes('claude-3') || 
+    const hasVision = id.includes('vision') ||
+                      id.includes('claude-3') ||
                       id.includes('gpt-4o') ||
                       id.includes('gemini');
-    
+
     return {
       vision: hasVision,
       functionCalling: !id.includes('instruct'),
     };
   }
+}
+
+// OpenRouter pricing is USD per token as a string (e.g. "0.000003");
+// "-1" marks dynamic/BYOK pricing and maps to undefined.
+function parsePerTokenPrice(price: string | undefined): number | undefined {
+  const perToken = Number(price);
+  if (!Number.isFinite(perToken) || perToken < 0) return undefined;
+  return perToken * 1_000_000;
 }
 
 // -----------------------------------------------------------------------------

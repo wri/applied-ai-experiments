@@ -1,0 +1,21 @@
+# ---- Required ----
+title: "CHANGEME"
+type: benchmark                       # evaluation | benchmark | spike | prototype | research | notebook | marimo
+status: idea                            # idea | started | paused | done | archived
+
+# ---- Recommended ----
+created_at: YYYY-MM-DD
+updated_at: YYYY-MM-DD
+
+# ---- Classification ----
+targets:                                # capability (what can the tools do?) | infra (can we build and run this?) | feature (should we build this?)
+themes: []                              # up to 2; first is primary — cost-perf | evals | patterns | geospatial | reliability | agents | scouting | prototyping | development
+tags:
+  - benchmark
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+  type: static                          # static | sveltekit | notebook-html | marimo-html | marimo-wasm | astro
+  build_command: ""
+  output_dir: ""

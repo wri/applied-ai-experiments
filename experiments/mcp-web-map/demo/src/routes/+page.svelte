@@ -1,15 +1,18 @@
 <script lang="ts">
   import { DemoLayout } from '@wri-datalab/ui';
+  import { runLLM, SessionTelemetryTrigger } from '@wri-datalab/llm-lab';
+  import { defaultModelForDemo } from '@wri-datalab/llm-lab/models';
   import type { KeyStatus, ProviderId } from '@byo-keys/core';
   import MapView from '$lib/components/MapView.svelte';
   import ChatPanel from '$lib/components/ChatPanel.svelte';
   import CommandPalette from '$lib/components/CommandPalette.svelte';
   import LayerList from '$lib/components/LayerList.svelte';
+  import EngineToggle from '$lib/components/EngineToggle.svelte';
   import { stores, initStores, storesReady, providerIds } from '$lib/stores';
   import { chatStore } from '$lib/stores/chat.svelte';
   import { mapStore } from '$lib/stores/map.svelte';
-  import { mcpBridge } from '$lib/mcp/bridge';
-  import { getToolsSystemPrompt } from '$lib/mcp/tools';
+  import { engineStore } from '$lib/stores/engine.svelte';
+  import { runAgent, type ModelCaller } from '$lib/agent/loop';
 
   // Track store initialization
   let isStoresReady = $state(false);
@@ -44,135 +47,79 @@
     return unsubscribe;
   });
 
+  // A provider is usable if it has a valid key, or — for keyless Ollama — once
+  // its local models have been discovered (populated by refreshModels on load).
+  const isReady = (id: ProviderId): boolean => {
+    const status = keys[id];
+    if (status?.hasKey && status?.isValid !== false) return true;
+    return id === 'ollama' && (status?.models?.length ?? 0) > 0;
+  };
+
   // Check if we have a ready provider
-  const hasReadyProvider = $derived(
-    providerIds.some((id) => {
-      const status = keys[id];
-      return status?.hasKey && status?.isValid !== false;
-    })
-  );
+  const hasReadyProvider = $derived(providerIds.some(isReady));
 
   // Get the first ready provider
-  const readyProvider = $derived(
-    providerIds.find((id) => {
-      const status = keys[id];
-      return status?.hasKey && status?.isValid !== false;
-    }) as ProviderId | undefined
-  );
+  const readyProvider = $derived(providerIds.find(isReady) as ProviderId | undefined);
 
-  // Handle chat submission
+  // Initialize WebMCP eagerly if it's the saved/active engine, so the toggle
+  // can show its status before the first message.
+  $effect(() => {
+    if (engineStore.current === 'webmcp' && !engineStore.webmcpReady && !engineStore.webmcpError) {
+      engineStore.initWebMCP();
+    }
+  });
+
+  // Dev-only debug hook (stripped from production builds) for manual verification
+  $effect(() => {
+    if (import.meta.env.DEV) {
+      (window as unknown as Record<string, unknown>).__mcp = {
+        engineStore,
+        mapStore,
+        chatStore,
+        runAgent,
+      };
+    }
+  });
+
+  // Handle chat submission — runs the multi-turn agentic loop with the active engine
   async function handleChatSubmit(message: string) {
     if (!readyProvider || chatStore.isStreaming) return;
 
-    // Add user message
-    chatStore.addUserMessage(message);
+    const provider = readyProvider;
+    const model = getDefaultModel(provider);
 
-    // Add assistant message placeholder
-    chatStore.addAssistantMessage();
-
-    try {
-      // Build messages with system prompt
-      const systemPrompt = getToolsSystemPrompt() + `\n\nCurrent map state:\n- Center: [${mapStore.view.center[0].toFixed(4)}, ${mapStore.view.center[1].toFixed(4)}]\n- Zoom: ${mapStore.view.zoom.toFixed(2)}\n- Bearing: ${mapStore.view.bearing}°\n- Pitch: ${mapStore.view.pitch}°`;
-
-      // Get chat history (excluding system messages - we pass system separately)
-      const chatHistory = chatStore.getMessagesForAPI().filter(m => m.role !== 'system');
-
-      const messages = [
-        ...chatHistory,
-        { role: 'user' as const, content: message },
-      ];
-
-      // Stream the response - pass system prompt as separate field for provider compatibility
-      const stream = stores.chatStream(readyProvider, {
-        model: getDefaultModel(readyProvider),
+    // Bridge the loop's ModelCaller to runLLM rather than stores.chatStream
+    // directly: runLLM is the choke point @wri-datalab/llm-lab taps, so every
+    // agent turn lands in the session-telemetry dashboard with its own tokens,
+    // latency and cost. Labelling by turn keeps those rows readable.
+    const callModel: ModelCaller = async (system, messages, { label, onDelta }) => {
+      const result = await runLLM(stores, {
+        providerId: provider,
+        model,
         messages,
-        system: systemPrompt,  // Pass as separate field, not in messages array
+        system,
         maxTokens: 2048,
         temperature: 0.7,
+        label,
+        onDelta: (delta) => onDelta(delta),
       });
+      return { content: result.content, error: result.error };
+    };
 
-      let fullContent = '';
-
-      for await (const chunk of stream) {
-        switch (chunk.type) {
-          case 'delta':
-            fullContent += chunk.content;
-            chatStore.appendContent(chunk.content);
-            break;
-
-          case 'thinking_delta':
-            // Could handle thinking display here
-            break;
-
-          case 'done':
-            // Process tool calls from the response
-            const toolCalls = mcpBridge.parseToolCalls(fullContent);
-
-            if (toolCalls.length > 0) {
-              // Execute each tool call
-              for (const tc of toolCalls) {
-                const toolCallEntry = chatStore.addToolCall({
-                  id: `tc-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-                  name: tc.name,
-                  arguments: tc.arguments,
-                });
-
-                // Mark as running
-                chatStore.updateToolCall(toolCallEntry.id, { status: 'running' });
-
-                // Execute the tool
-                const result = await mcpBridge.execute(tc.name, tc.arguments, toolCallEntry.id);
-
-                // Update with result
-                if (result.success) {
-                  chatStore.updateToolCall(toolCallEntry.id, {
-                    status: 'completed',
-                    result: result.result,
-                  });
-                } else {
-                  chatStore.updateToolCall(toolCallEntry.id, {
-                    status: 'error',
-                    error: result.error,
-                  });
-                }
-              }
-
-              // Clean the content to remove tool call blocks
-              const cleanContent = mcpBridge.cleanContent(fullContent);
-              chatStore.updateLastAssistant({ content: cleanContent, status: 'complete' });
-            } else {
-              chatStore.updateLastAssistant({ status: 'complete' });
-            }
-            break;
-
-          case 'error':
-            chatStore.updateLastAssistant({
-              content: `Error: ${chunk.error.message}`,
-              status: 'error',
-            });
-            break;
-        }
-      }
-    } catch (error) {
-      chatStore.updateLastAssistant({
-        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        status: 'error',
-      });
-    }
+    await runAgent({ engine: engineStore.engine, userMessage: message, callModel });
   }
 
-  // Get default model for provider
+  // Default model per provider — sourced from the central registry. This demo's
+  // slice (providers + functionCalling filter) lives in DEMO_MODEL_SETS in
+  // @wri-datalab/llm-lab/models; change what it offers there, not here.
   function getDefaultModel(provider: ProviderId): string {
-    switch (provider) {
-      case 'anthropic':
-        return 'claude-haiku-4-5-20251001';
-      case 'gemini':
-        return 'gemini-3.0-flash';
-      case 'openrouter':
-        return 'anthropic/claude-4.5-haiku';
-      default:
-        return '';
-    }
+    // Ollama has no curated registry default — fall back to the first
+    // locally-discovered model.
+    return (
+      defaultModelForDemo('mcp-web-map', provider) ||
+      keys[provider]?.models?.[0]?.id ||
+      ''
+    );
   }
 
   // Handle command palette command
@@ -194,14 +141,29 @@
 
 <DemoLayout
   title="MCP Web Map"
-  subtitle="AI-powered geospatial chat"
   {stores}
   providers={providerIds}
   showSettings={true}
   showApiKeys={true}
   showFooter={false}
+  fillHeight
   maxWidth="full"
+  mode={hasReadyProvider ? 'live' : 'mock'}
+  modeLabel={hasReadyProvider ? readyProvider : 'no key'}
+  modeHint={hasReadyProvider
+    ? `Running live on ${readyProvider}`
+    : 'No API key — this demo has no keyless mode, so add a key to chat'}
 >
+  {#snippet headerActions()}
+    <SessionTelemetryTrigger />
+  {/snippet}
+
+  <!-- The engine toggle is a labelled control, so it sits in the banner row
+       rather than the header (DESIGN.md §4). -->
+  {#snippet banner()}
+    <EngineToggle />
+  {/snippet}
+
   <div class="map-layout">
     <div class="map-area">
       <MapView />
@@ -251,7 +213,6 @@
     display: flex;
     flex: 1;
     min-height: 0;
-    height: calc(100vh - 60px); /* Subtract header height */
   }
 
   .map-area {
@@ -374,7 +335,6 @@
   @media (max-width: 768px) {
     .map-layout {
       flex-direction: column;
-      height: calc(100vh - 60px);
     }
 
     .map-area {

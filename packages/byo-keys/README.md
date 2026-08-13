@@ -54,7 +54,7 @@ if (result.valid) {
     model: 'claude-sonnet-4-20250514',
     messages: [{ role: 'user', content: 'Hello!' }],
   });
-  
+
   console.log(response.content);
 }
 ```
@@ -94,7 +94,7 @@ export const byok = createBYOKStores(client);
   import { onMount } from 'svelte';
   import { byok } from '$lib/byok';
   import { setBYOKContext, initializeBYOK } from '@byo-keys/svelte';
-  
+
   setBYOKContext(byok);
   onMount(() => initializeBYOK(byok));
 </script>
@@ -106,11 +106,11 @@ export const byok = createBYOKStores(client);
 <!-- Any component -->
 <script>
   import { getBYOKContext } from '@byo-keys/svelte';
-  
+
   const { keys, setKey, chat } = getBYOKContext();
-  
+
   let apiKey = '';
-  
+
   async function saveKey() {
     const result = await setKey('anthropic', apiKey);
     if (!result.valid) alert(result.error);
@@ -133,6 +133,7 @@ export const byok = createBYOKStores(client);
 | OpenAI | ❌ (proxy needed) | Yes | GPT-4, o-series models |
 | Gemini | ✅ Native | Yes | Browser-first apps |
 | OpenRouter | ✅ Native | Yes | Multi-model access |
+| Hugging Face | ✅ Native | Yes | Open models, multi-provider routing |
 | Groq | ❌ (proxy needed) | Yes | Ultra-fast inference |
 | Together | ❌ (proxy needed) | Yes | Open-source models |
 | Mistral | ❌ (proxy needed) | Yes | European AI, efficiency |
@@ -146,7 +147,7 @@ import { anthropic } from '@byo-keys/providers';
 const provider = anthropic({
   // For development: enable direct browser access
   dangerouslyAllowBrowser: true,
-  
+
   // For production: use a proxy
   proxyUrl: '/api/proxy/anthropic',
 });
@@ -184,6 +185,24 @@ const provider = openrouter({
   siteName: 'Your App',
 });
 ```
+
+### Hugging Face
+
+```typescript
+import { huggingface } from '@byo-keys/providers';
+
+// The Inference Providers router supports CORS natively — no proxy needed!
+// Get a token at https://huggingface.co/settings/tokens
+const provider = huggingface();
+
+// Model ids are "org/model" with an optional routing suffix:
+//   "meta-llama/Llama-3.3-70B-Instruct"           → router default (:fastest)
+//   "meta-llama/Llama-3.3-70B-Instruct:cerebras"  → pin a specific provider
+//   "meta-llama/Llama-3.3-70B-Instruct:cheapest"  → cheapest available provider
+```
+
+Note: model pricing reported by `listModels()` reflects the cheapest available
+inference provider; the router's default `:fastest` route may cost more.
 
 ### Groq
 
@@ -257,7 +276,7 @@ Create a simple passthrough proxy on your server:
 export const POST = async ({ params, request }) => {
   const [provider, ...rest] = params.path.split('/');
   const baseUrl = { anthropic: 'https://api.anthropic.com' }[provider];
-  
+
   return fetch(`${baseUrl}/${rest.join('/')}`, {
     method: 'POST',
     headers: request.headers,
@@ -271,6 +290,7 @@ export const POST = async ({ params, request }) => {
 Some providers support CORS:
 - **Ollama**: Local, CORS configurable
 - **OpenRouter**: Designed for browser use
+- **Hugging Face**: Inference Providers router supports CORS
 - **Google AI (Gemini)**: Supports CORS
 
 ### 3. Development Mode (Anthropic Only)
@@ -377,172 +397,6 @@ const unsubscribe = client.subscribe((event) => {
 4. **Clear on logout**: Call `client.destroy()` or clear localStorage when users log out.
 
 5. **HTTPS required**: Always serve your app over HTTPS in production.
-
-## Real-time Voice Sessions
-
-The `@byo-keys/realtime` package enables voice conversations using OpenAI Realtime and Gemini Live APIs.
-
-```bash
-npm install @byo-keys/realtime
-```
-
-### Quick Example
-
-```typescript
-import { openaiRealtime, createAudioCapture, createAudioPlayback } from '@byo-keys/realtime';
-
-// Create a voice session
-const session = openaiRealtime({
-  model: 'gpt-4o-realtime-preview-2024-12-17',
-  voice: 'alloy',
-  instructions: 'You are a helpful assistant.',
-});
-
-// Set API key and connect
-session.setApiKey('sk-...');
-await session.connect();
-
-// Set up audio capture (microphone)
-const capture = createAudioCapture({ sampleRate: 24000 });
-capture.onAudioChunk((chunk) => session.sendAudio(chunk));
-
-// Set up audio playback (speaker)
-const playback = createAudioPlayback({ sampleRate: 24000 });
-await playback.initialize();
-
-// Handle events
-session.subscribe((event) => {
-  switch (event.type) {
-    case 'transcript:delta':
-      console.log(`${event.role}: ${event.delta}`);
-      break;
-    case 'response:audio_delta':
-      playback.enqueue(event.audio);
-      break;
-    case 'tool:call':
-      // Handle function calls
-      const result = await myFunction(event.arguments);
-      session.submitToolResult(event.callId, result);
-      break;
-  }
-});
-
-// Start listening
-await capture.start();
-```
-
-### Providers
-
-| Provider | CORS | Sample Rate | Voices |
-|----------|------|-------------|--------|
-| OpenAI Realtime | ❌ | 24kHz | alloy, echo, fable, onyx, nova, shimmer |
-| Gemini Live | ✅ | 16kHz | Puck, Charon, Kore, Fenrir, Aoede |
-
-### OpenAI Realtime
-
-```typescript
-import { openaiRealtime } from '@byo-keys/realtime';
-
-const session = openaiRealtime({
-  model: 'gpt-4o-realtime-preview-2024-12-17',
-  voice: 'nova',
-  instructions: 'Be concise and friendly.',
-  vadEnabled: true,           // Voice activity detection
-  vadThreshold: 0.5,          // Sensitivity (0-1)
-  silenceDurationMs: 500,     // Silence before turn end
-  tools: [{                   // Function calling
-    type: 'function',
-    name: 'get_weather',
-    description: 'Get weather for a location',
-    parameters: { type: 'object', properties: { location: { type: 'string' } } }
-  }],
-}, {
-  enableTranscription: true,  // Get text transcripts
-});
-```
-
-### Gemini Live
-
-```typescript
-import { geminiLive } from '@byo-keys/realtime';
-
-const session = geminiLive({
-  model: 'gemini-2.0-flash-exp',
-  voice: 'Kore',
-  instructions: 'You are a helpful assistant.',
-});
-
-// Gemini supports vision in realtime!
-session.sendImage(base64ImageData, 'image/jpeg');
-session.sendTextAndImage('What is this?', base64Data);
-```
-
-### Audio Capture Options
-
-```typescript
-import { createAudioCapture, createLegacyAudioCapture } from '@byo-keys/realtime';
-
-// Modern AudioWorklet-based capture (recommended)
-const capture = createAudioCapture({
-  sampleRate: 24000,          // Match provider's rate
-  echoCancellation: true,
-  noiseSuppression: true,
-  autoGainControl: true,
-  chunkSize: 4800,            // Samples per chunk
-});
-
-// Legacy ScriptProcessor-based (better compatibility)
-const legacyCapture = createLegacyAudioCapture({ sampleRate: 24000 });
-
-// Volume monitoring
-capture.onVolumeLevel((level) => {
-  volumeMeter.style.width = `${level * 100}%`;
-});
-```
-
-### Streaming Audio Playback
-
-```typescript
-import { createStreamingPlayer } from '@byo-keys/realtime';
-
-// Better for continuous streaming with jitter handling
-const player = createStreamingPlayer(24000);
-await player.initialize();
-
-session.subscribe((event) => {
-  if (event.type === 'response:audio_delta') {
-    player.addAudio(event.audio);
-  }
-});
-
-// Interrupt playback
-player.clear();
-```
-
-### Session Lifecycle
-
-```typescript
-// Connect
-await session.connect();
-
-// Send text (bypasses voice input)
-session.sendText('Hello!');
-
-// Manually commit audio buffer (if turn detection disabled)
-session.commitAudio();
-
-// Interrupt current response
-session.interrupt();
-
-// Update configuration mid-session
-session.updateConfig({ 
-  voice: 'shimmer',
-  temperature: 0.8 
-});
-
-// Disconnect
-session.disconnect();
-```
 
 ## License
 

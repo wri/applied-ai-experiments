@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { Button, Badge, Panel } from '@wri-datalab/ui';
-	import type { Page, SearchResult, ChunkResult } from '../types';
+	import PassageItem from './PassageItem.svelte';
+	import type { Page, SearchResult } from '../types';
 
 	interface Props {
 		page: Page;
 		searchResult?: SearchResult;
+		query?: string;
 		fullPageImage?: string;
 		onClose?: () => void;
 		onPrevious?: () => void;
@@ -16,6 +18,7 @@
 	let {
 		page,
 		searchResult,
+		query = '',
 		fullPageImage,
 		onClose,
 		onPrevious,
@@ -28,11 +31,6 @@
 	let sortedChunks = $derived(
 		searchResult?.chunks.slice().sort((a, b) => b.similarity - a.similarity) ?? []
 	);
-
-	function highlightText(text: string): string {
-		// Simple highlight - in production could use actual query terms
-		return text;
-	}
 </script>
 
 <div class="page-detail">
@@ -94,17 +92,13 @@
 			{#if sortedChunks.length > 0}
 				<Panel title="Relevant Passages">
 					<div class="passages-list">
-						{#each sortedChunks as chunkResult, i}
-							<div class="passage" class:top-passage={i < 3}>
-								<div class="passage-header">
-									<Badge variant={i < 3 ? 'success' : 'default'}>
-										{Math.round(chunkResult.similarity * 100)}%
-									</Badge>
-								</div>
-								<p class="passage-text">
-									{@html highlightText(chunkResult.chunk.text)}
-								</p>
-							</div>
+						{#each sortedChunks as chunkResult, i (chunkResult.chunk.id)}
+							<PassageItem
+								text={chunkResult.chunk.text}
+								similarity={chunkResult.similarity}
+								highlight={i < 3}
+								{query}
+							/>
 						{/each}
 					</div>
 				</Panel>
@@ -209,29 +203,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-4);
-	}
-
-	.passage {
-		padding: var(--space-3);
-		background-color: var(--bg);
-		border: 1px solid var(--ui);
-		border-radius: var(--radius-md);
-	}
-
-	.passage.top-passage {
-		border-color: var(--primary);
-		background-color: color-mix(in oklch, var(--primary) 5%, var(--bg));
-	}
-
-	.passage-header {
-		margin-bottom: var(--space-2);
-	}
-
-	.passage-text {
-		margin: 0;
-		font-size: var(--font-size-sm);
-		line-height: 1.6;
-		color: var(--tx);
 	}
 
 	.page-text-preview {

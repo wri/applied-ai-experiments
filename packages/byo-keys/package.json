@@ -2,36 +2,21 @@
   "name": "byo-keys",
   "version": "0.0.0",
   "private": true,
-  "description": "Bring Your Own Key pattern for LLM-powered web applications",
+  "description": "Bring Your Own Key pattern for LLM-powered web applications. Container only — the real packages are in packages/*, and the root pnpm workspace includes them directly (see pnpm-workspace.yaml).",
   "repository": {
     "type": "git",
     "url": "https://github.com/wri/applied-ai-experiments/packages/byo-keys"
   },
   "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "test": "turbo test",
-    "lint": "turbo lint",
-    "typecheck": "turbo typecheck",
-    "clean": "turbo clean && rm -rf node_modules",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "turbo build && changeset publish"
-  },
+  "_comment": "No scripts here on purpose. This started life as a standalone turbo monorepo; every script called `turbo`, there is no turbo.json, so all of them failed — which is why CI had to hand-pick which packages to test. `pnpm -r` recurses into packages/byo-keys/packages/* directly, so the aggregator scripts were redundant as well as broken.",
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@types/node": "^20.10.0",
     "prettier": "^3.1.0",
-    "turbo": "^2.0.0",
     "typescript": "^5.3.0",
     "vitest": "^3.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "packageManager": "pnpm@10.29.2"
+  }
 }

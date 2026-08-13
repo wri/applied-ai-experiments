@@ -1,10 +1,10 @@
-# WRI Asset locator
+# WRI Assets Locator
 
-Fetches information about various WRI assets (currently datasets) and displays them visually for a user to search and explore. 
+> See [brief.md](./brief.md) for context, signals, and findings.
 
 ## Idea garden reference
 
-This experiment has an Asana entry: 
+This experiment has an Asana entry:
 https://app.asana.com/1/25496124013636/project/1210050417738685/task/1211762347149448?focus=true
 
 Originating idea from Evan:
@@ -14,7 +14,7 @@ Asana: https://app.asana.com/1/25496124013636/project/1210050417738685/task/1210
 
 **Purpose: Provide a simple way for user to find relevant datasets and link to where it can be viewed/downloaded.**
 
-Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive of assets. Provides only basic information about the selected asset, and a link. 
+Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive of assets. Provides only basic information about the selected asset, and a link.
 
 ![WRI Asset Locator Visualization](exports/screenshot_projection_01.png)
 *2D projection of WRI assets with semantic search and filtering*
@@ -31,13 +31,12 @@ Compare to the WRI Dataset Explorer -- this is more lightweight, more inclusive 
 There is documentation built into the main notebook
 `asset_locator.py`
 
-Experiment Methodology Steps: 
-* Fetches a list of assets and metadata from various sources, such as ResourceWatch. 
-* Flattens all descriptions and information into a text string per asset. 
-* Embeds the text string in a high-dimensional space using a transformer, then back down to a 2-dim space. 
+Experiment Methodology Steps:
+* Fetches a list of assets and metadata from various sources, such as ResourceWatch.
+* Flattens all descriptions and information into a text string per asset.
+* Embeds the text string in a high-dimensional space using a transformer, then back down to a 2-dim space.
 * Enable a search query which is embedded with the same transformer, can compute distances to each asset
 * Create a simple UI and visualization
-
 
 ## What's in here
 
@@ -102,20 +101,4 @@ The notebook will check for the combined data file and show instructions if it's
 
 ### Subsequent Runs
 * Fetch scripts don't need to be run again unless you want fresh data
-* The main notebook will use cached embeddings when possible 
-
-
-## Decisions & Learnings Log
-
-Use this as a lightweight log of important decisions and learnings.
-– Decision or learning, and why it matters.
-- Another note.
-
-## Future Work
-- What we'd do next if this experiment shows promise.
-- How this could roll into a product, tool, or broader system.
-- Follow-up experiments or variations to explore.
-
-## Results
-
-_Summary of findings once the experiment is complete. Link to [brief.md](./brief.md) for the full write-up._
+* The main notebook will use cached embeddings when possible

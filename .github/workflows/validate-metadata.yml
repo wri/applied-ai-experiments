@@ -3,11 +3,19 @@ name: Validate Experiment Metadata
 on:
   pull_request:
     paths:
-      - 'experiments/**/info.yaml'
-      - 'experiments/**/experiment.yaml'
-      - '.github/scripts/validate-experiments.py'
-      - '.github/templates/**/info.yaml'
-      - '.github/templates/**/experiment.yaml'
+      - 'experiments/**/brief.md'
+      - 'experiments/**/demo/src/app.html'
+      - '.github/scripts/**.py'
+      - '.github/workflows/validate-metadata.yml'
+      - 'packages/shared-types/src/index.ts'
+      - 'hub/src/data/taxonomy.json'
+      - 'pyproject.toml'
+      - 'README.md'
+      # NOTE: template frontmatter is deliberately NOT a trigger here.
+      # validate-experiments.py only walks experiments/, and templates ship
+      # CHANGEME/YYYY-MM-DD placeholders that it (correctly) rejects. Template
+      # changes are covered by the smoke-scaffold workflow, which scaffolds each
+      # one into a real experiment first.
 
 jobs:
   validate:
@@ -23,13 +31,39 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --extra dev
 
       - name: Validate experiment metadata
-        run: uv run python .github/scripts/validate-experiments.py
+        run: uv run .github/scripts/validate-experiments.py
 
-      - name: Check for validation errors
-        if: failure()
+      - name: Check schema copies are in sync
+        run: uv run .github/scripts/check-schema-sync.py
+
+      - name: Check demo SEO meta is in sync with the briefs
+        run: uv run .github/scripts/sync-demo-meta.py --check
+
+      # Every reader and writer of a brief goes through experiment_doc, so its
+      # edge cases (`---` rules inside a body, CRLF, unterminated blocks) are the
+      # difference between a parsed brief and a shredded one. Warn rather than
+      # fail when tests/ is absent — it is untracked today, and a silent pass
+      # would read as "the safety net ran".
+      - name: Run pipeline tests
         run: |
-          echo "::error::Experiment metadata validation failed. Please fix the errors above."
-          exit 1
+          if [[ -d tests ]]; then
+            uv run pytest -q tests
+          else
+            echo "::warning::tests/ not present in this checkout (untracked) — pipeline tests did not run"
+          fi
+
+      # The pipeline scripts are what every contributor's tooling runs, and the
+      # pre-commit hooks that lint them are local-only. Scoped to the pipeline on
+      # purpose: reformatting somebody's marimo notebook is friction, not a safeguard.
+      - name: Lint the pipeline scripts
+        run: |
+          uv run ruff check .github/scripts/
+          uv run ruff format --check .github/scripts/
+
+      # Docs that name a `just` recipe which doesn't exist, or link a file that
+      # isn't there, send contributors down dead ends. Cheap to check.
+      - name: Check the docs don't lie
+        run: python3 .github/scripts/check-docs.py

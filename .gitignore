@@ -201,6 +201,7 @@ node_modules/
 .cursor/
 .claude/
 .idea/
+drafts/
 
 # ============================================
 # Monorepo-specific ignores
@@ -220,7 +221,7 @@ experiments/**/exports/
 # Notebook exports (committed selectively)
 # experiments/**/exports/
 
-# Auto-generated experiment index (generated at build time from info.yaml files)
+# Auto-generated experiment index (generated at build time from brief.md frontmatter)
 experiment-index.json
 
 # SvelteKit
@@ -232,9 +233,6 @@ experiment-index.json
 # pnpm
 .pnpm-store/
 
-# byo-keys built outputs (needed for workspace resolution in CI)
-!packages/byo-keys/packages/*/dist/
-
 # Astro cache
 hub/.astro/
 
@@ -245,3 +243,19 @@ hub/.astro/
 *.key
 credentials.json
 secrets.json
+
+# ============================================
+# In-progress documentation — deliberately untracked
+# ============================================
+# Written and iterated locally; these go into git when they are ready to be read
+# by someone else. Safe to leave out of a checkout: check-docs.py checks them when
+# present and skips them when absent, and check-committed.py exempts docs/ by
+# design. Paths are anchored with a leading / so a future
+# experiments/<slug>/DESIGN.md is not caught by accident.
+/AGENTS.md
+/CLAUDE.md
+/CONTRIBUTING.md
+/DESIGN.md
+/ONBOARDING.md
+/docs/
+/hub/DESIGN.md

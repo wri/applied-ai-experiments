@@ -28,10 +28,24 @@ export interface ModelConfig {
 export interface ProviderConfig {
   /** Display name for the provider */
   name: string;
-  /** Available models for this provider */
+  /** Curated models for this provider */
   models: ModelConfig[];
   /** Default model ID to select */
   defaultModel?: string;
+  /**
+   * When true, the selector also lists models discovered live from the
+   * provider's API (BYOK `listModels()`), merged after the curated `models`
+   * and de-duplicated by id. Use for open catalogs (OpenRouter, Hugging Face)
+   * where you want a curated default plus full live discovery. `models` may be
+   * empty for a "live only" provider. Default: false (curated only).
+   */
+  allowDynamic?: boolean;
+  /**
+   * Message shown in the selector when this provider has no available models
+   * (e.g. a local provider like Ollama that couldn't be reached). Replaces the
+   * generic "No models available" empty state.
+   */
+  emptyNote?: string;
 }
 
 /**

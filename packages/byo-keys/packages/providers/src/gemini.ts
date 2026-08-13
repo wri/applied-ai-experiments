@@ -106,7 +106,7 @@ export class GeminiProvider extends BaseProvider {
     supportsCORS: true, // Gemini supports browser requests
     baseUrl: 'https://generativelanguage.googleapis.com',
   };
-  
+
   readonly capabilities: ProviderCapabilities = {
     chat: true,
     streaming: true,
@@ -117,9 +117,9 @@ export class GeminiProvider extends BaseProvider {
     functionCalling: true,
     extendedThinking: true,
   };
-  
+
   private geminiOptions: GeminiProviderOptions;
-  
+
   constructor(options: GeminiProviderOptions = {}) {
     super(options);
     this.geminiOptions = {
@@ -127,27 +127,27 @@ export class GeminiProvider extends BaseProvider {
       ...options,
     };
   }
-  
+
   /**
    * Gemini uses API key as query parameter, not header
    */
   protected addAuthHeaders(_headers: Headers): void {
     // Gemini doesn't use auth headers - key is in URL
   }
-  
+
   protected getAuthenticatedUrl(endpoint: string): string {
     const baseUrl = this.getBaseUrl();
     const separator = endpoint.includes('?') ? '&' : '?';
     return `${baseUrl}${endpoint}${separator}key=${this.getApiKey()}`;
   }
-  
+
   async validateKey(key: string): Promise<KeyValidationResult> {
     const originalKey = this.apiKey;
     this.apiKey = key;
-    
+
     try {
       const models = await this.listModels();
-      
+
       return {
         valid: true,
         providerId: 'gemini',
@@ -155,10 +155,10 @@ export class GeminiProvider extends BaseProvider {
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      const isAuthError = message.includes('API_KEY_INVALID') || 
+      const isAuthError = message.includes('API_KEY_INVALID') ||
                           message.includes('401') ||
                           message.includes('403');
-      
+
       return {
         valid: false,
         providerId: 'gemini',
@@ -169,18 +169,18 @@ export class GeminiProvider extends BaseProvider {
       this.apiKey = originalKey;
     }
   }
-  
+
   async listModels(): Promise<ModelInfo[]> {
     const url = this.getAuthenticatedUrl('/v1beta/models');
-    
+
     const response = await this.fetchFn(url);
     if (!response.ok) {
       const error = await this.parseError(response);
       throw error;
     }
-    
+
     const data: GeminiModelsResponse = await response.json();
-    
+
     // Filter to generative models
     const chatModels = data.models
       .filter(m => m.supportedGenerationMethods.includes('generateContent'))
@@ -190,67 +190,68 @@ export class GeminiProvider extends BaseProvider {
         provider: 'gemini' as const,
         contextWindow: m.inputTokenLimit,
         capabilities: {
-          vision: m.name.includes('vision') || m.name.includes('1.5') || m.name.includes('2'),
+          // Every Gemini model from 1.5 onward is multimodal.
+          vision: m.name.includes('vision') || /gemini-(?:1\.5|[2-9])/.test(m.name),
           functionCalling: true,
         },
       }));
-    
+
     // Sort by preference (newer models first)
     return chatModels.sort((a, b) => {
-      const order = ['gemini-2', 'gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-1.0', 'gemini-pro'];
+      const order = ['gemini-3', 'gemini-2', 'gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-1.0'];
       const aIndex = order.findIndex(p => a.id.includes(p));
       const bIndex = order.findIndex(p => b.id.includes(p));
       return aIndex - bIndex;
     });
   }
-  
+
   async chat(request: ChatRequest): Promise<ChatResponse> {
     const model = request.model;
     const geminiRequest = this.toGeminiRequest(request);
-    
+
     const url = this.getAuthenticatedUrl(`/v1beta/models/${model}:generateContent`);
-    
+
     const response = await this.fetchFn(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(geminiRequest),
     });
-    
+
     if (!response.ok) {
       const error = await this.parseError(response);
       throw error;
     }
-    
+
     const data: GeminiResponse = await response.json();
     return this.fromGeminiResponse(data, model);
   }
-  
+
   async *chatStream(request: ChatRequest): AsyncIterable<ChatStreamChunk> {
     const model = request.model;
     const geminiRequest = this.toGeminiRequest(request);
-    
+
     const url = this.getAuthenticatedUrl(`/v1beta/models/${model}:streamGenerateContent?alt=sse`);
-    
+
     const response = await this.fetchFn(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(geminiRequest),
     });
-    
+
     if (!response.ok) {
       const error = await this.parseError(response);
       throw error;
     }
-    
+
     if (!response.body) {
       throw new Error('No response body for streaming request');
     }
-    
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    
+
     let started = false;
-    
+
     async function* streamToIterable(): AsyncIterable<string> {
       try {
         while (true) {
@@ -262,7 +263,7 @@ export class GeminiProvider extends BaseProvider {
         reader.releaseLock();
       }
     }
-    
+
     let wasThinking = false;
 
     for await (const { data } of parseSSE(streamToIterable())) {
@@ -321,11 +322,11 @@ export class GeminiProvider extends BaseProvider {
       }
     }
   }
-  
+
   // ---------------------------------------------------------------------------
   // Conversion Helpers
   // ---------------------------------------------------------------------------
-  
+
   private toGeminiRequest(request: ChatRequest): GeminiRequest {
     const contents = this.convertMessages(request);
 
@@ -356,30 +357,30 @@ export class GeminiProvider extends BaseProvider {
 
     return geminiRequest;
   }
-  
+
   private convertMessages(request: ChatRequest): GeminiContent[] {
     const contents: GeminiContent[] = [];
-    
+
     for (const msg of request.messages) {
       contents.push({
         role: msg.role === 'assistant' ? 'model' : 'user',
         parts: this.convertContent(msg.content),
       });
     }
-    
+
     return contents;
   }
-  
+
   private convertContent(content: string | ContentPart[]): GeminiPart[] {
     if (typeof content === 'string') {
       return [{ text: content }];
     }
-    
+
     return content.map(part => {
       if (part.type === 'text') {
         return { text: part.text };
       }
-      
+
       if (part.type === 'image') {
         if (part.source.type === 'base64') {
           return {
@@ -392,11 +393,11 @@ export class GeminiProvider extends BaseProvider {
         // URL images need to be fetched and converted to base64
         throw new Error('URL-based images not yet supported for Gemini - use base64');
       }
-      
+
       throw new Error(`Unsupported content type: ${(part as ContentPart).type}`);
     });
   }
-  
+
   private fromGeminiResponse(response: GeminiResponse, model: string): ChatResponse {
     const candidate = response.candidates[0];
     if (!candidate) {
@@ -427,7 +428,7 @@ export class GeminiProvider extends BaseProvider {
       raw: response,
     };
   }
-  
+
   private mapFinishReason(reason: string): FinishReason {
     switch (reason) {
       case 'STOP': return 'stop';
@@ -439,10 +440,17 @@ export class GeminiProvider extends BaseProvider {
   }
 
   /**
-   * Check if model supports thinking/reasoning
+   * Check if model supports thinking/reasoning.
+   *
+   * Gemini 3 prefers `thinkingLevel` over `thinkingBudget`, but still accepts
+   * the budget form — so the request shape below needs no per-version branch.
+   * (Sending both in one request is a 400, so don't add `thinkingLevel` here
+   * without dropping `thinkingBudget`.)
    */
   private supportsThinking(model: string): boolean {
-    return model.includes('2.5') || model.includes('3.0') || model.includes('flash-thinking');
+    return (
+      model.includes('2.5') || /gemini-3(?:\.\d+)?-/.test(model) || model.includes('flash-thinking')
+    );
   }
 }
 

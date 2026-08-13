@@ -1,0 +1,280 @@
+{
+  "experiment": "ask-ten-times",
+  "title": "No API key? Watch a variance run",
+  "description": "An illustrative example session: six runs of one question at temperature 1.0, then the consensus analysis. Structured exactly like a live export — real prompts, real schema — but hand-authored rather than recorded. See the README.",
+  "recordedAt": 1786353052871,
+  "config": {
+    "question": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs.",
+    "n": 6,
+    "temperature": 1,
+    "paraphrase": false
+  },
+  "calls": [
+    {
+      "label": "run 1",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 1",
+        "sentAt": 1786353041268
+      },
+      "response": {
+        "content": "Prioritize wetland restoration if the goal is measurably lower flood peaks. Restored wetlands provide actual storage volume — they absorb stormwater during an event and release it slowly afterward — while street trees mainly intercept rainfall and improve infiltration at the margins. The tradeoff is deliverability: trees are cheap, can be planted incrementally across the whole city, and start working within a few seasons, whereas wetland projects need contiguous land the city may not own and permitting timelines measured in years. Where the land exists, lead with wetlands and use street plantings as the distributed complement.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 108,
+          "totalTokens": 142
+        },
+        "latencyMs": 2114,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "run 2",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 2",
+        "sentAt": 1786353041281
+      },
+      "response": {
+        "content": "It depends on which failure mode is actually flooding the city. If water arrives from the wider catchment and overwhelms the drainage network, wetland restoration is the higher-leverage investment, because only wetlands offer storage at that scale — trees cannot hold back a regional flood peak. If the problem is localized ponding on streets after short intense bursts, distributed green infrastructure (street trees, bioswales, permeable surfaces) does more per dollar and can be rolled out quickly across many blocks. Wetlands also compete for scarce developable land and can take years to permit. Diagnose the failure mode first, then spend.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 118,
+          "totalTokens": 152
+        },
+        "latencyMs": 2487,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "run 3",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 3",
+        "sentAt": 1786353041294
+      },
+      "response": {
+        "content": "**Recommendation: wetlands for flood control, trees for nearly everything else.**\n\nWetlands are the stronger hydrological lever — they store and slowly release large volumes of stormwater, where street trees reduce and delay runoff only modestly. But framing this purely as flood policy undersells the trees: they are far cheaper per site, deploy quickly across neighbourhoods, and bring heat mitigation, air quality, and street-level livability that a restored marsh on the edge of town does not. The honest answer also depends on scale — catchment-level flood peaks and local street ponding are different problems with different best answers.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 112,
+          "totalTokens": 146
+        },
+        "latencyMs": 1963,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "run 4",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 4",
+        "sentAt": 1786353043261
+      },
+      "response": {
+        "content": "Before committing either way, commission a hydrology study of where water actually accumulates and why. Cities routinely fund the visible intervention rather than the one matched to their drainage failure. With that caveat: wetlands hold and release far more stormwater than any realistic number of street trees, so they are the default answer for reducing flood peaks. Street trees remain worth funding because they are inexpensive, distributed, and quick to establish. In practice the binding constraint is land — many mid-sized cities have no restorable wetland inside the catchment, and permitting what does exist is slow.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 104,
+          "totalTokens": 138
+        },
+        "latencyMs": 2732,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "run 5",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 5",
+        "sentAt": 1786353043387
+      },
+      "response": {
+        "content": "Wetland restoration wins on pure flood performance — the storage capacity is not comparable, and street trees mostly shave and delay the runoff curve rather than absorbing a peak. Trees win on cost, speed, and coverage. The factor most cities underweight is neither: it's maintenance. Both assets fail without recurring operating money — unmaintained wetlands silt up and lose storage, unwatered young trees die in their first drought — and capital budgets are far easier to raise than a twenty-year maintenance line. Match the choice to whether the flooding is catchment-scale or local street ponding, then fund upkeep before expanding.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 116,
+          "totalTokens": 150
+        },
+        "latencyMs": 2298,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "run 6",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs."
+          }
+        ],
+        "params": {
+          "temperature": 1,
+          "maxTokens": 1024
+        },
+        "label": "run 6",
+        "sentAt": 1786353043772
+      },
+      "response": {
+        "content": "Lead with wetlands. Their storage and slow-release capacity does more for flood peaks than street trees can, since trees chiefly intercept rainfall and improve local infiltration. That said, street trees are cheap, incrementally deployable, and carry co-benefits — shade and cooling during heat waves, air quality, walkability — that a wetland on the urban fringe cannot deliver to residents standing on a hot street. The binding constraint on the wetland side is nearly always land availability and permitting; where those block you, a dense program of trees and other distributed green infrastructure is the realistic second best.",
+        "usage": {
+          "inputTokens": 34,
+          "outputTokens": 111,
+          "totalTokens": 145
+        },
+        "latencyMs": 2051,
+        "finishReason": "stop"
+      }
+    },
+    {
+      "label": "analysis",
+      "request": {
+        "providerId": "anthropic",
+        "model": "claude-opus-4-8",
+        "system": "You analyze sets of LLM responses for stability and variance. Be precise about which run\nsaid what — never attribute a claim to a run that does not contain it.\nReturn ONLY JSON conforming to this JSON Schema:\n\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"claims\",\n    \"stable_points\",\n    \"disputed_points\",\n    \"rare_but_important_points\",\n    \"recommended_answer\",\n    \"confidence_assessment\"\n  ],\n  \"properties\": {\n    \"claims\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"text\",\n          \"present_in_runs\"\n        ],\n        \"properties\": {\n          \"text\": {\n            \"type\": \"string\",\n            \"description\": \"A short distinct claim, max ~15 words\"\n          },\n          \"present_in_runs\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"integer\",\n              \"minimum\": 1\n            },\n            \"description\": \"1-based run numbers that contain this claim\"\n          }\n        }\n      }\n    },\n    \"stable_points\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"disputed_points\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Places where runs disagree or contradict each other\"\n    },\n    \"rare_but_important_points\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"recommended_answer\": {\n      \"type\": \"string\"\n    },\n    \"confidence_assessment\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "The same question was asked to an LLM 6 times. Analyze the variability across runs.\n\nQuestion: Should a mid-sized city prioritize planting street trees or restoring nearby wetlands to reduce urban flooding? Give a recommendation with the key tradeoffs.\n\n### Run 1\nPrioritize wetland restoration if the goal is measurably lower flood peaks. Restored wetlands provide actual storage volume — they absorb stormwater during an event and release it slowly afterward — while street trees mainly intercept rainfall and improve infiltration at the margins. The tradeoff is deliverability: trees are cheap, can be planted incrementally across the whole city, and start working within a few seasons, whereas wetland projects need contiguous land the city may not own and permitting timelines measured in years. Where the land exists, lead with wetlands and use street plantings as the distributed complement.\n\n### Run 2\nIt depends on which failure mode is actually flooding the city. If water arrives from the wider catchment and overwhelms the drainage network, wetland restoration is the higher-leverage investment, because only wetlands offer storage at that scale — trees cannot hold back a regional flood peak. If the problem is localized ponding on streets after short intense bursts, distributed green infrastructure (street trees, bioswales, permeable surfaces) does more per dollar and can be rolled out quickly across many blocks. Wetlands also compete for scarce developable land and can take years to permit. Diagnose the failure mode first, then spend.\n\n### Run 3\n**Recommendation: wetlands for flood control, trees for nearly everything else.**\n\nWetlands are the stronger hydrological lever — they store and slowly release large volumes of stormwater, where street trees reduce and delay runoff only modestly. But framing this purely as flood policy undersells the trees: they are far cheaper per site, deploy quickly across neighbourhoods, and bring heat mitigation, air quality, and street-level livability that a restored marsh on the edge of town does not. The honest answer also depends on scale — catchment-level flood peaks and local street ponding are different problems with different best answers.\n\n### Run 4\nBefore committing either way, commission a hydrology study of where water actually accumulates and why. Cities routinely fund the visible intervention rather than the one matched to their drainage failure. With that caveat: wetlands hold and release far more stormwater than any realistic number of street trees, so they are the default answer for reducing flood peaks. Street trees remain worth funding because they are inexpensive, distributed, and quick to establish. In practice the binding constraint is land — many mid-sized cities have no restorable wetland inside the catchment, and permitting what does exist is slow.\n\n### Run 5\nWetland restoration wins on pure flood performance — the storage capacity is not comparable, and street trees mostly shave and delay the runoff curve rather than absorbing a peak. Trees win on cost, speed, and coverage. The factor most cities underweight is neither: it's maintenance. Both assets fail without recurring operating money — unmaintained wetlands silt up and lose storage, unwatered young trees die in their first drought — and capital budgets are far easier to raise than a twenty-year maintenance line. Match the choice to whether the flooding is catchment-scale or local street ponding, then fund upkeep before expanding.\n\n### Run 6\nLead with wetlands. Their storage and slow-release capacity does more for flood peaks than street trees can, since trees chiefly intercept rainfall and improve local infiltration. That said, street trees are cheap, incrementally deployable, and carry co-benefits — shade and cooling during heat waves, air quality, walkability — that a wetland on the urban fringe cannot deliver to residents standing on a hot street. The binding constraint on the wetland side is nearly always land availability and permitting; where those block you, a dense program of trees and other distributed green infrastructure is the realistic second best.\n\nTasks:\n1. Extract every distinct claim made across the runs (deduplicate paraphrases into one claim).\n   For each claim, list the 1-based run numbers in which it appears.\n2. Summarize stable points (in most runs), disputed points (runs disagree), and\n   rare-but-important points (appear in few runs but matter).\n3. Write a recommended consensus answer and a short confidence assessment that names\n   what was unstable.\n\nReturn ONLY a JSON object conforming to the schema you were given. No prose, no fences."
+          }
+        ],
+        "params": {
+          "temperature": 0,
+          "maxTokens": 4096
+        },
+        "schema": {
+          "type": "object",
+          "required": [
+            "claims",
+            "stable_points",
+            "disputed_points",
+            "rare_but_important_points",
+            "recommended_answer",
+            "confidence_assessment"
+          ],
+          "properties": {
+            "claims": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "present_in_runs"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "A short distinct claim, max ~15 words"
+                  },
+                  "present_in_runs": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "description": "1-based run numbers that contain this claim"
+                  }
+                }
+              }
+            },
+            "stable_points": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "disputed_points": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Places where runs disagree or contradict each other"
+            },
+            "rare_but_important_points": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "recommended_answer": {
+              "type": "string"
+            },
+            "confidence_assessment": {
+              "type": "string"
+            }
+          }
+        },
+        "label": "analysis",
+        "sentAt": 1786353046004
+      },
+      "response": {
+        "content": "{\"claims\":[{\"text\":\"Wetlands store and slowly release far more stormwater than street trees\",\"present_in_runs\":[1,2,3,4,5,6]},{\"text\":\"Street trees are cheaper, faster to deploy, and distribute across the city\",\"present_in_runs\":[1,2,3,4,5,6]},{\"text\":\"Land availability and permitting constrain wetland restoration\",\"present_in_runs\":[1,2,4,6]},{\"text\":\"The right answer depends on catchment-scale flooding vs local street ponding\",\"present_in_runs\":[2,3,5]},{\"text\":\"Trees add heat and air-quality co-benefits wetlands cannot deliver\",\"present_in_runs\":[3,6]},{\"text\":\"Maintenance funding, not capital cost, is the usual failure point\",\"present_in_runs\":[5]},{\"text\":\"Commission a hydrology study of where water accumulates before choosing\",\"present_in_runs\":[4]}],\"stable_points\":[\"Wetlands are the stronger lever for reducing flood peaks, because they provide real storage volume rather than interception at the margins.\",\"Street trees are a cheap, fast, widely distributed complement rather than a substitute for that storage.\"],\"disputed_points\":[\"Whether this is a genuine either/or choice or a diagnose-first question — three runs led with the trade-off, three reframed it as depending on the flooding mechanism.\",\"How much the trees' non-flood co-benefits should weigh in what is nominally a flood-protection decision.\"],\"rare_but_important_points\":[\"Recurring maintenance funding, not capital cost, is where both interventions usually fail: wetlands silt up and lose storage, young trees die unwatered (1 of 6 runs).\",\"Commission a hydrology study of where water actually accumulates before choosing an intervention (1 of 6 runs).\"],\"recommended_answer\":\"For flood reduction specifically, lead with wetland restoration where land and permitting allow: wetlands provide storage volume that street trees cannot match, absorbing a flood peak rather than shaving it. Fund street trees in parallel as the cheap, fast, distributed complement — they cover the whole city on a timescale wetlands cannot, and they carry heat and air-quality benefits a wetland on the urban fringe does not deliver. Two qualifiers that only appeared in single runs deserve weight anyway: diagnose the flooding mechanism first (catchment-scale inflow and local street ponding call for different interventions), and budget recurring maintenance before expanding either asset, since that is where both usually fail.\",\"confidence_assessment\":\"High agreement on the core hydrology — all six runs put wetland storage ahead of street trees for flood peaks, and all six called trees a cheaper distributed complement. Variability was in framing rather than substance: whether to answer the question as posed or to reframe it around the flooding mechanism (3 of 6), and whether land and permitting constraints are decisive (4 of 6). The two most actionable qualifiers — fund maintenance, and study the hydrology first — each surfaced in only one run, so a single-response workflow would probably have missed both.\"}",
+        "usage": {
+          "inputTokens": 1512,
+          "outputTokens": 604,
+          "totalTokens": 2116
+        },
+        "latencyMs": 6842,
+        "finishReason": "stop"
+      }
+    }
+  ]
+}

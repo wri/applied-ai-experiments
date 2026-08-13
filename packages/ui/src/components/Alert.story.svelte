@@ -13,6 +13,9 @@
 <section>
   <h3>Variants</h3>
   <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 500px;">
+    <Alert variant="default">
+      A neutral note — no severity, just context.
+    </Alert>
     <Alert variant="info">
       This is an informational message.
     </Alert>

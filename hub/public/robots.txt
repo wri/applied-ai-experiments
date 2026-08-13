@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wri.github.io/applied-ai-experiments/sitemap-index.xml

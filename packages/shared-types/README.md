@@ -1,6 +1,6 @@
 # @wri/shared-types
 
-Shared TypeScript types for WRI experiments. These types match the `info.yaml` schema and `experiment-index.json` structure.
+Shared TypeScript types for WRI experiments. These types match the experiment metadata schema and `experiment-index.json` structure.
 
 ## Installation
 
@@ -42,12 +42,11 @@ console.log(VALID_THEMES); // ['cost-perf', 'evals', ...]
 
 | Type | Description |
 |------|-------------|
-| `Experiment` | Full experiment metadata from info.yaml |
+| `Experiment` | Full experiment metadata from brief.md frontmatter |
 | `ExperimentIndex` | Structure of experiment-index.json |
 | `ExperimentType` | Union of valid experiment types |
 | `ExperimentStatus` | Union of valid status values |
 | `DemoConfig` | Demo configuration object |
-| `Owner` | Experiment owner information |
 | `Theme` | Union of valid theme values |
 
 ## Why This Package?

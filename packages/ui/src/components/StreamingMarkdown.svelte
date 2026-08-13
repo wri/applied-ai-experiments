@@ -101,8 +101,8 @@
 <style>
   .ui-streaming-markdown {
     font-family: var(--font-body);
-    font-size: var(--text-body-font-size);
-    line-height: 1.6;
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
     color: var(--tx);
   }
 
@@ -140,13 +140,13 @@
     margin-top: 0;
   }
 
-  .markdown-content :global(h1) { font-size: 1.75rem; }
-  .markdown-content :global(h2) { font-size: 1.5rem; }
-  .markdown-content :global(h3) { font-size: 1.25rem; }
-  .markdown-content :global(h4) { font-size: 1rem; }
+  .markdown-content :global(h1) { font-size: var(--text-prose-h1); }
+  .markdown-content :global(h2) { font-size: var(--text-prose-h2); }
+  .markdown-content :global(h3) { font-size: var(--text-prose-h3); }
+  .markdown-content :global(h4) { font-size: var(--text-prose-h4); }
 
   .markdown-content :global(p) {
-    margin: 1em 0;
+    margin: var(--text-prose-gap) 0;
   }
 
   .markdown-content :global(p:first-child) {
@@ -204,12 +204,12 @@
 
   .markdown-content :global(ul),
   .markdown-content :global(ol) {
-    margin: 1em 0;
-    padding-left: 2em;
+    margin: var(--text-prose-gap) 0;
+    padding-left: 1.6em;
   }
 
   .markdown-content :global(li) {
-    margin: 0.25em 0;
+    margin: 0.4em 0;
   }
 
   .markdown-content :global(table) {

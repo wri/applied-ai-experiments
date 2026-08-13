@@ -1,226 +1,447 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ExperimentCard from '../components/ExperimentCard.astro';
-import { loadExperimentIndex } from '../utils/experiments';
+import {
+  loadExperimentIndex,
+  collectLearnings,
+  learningHighlights,
+  getTypeColor,
+  visibleInsights,
+  aggregatable,
+} from '../utils/experiments';
 
 const index = await loadExperimentIndex();
-const experiments = index.experiments;
-const typeCount = Object.keys(index.by_type).length;
-const themeCount = Object.keys(index.by_theme).length;
+// The home page speaks for the portfolio — every register and every number on
+// it. Reference scaffolds are excluded here once, at the top, so nothing further
+// down has to remember; they remain browsable at /experiments/.
+const experiments = aggregatable(index.experiments);
 // Ensure base URL ends with a slash for proper path concatenation
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-// Sort experiments by updated_at for "Recently Updated" section
-const recentlyUpdated = [...experiments]
-  .filter(e => e.updated_at)
-  .sort((a, b) => {
-    const dateA = new Date(a.updated_at || 0).getTime();
-    const dateB = new Date(b.updated_at || 0).getTime();
-    return dateB - dateA;
-  })
-  .slice(0, 4);
+const recency = (e: typeof experiments[number]) =>
+  new Date(e.updated_at || e.created_at || 0).getTime();
 
+// Register 1 — open questions first, then recently answered ones.
+//
+// In-flight work always outranks finished work here, however stale: the register
+// is about what's live. But there are usually only one or two in-flight
+// experiments at a time, which left the column near-empty against a slot for
+// five, so completed experiments backfill the remainder, newest first. Archived
+// is excluded from both passes — retired work isn't something we're asking.
+const IN_FLIGHT = ['started', 'idea', 'paused'];
+const byRecency = (a: typeof experiments[number], b: typeof experiments[number]) =>
+  recency(b) - recency(a);
+const asking = [
+  ...experiments.filter((e) => IN_FLIGHT.includes(e.status)).sort(byRecency),
+  ...experiments.filter((e) => e.status === 'done').sort(byRecency),
+].slice(0, 5);
+
+// Register 2 — runnable demos: strongest first (done, then recordings, then recency).
+const demoRanked = experiments
+  .filter((e) => e._has_demo)
+  .sort((a, b) => {
+    const score = (e: typeof experiments[number]) =>
+      (e.status === 'done' ? 2 : 0) + (e.results?.learnings?.length ? 1 : 0);
+    return score(b) - score(a) || recency(b) - recency(a);
+  });
+const featuredDemo = demoRanked[0] ?? null;
+const demoRows = demoRanked.slice(1, 6);
+const demoHref = (e: typeof experiments[number]) =>
+  e._is_notebook ? `${base}notebook/${e.slug}/` : `${base}${e.slug}/`;
+
+// Register 3 — the pinned insight + latest learnings (any status).
+const allInsights = await getCollection('insights');
+const insights = visibleInsights(allInsights, import.meta.env.DEV);
+const featuredInsight = insights.find((i) => i.data.featured) ?? insights[0] ?? null;
+const highlights = learningHighlights(index, 3);
+const { total: learningTotal } = collectLearnings(index);
+
+const demoCount = demoRanked.length;
+const updated = [...experiments]
+  .map((e) => e.updated_at || e.created_at)
+  .filter(Boolean)
+  .sort()
+  .pop();
+
+const description =
+  'Small working experiments from the WRI Applied AI Group that test model capabilities, ' +
+  'gauge feature feasibility, and kick the tires on new infrastructure — ' +
+  'learnings shared as we go.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'WRI Applied AI Experiments',
+  alternateName: 'AI Experiments Hub',
+  url: `https://wri.github.io${base}`,
+  description,
+  publisher: { '@type': 'Organization', name: 'World Resources Institute', url: 'https://www.wri.org' },
+};
 ---
 
-<BaseLayout title="Home">
-  <section class="hero">
-    <h1>AI Experiments Hub</h1>
+<BaseLayout title="Home" description={description} jsonLd={jsonLd}>
+  <header class="masthead">
+    <span class="eyebrow">WRI Applied AI Group</span>
+    <h1>AI experiments</h1>
     <p class="subtitle">
-      Explore {index.count} experiment{index.count !== 1 ? 's' : ''} across {themeCount} theme{themeCount !== 1 ? 's' : ''}
+      Small AI experiments to find out what works, what’s worth building, and what it takes to make it real. From testing models and agents to prototyping features and pressure-testing infrastructure, this is where we share learnings and progress.
     </p>
-  </section>
+  </header>
 
-  <section class="stats">
-    <div class="stat-card">
-      <span class="stat-value">{index.count}</span>
-      <span class="stat-label">Total Experiments</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-value">{Object.keys(index.by_type).length}</span>
-      <span class="stat-label">Experiment Types</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-value">{experiments.filter(e => e._has_demo).length}</span>
-      <span class="stat-label">Live Demos</span>
-    </div>
-  </section>
-
-  {recentlyUpdated.length > 0 && (
-    <section class="recently-updated">
-      <h2>Recently Updated</h2>
-      <div class="updated-list">
-        {recentlyUpdated.map(exp => (
-          <a href={`${base}experiments/${exp.slug}/`} class="updated-item">
-            <span class="updated-title">{exp.title}</span>
+  <div class="triptych">
+    <section class="register">
+      <header class="register-head">
+        <h2>What we're exploring</h2>
+        <span class="count">{experiments.length}</span>
+      </header>
+      <div class="register-body">
+        {asking.map((exp) => (
+          <a class="ask" href={`${base}experiments/${exp.slug}/`}>
+            <p class="ask-text">{exp.description}</p>
+            <span class="row-source">{exp.title}</span>
           </a>
         ))}
       </div>
+      <footer class="register-foot">
+        <a href={`${base}experiments/`}>All experiments →</a>
+      </footer>
     </section>
-  )}
 
-  <section class="experiments-section">
-    <div class="section-header">
-      <h2>Featured Experiments</h2>
-      <a href={`${base}experiments/`} class="btn btn-secondary">
-        View All
-      </a>
-    </div>
-    <div class="experiments-grid">
-      {experiments.slice(0, 6).map(exp => (
-        <ExperimentCard experiment={exp} />
-      ))}
-    </div>
-  </section>
-
-  {Object.keys(index.by_type).length > 0 && (
-    <section class="types-section">
-      <h2>By Type</h2>
-      <div class="type-list">
-        {Object.entries(index.by_type).map(([type, slugs]) => (
-          <div class="type-item">
-            <span class="type-name">{type}</span>
-            <span class="type-count">{slugs.length}</span>
-          </div>
+    <section class="register">
+      <header class="register-head">
+        <h2>What you can try</h2>
+        <span class="count">{demoCount}</span>
+      </header>
+      <div class="register-body">
+        {featuredDemo && (
+          <a
+            class="feat-demo"
+            href={demoHref(featuredDemo)}
+            style={`--type-color: ${getTypeColor(featuredDemo.type)}`}
+          >
+            <span class="feat-visual"><span class="feat-slug">{featuredDemo.slug}</span></span>
+            <span class="feat-cap">
+              <span class="feat-title">{featuredDemo.title}</span>
+              <span class="btn-try">Try it</span>
+            </span>
+          </a>
+        )}
+        {demoRows.map((exp) => (
+          <a class="try-row" href={demoHref(exp)}>
+            <span class="try-title">{exp.title}</span>
+            <span class="try-go">{exp._is_notebook ? 'Notebook →' : 'Launch →'}</span>
+          </a>
         ))}
       </div>
+      <footer class="register-foot">
+        <a href={`${base}experiments/?demos=true`}>All demos →</a>
+      </footer>
     </section>
-  )}
+
+    <section class="register">
+      <header class="register-head">
+        <h2>What we're learning</h2>
+        <span class="count">{learningTotal}</span>
+      </header>
+      <div class="register-body">
+        {featuredInsight && (
+          <a class="insight" href={`${base}insights/${featuredInsight.id}/`}>
+            <span class="insight-kicker">Insight</span>
+            <span class="insight-title">{featuredInsight.data.title}</span>
+          </a>
+        )}
+        {highlights.map((h) => (
+          <a class="learning" href={`${base}experiments/${h.slug}/#learning-${h.learningIndex}`}>
+            <p class="learning-text">{h.learning}</p>
+            <span class="row-source">{h.title}</span>
+          </a>
+        ))}
+      </div>
+      <footer class="register-foot">
+        <a href={`${base}learnings/`}>All learnings →</a>
+      </footer>
+    </section>
+  </div>
+
 </BaseLayout>
 
 <style>
-  .hero {
+  .masthead {
     text-align: center;
-    padding: var(--space-6) 0 var(--space-8);
+    padding: var(--space-8) 0 var(--space-7);
   }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--space-3);
-    margin-bottom: var(--space-8);
-  }
-
-  .stat-card {
-    background: var(--bg-2);
-    border: 1px solid var(--ui);
-    border-radius: var(--radius-md);
-    padding: var(--space-4);
-    text-align: center;
-  }
-
-  .stat-value {
+  .eyebrow {
     display: block;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-medium);
-    color: var(--primary);
-  }
-
-  .stat-label {
     font-family: var(--font-mono);
     font-size: var(--text-label);
     text-transform: uppercase;
-    letter-spacing: var(--font-letterSpacing-wide);
-    color: var(--tx-3);
-    margin-top: var(--space-1);
+    letter-spacing: var(--font-letterSpacing-wider);
+    color: var(--primary);
+    margin-bottom: var(--space-3);
+  }
+  .masthead h1 {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 62ch;
+    margin: var(--space-3) auto 0;
+    line-height: 1.6;
+  }
+  .subtitle strong {
+    color: var(--tx);
+    font-weight: var(--font-weight-medium);
   }
 
-  .recently-updated {
-    margin-bottom: var(--space-8);
+  /* --- The three registers --- */
+  .triptych {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: var(--space-3);
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .triptych {
+      grid-template-columns: 1fr;
+    }
+  }
+  .register {
     background: var(--bg-2);
     border: 1px solid var(--ui);
     border-radius: var(--radius-md);
     overflow: hidden;
   }
-
-  .recently-updated h2 {
-    padding: var(--padding-panel-header);
-    background: var(--bg-3);
-    border-bottom: 1px solid var(--ui);
-    margin-bottom: 0;
-    font-size: var(--text-title-sm);
-  }
-
-  .updated-list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .updated-item {
-    display: block;
-    padding: var(--padding-panel-header);
-    text-decoration: none;
-    border-bottom: 1px solid var(--ui);
-    transition: background var(--transition-fast) ease;
-  }
-
-  .updated-item:last-child {
-    border-bottom: none;
-  }
-
-  .updated-item:hover {
-    background: var(--bg-3);
-    text-decoration: none;
-  }
-
-  .updated-title {
-    font-family: var(--font-mono);
-    font-size: var(--text-body);
-    color: var(--tx);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .section-header {
+  .register-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--ui);
   }
-
-  .experiments-section {
-    margin-bottom: var(--space-8);
-  }
-
-  .types-section {
-    margin-top: var(--space-8);
-    padding-top: var(--space-6);
-    border-top: 1px solid var(--ui);
-  }
-
-  .types-section h2 {
-    margin-bottom: var(--space-4);
-  }
-
-  .type-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .type-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--padding-btn-sm);
-    background: var(--bg-2);
-    border: 1px solid var(--ui);
-    border-radius: var(--radius-sm);
+  .register-head h2 {
     font-family: var(--font-mono);
     font-size: var(--text-ui);
-  }
-
-  .type-name {
-    text-transform: capitalize;
-    color: var(--tx-2);
-  }
-
-  .type-count {
-    background: var(--primary);
-    color: var(--primary-content);
-    padding: var(--padding-badge);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-badge);
     font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    margin: 0;
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    color: var(--primary);
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-2);
+  }
+  .register-body {
+    padding: var(--space-1) var(--space-3) var(--space-2);
+  }
+  .register-foot {
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+  .register-foot a {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    text-transform: uppercase;
+    color: var(--tx-3);
+  }
+  .register-foot a:hover {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .row-source {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    text-transform: uppercase;
+    color: var(--tx-3);
+  }
+
+  /* Register 1 — questions */
+  .ask {
+    display: block;
+    padding: var(--space-3) 0;
+    border-bottom: 1px dashed var(--ui);
+    text-decoration: none;
+  }
+  .ask:last-child {
+    border-bottom: none;
+  }
+  .ask-text {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--tx);
+    margin: 0 0 var(--space-1);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ask:hover .row-source {
+    color: var(--primary);
+  }
+
+  /* Register 2 — demos */
+  .feat-demo {
+    display: block;
+    margin: var(--space-3) 0;
+    border: 1px solid var(--ui);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg);
+    text-decoration: none;
+    transition: border-color var(--transition-fast) ease;
+  }
+  .feat-demo:hover {
+    border-color: var(--primary);
+    text-decoration: none;
+  }
+  .feat-visual {
+    display: flex;
+    align-items: flex-end;
+    height: 120px;
+    padding: var(--space-2) var(--space-3);
+    background:
+      repeating-linear-gradient(0deg, transparent 0 23px, color-mix(in srgb, var(--tx) 6%, transparent) 23px 24px),
+      repeating-linear-gradient(90deg, transparent 0 23px, color-mix(in srgb, var(--tx) 6%, transparent) 23px 24px),
+      linear-gradient(160deg, color-mix(in srgb, var(--type-color) 34%, var(--bg)) 0%, var(--bg) 90%);
+    border-bottom: 1px solid var(--ui);
+  }
+  .feat-slug {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+  }
+  .feat-cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+  .feat-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    color: var(--tx);
+  }
+  .btn-try {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--font-letterSpacing-wide);
+    text-transform: uppercase;
+    background: var(--primary);
+    color: var(--bg);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+  }
+  .try-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    border-bottom: 1px dashed var(--ui);
+    text-decoration: none;
+  }
+  .try-row:last-child {
+    border-bottom: none;
+  }
+  .try-title {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--tx);
+  }
+  .try-go {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .try-row:hover .try-title {
+    color: var(--primary);
+  }
+
+  /* Register 3 — learning */
+  .insight {
+    display: block;
+    margin: var(--space-3) 0;
+    border-left: 2px solid var(--primary);
+    background: var(--bg);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: var(--space-2) var(--space-3);
+    text-decoration: none;
+  }
+  .insight:hover .insight-title {
+    color: var(--primary);
+  }
+  .insight-kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--font-letterSpacing-wider);
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: var(--space-1);
+  }
+  .insight-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.4;
+    color: var(--tx);
+    transition: color var(--transition-fast) ease;
+  }
+  .learning {
+    display: block;
+    padding: var(--space-3) 0;
+    border-bottom: 1px dashed var(--ui);
+    text-decoration: none;
+  }
+  .learning:last-child {
+    border-bottom: none;
+  }
+  .learning-text {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--tx);
+    margin: 0 0 var(--space-1);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .learning:hover .row-source {
+    color: var(--primary);
+  }
+
+  /* --- Colophon --- */
+  .colophon {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    text-transform: uppercase;
+    color: var(--tx-3);
+    margin: var(--space-7) 0 var(--space-8);
+  }
+  .colophon-sep {
+    margin: 0 var(--space-2);
   }
 </style>

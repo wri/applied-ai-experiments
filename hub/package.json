@@ -10,9 +10,14 @@
     "check": "astro check"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-js": "^2.6.2",
+    "@wri-datalab/ui": "workspace:*",
     "@wri/shared-types": "workspace:*",
     "astro": "^5.16.15",
-    "marked": "^15.0.0"
+    "marked": "^16.0.0",
+    "satori": "^0.26.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.6",

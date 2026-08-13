@@ -36,18 +36,15 @@
 
 <div
   class="ui-toggle {className}"
-  style="
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-direction: {labelPosition === 'left' ? 'row-reverse' : 'row'};
-  "
+  class:label-left={labelPosition === 'left'}
 >
   <button
     type="button"
     role="switch"
     aria-checked={checked}
     aria-labelledby={label ? `${toggleId}-label` : undefined}
+    class="toggle-track"
+    class:checked
     {disabled}
     onclick={() => { if (!disabled) checked = !checked; }}
     onkeydown={(e) => {
@@ -56,54 +53,89 @@
         if (!disabled) checked = !checked;
       }
     }}
-    style="
-      position: relative;
-      width: {config.track.width}px;
-      height: {config.track.height}px;
-      border-radius: var(--radius-full);
-      background-color: {checked ? 'var(--primary)' : 'var(--ui)'};
-      border: none;
-      cursor: {disabled ? 'not-allowed' : 'pointer'};
-      opacity: {disabled ? 0.5 : 1};
-      transition: background-color var(--transition-fast) ease;
-      padding: 0;
-      flex-shrink: 0;
-    "
-    onfocus={(e) => {
-      e.currentTarget.style.outline = 'none';
-      e.currentTarget.style.boxShadow = `0 0 0 var(--focus-ring-width) var(--focus-ring-color)`;
-    }}
-    onblur={(e) => {
-      e.currentTarget.style.boxShadow = 'none';
-    }}
+    style="width: {config.track.width}px; height: {config.track.height}px;"
   >
     <span
+      class="toggle-thumb"
       style="
-        position: absolute;
         top: {thumbOffset}px;
-        left: 0;
         width: {config.thumb}px;
         height: {config.thumb}px;
-        border-radius: var(--radius-full);
-        background-color: white;
         transform: translateX({translateX}px);
-        transition: transform var(--transition-fast) ease;
-        box-shadow: var(--shadow-sm);
       "
     ></span>
   </button>
   {#if label}
     <span
       id="{toggleId}-label"
-      style="
-        font-family: var(--font-ui);
-        font-size: {size === 'sm' ? 'var(--font-size-sm)' : 'var(--text-body-font-size)'};
-        color: {disabled ? 'var(--tx-3)' : 'var(--tx)'};
-        cursor: {disabled ? 'not-allowed' : 'pointer'};
-        user-select: none;
-      "
+      class="toggle-label"
+      class:disabled
+      class:small={size === 'sm'}
     >
       {label}
     </span>
   {/if}
 </div>
+
+<style>
+  .ui-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ui-toggle.label-left {
+    flex-direction: row-reverse;
+  }
+
+  .toggle-track {
+    position: relative;
+    border-radius: var(--radius-full);
+    background-color: var(--ui);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast, 0.15s) ease;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .toggle-track.checked {
+    background-color: var(--primary);
+  }
+
+  .toggle-track:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .toggle-track:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--focus-ring-width, 2px) var(--focus-ring-color, var(--primary));
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    left: 0;
+    border-radius: var(--radius-full);
+    background-color: white;
+    transition: transform var(--transition-fast, 0.15s) ease;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toggle-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-font-size);
+    color: var(--tx);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-label.small {
+    font-size: var(--font-size-sm);
+  }
+
+  .toggle-label.disabled {
+    color: var(--tx-3);
+    cursor: not-allowed;
+  }
+</style>

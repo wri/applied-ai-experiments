@@ -1,0 +1,20 @@
+[project]
+name = "basic-eval-notebook"
+version = "0.1.0"
+description = "Minimal copy-and-modify evaluation notebook with three templates."
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.40.0",
+    "marimo>=0.23.4",
+    "pandas>=2.2.0",
+    "scikit-learn>=1.5.0",
+    "rouge-score>=0.1.2",
+    "pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

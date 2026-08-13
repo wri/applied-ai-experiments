@@ -7,11 +7,12 @@
 #   output-dir  Directory to aggregate demo outputs (default: dist/experiments)
 #
 # Options:
-#   --sequential   Disable parallel builds
-#   --force        Force rebuild even if unchanged
+#   --sequential     Disable parallel builds
+#   --force          Force rebuild even if unchanged
+#   --only a,b,c     Build only these slugs (PR CI builds just the touched demos)
 #
 # The script:
-# 1. Scans experiments/*/info.yaml (or experiment.yaml for migration)
+# 1. Scans experiments/*/brief.md for demo metadata
 # 2. Finds experiments with demo.enabled: true
 # 3. Computes hash of source files to detect changes
 # 4. Runs builds in parallel (up to 4 concurrent)
@@ -32,15 +33,32 @@ OUTPUT_DIR="$REPO_ROOT/dist/experiments"
 PARALLEL=true
 FORCE_REBUILD=false
 MAX_JOBS=4
+# Comma-separated allowlist of slugs. Empty means "every demo-enabled experiment".
+# PR CI uses this to build only what the diff touched.
+ONLY=""
 
-for arg in "$@"; do
-    case "$arg" in
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --sequential) PARALLEL=false ;;
         --force) FORCE_REBUILD=true ;;
+        --only) ONLY="${2:-}"; shift ;;
+        --only=*) ONLY="${1#*=}" ;;
         --*) ;; # Ignore other flags
-        *) OUTPUT_DIR="$arg" ;;
+        *) OUTPUT_DIR="$1" ;;
     esac
+    shift
 done
+
+# Is this experiment in the --only allowlist?
+selected() {
+    [[ -z "$ONLY" ]] && return 0
+    local slug="$1" want
+    IFS=',' read -ra want <<< "$ONLY"
+    for w in "${want[@]}"; do
+        [[ "$slug" == "${w// /}" ]] && return 0
+    done
+    return 1
+}
 
 # Colors for output
 RED='\033[0;31m'
@@ -60,7 +78,14 @@ if command -v uv &>/dev/null; then
     PYTHON_CMD="uv run python"
 fi
 
-# Wrap a command with "uv run" when uv is available (for marimo, jupyter, etc.)
+# Wrap a command with "uv run" when uv is available (for marimo, jupyter, etc.).
+#
+# Deliberately bare `uv run`, with no `--extra`: this runs with cwd set to the
+# experiment directory, and every notebook experiment carries its own
+# pyproject.toml declaring marimo/jupyter, so uv resolves the experiment's project
+# and gets the right tool. Adding `--extra notebooks` here fails with "Extra
+# `notebooks` is not defined" — that extra belongs to the *root* project, which
+# isn't the one in scope.
 wrap_python_cmd() {
     local cmd="$1"
     if command -v uv &>/dev/null; then
@@ -84,30 +109,36 @@ check_dependencies() {
     fi
 }
 
-# Extract YAML value using Python (portable, no yq dependency)
-get_yaml_value() {
-    local file="$1"
+# Read one metadata value for an experiment. Delegates to experiment_doc.py so
+# there is a single implementation of "where does an experiment's metadata live"
+# — the brief's YAML frontmatter.
+#
+# Deliberately NOT swallowing errors: this used to end in `2>/dev/null || echo ""`,
+# which turned a parse failure into "demo.enabled is empty", which build_demo()
+# reads as "disabled" and returns success for. That combination silently drops
+# every demo from the deploy while CI stays green.
+get_meta_value() {
+    local exp_dir="$1"
     local key="$2"
-    $PYTHON_CMD -c "
-import yaml
-import sys
-with open('$file') as f:
-    data = yaml.safe_load(f)
-# Navigate nested keys like 'demo.enabled'
-keys = '$key'.split('.')
-val = data
-for k in keys:
-    if isinstance(val, dict):
-        val = val.get(k)
-    else:
-        val = None
-        break
-if val is not None:
-    print(val)
-" 2>/dev/null || echo ""
+    $PYTHON_CMD .github/scripts/experiment_doc.py --get "$key" "$exp_dir"
 }
 
-# Compute hash of demo source files
+# Compute the cache key for a demo: its own sources, every shared package's
+# sources, and the build mode.
+#
+# Two things here are load-bearing and were both bugs once:
+#
+#  1. Shared packages are discovered, not listed. An earlier version enumerated
+#     packages/ui/src and packages/byo-keys/*/src by hand and therefore missed
+#     packages/llm-lab/src entirely — so llm-lab changes silently reused stale
+#     demo builds, and CI could publish demos built against an older llm-lab.
+#     Anything under packages/ counts now, so a new package can't be forgotten.
+#
+#  2. The build mode is part of the key. SvelteKit bakes the base path in at
+#     build time ('' for LOCAL_DEV, /applied-ai-experiments/<slug> otherwise), so
+#     a dist built in one mode is NOT interchangeable with the other. Without
+#     this, a cache hit could hand a production-path build to a local dev server,
+#     where every asset 404s and the page renders blank.
 compute_demo_hash() {
     local demo_dir="$1"
 
@@ -116,17 +147,48 @@ compute_demo_hash() {
         return
     fi
 
-    # Hash relevant source files (excluding node_modules, .svelte-kit, dist)
-    find "$demo_dir" -type f \
-        \( -name "*.svelte" -o -name "*.ts" -o -name "*.js" -o -name "*.css" \
-           -o -name "*.html" -o -name "package.json" -o -name "*.json" -o -name "*.py" \) \
-        -not -path "*/node_modules/*" \
-        -not -path "*/.svelte-kit/*" \
-        -not -path "*/dist/*" \
-        -not -path "*/.build/*" \
-        -print0 2>/dev/null | \
+    # Note the two-stage hash: the block below emits NUL-separated *filenames*
+    # that xargs feeds to cat, so the build mode cannot be echoed into that
+    # stream — it would be read as a filename, silently dropped, and would
+    # corrupt the first real entry. Hash the file contents first, then fold the
+    # mode in afterwards.
+    local files_hash
+    files_hash=$(
+    {
+        find "$demo_dir" -type f \
+            \( -name "*.svelte" -o -name "*.ts" -o -name "*.js" -o -name "*.css" \
+               -o -name "*.html" -o -name "package.json" -o -name "*.json" -o -name "*.py" \) \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.svelte-kit/*" \
+            -not -path "*/dist/*" \
+            -not -path "*/.build/*" \
+            -print0 2>/dev/null
+
+        # Every shared package's sources — see (1) above.
+        find "$REPO_ROOT/packages" -type f \
+            \( -name "*.svelte" -o -name "*.ts" -o -name "*.js" -o -name "*.css" \
+               -o -name "*.html" -o -name "*.json" \) \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.svelte-kit/*" \
+            -not -path "*/dist/*" \
+            -not -path "*/.build/*" \
+            -print0 2>/dev/null
+    } | \
         sort -z | \
         xargs -0 cat 2>/dev/null | \
+        shasum -a 256 | \
+        cut -d' ' -f1
+    )
+
+    # Fold in the build mode — see (2) above.
+    #
+    # Deliberately folded into the single hash VALUE rather than kept as separate
+    # per-mode cache files. Per-mode caching looks like a free optimisation and is
+    # actually unsound: both modes build into the same `demo/dist`, so a cache hit
+    # for one mode can copy output the other mode wrote last. One key per
+    # experiment means switching modes always rebuilds — which is necessary here,
+    # not wasteful, because there is only one output directory to be correct.
+    printf 'LOCAL_DEV=%s\n%s\n' "${LOCAL_DEV:-}" "$files_hash" | \
         shasum -a 256 | \
         cut -d' ' -f1
 }
@@ -169,19 +231,18 @@ save_hash() {
 build_demo() {
     local exp_dir="$1"
     local exp_name="$2"
-    local yaml_file="$3"
-    local log_file="${4:-/dev/null}"
+    local log_file="${3:-/dev/null}"
 
     local demo_enabled demo_type build_cmd output_subdir
-    demo_enabled=$(get_yaml_value "$yaml_file" "demo.enabled")
+    demo_enabled=$(get_meta_value "$exp_dir" "demo.enabled")
 
     if [[ "$demo_enabled" != "True" && "$demo_enabled" != "true" ]]; then
         return 0
     fi
 
-    demo_type=$(get_yaml_value "$yaml_file" "demo.type")
-    build_cmd=$(get_yaml_value "$yaml_file" "demo.build_command")
-    output_subdir=$(get_yaml_value "$yaml_file" "demo.output_dir")
+    demo_type=$(get_meta_value "$exp_dir" "demo.type")
+    build_cmd=$(get_meta_value "$exp_dir" "demo.build_command")
+    output_subdir=$(get_meta_value "$exp_dir" "demo.output_dir")
 
     # Default values
     demo_type="${demo_type:-static}"
@@ -200,15 +261,15 @@ build_demo() {
 
     local demo_dir="$exp_dir/demo"
 
-    # Check if rebuild is needed (for JS projects)
+    # Check if rebuild is needed (for JS projects).
+    # A cache hit is only usable if there is actually output to reuse — otherwise
+    # the skip path copies nothing and the demo serves as a blank page. Missing
+    # output therefore forces a rebuild regardless of the hash.
     if [[ "$demo_type" == "sveltekit" || "$demo_type" == "astro" ]]; then
-        if ! needs_rebuild "$exp_name" "$demo_dir"; then
+        if [[ -d "$demo_src" ]] && ! needs_rebuild "$exp_name" "$demo_dir"; then
             echo "[SKIP] $exp_name - no changes detected" >> "$log_file"
-            # Still copy existing output if it exists
-            if [[ -d "$demo_src" ]]; then
-                mkdir -p "$demo_dest"
-                cp -r "$demo_src"/* "$demo_dest"/ 2>/dev/null || true
-            fi
+            mkdir -p "$demo_dest"
+            cp -r "$demo_src"/* "$demo_dest"/ 2>/dev/null || true
             return 2  # skipped
         fi
     fi
@@ -332,22 +393,19 @@ main() {
         # Skip hidden directories
         [[ "$exp_name" == .* ]] && continue
 
-        # Find metadata file
-        local yaml_file=""
-        if [[ -f "$exp_dir/info.yaml" ]]; then
-            yaml_file="$exp_dir/info.yaml"
-        elif [[ -f "$exp_dir/experiment.yaml" ]]; then
-            yaml_file="$exp_dir/experiment.yaml"
-        else
+        # All metadata lives in the brief's frontmatter.
+        if [[ ! -f "$exp_dir/brief.md" ]]; then
             continue
         fi
 
+        selected "$exp_name" || continue
+
         # Check if demo is enabled
         local demo_enabled
-        demo_enabled=$(get_yaml_value "$yaml_file" "demo.enabled")
+        demo_enabled=$(get_meta_value "$exp_dir" "demo.enabled")
 
         if [[ "$demo_enabled" == "True" || "$demo_enabled" == "true" ]]; then
-            echo "$exp_name:$yaml_file" >> "$demos_list"
+            echo "$exp_name" >> "$demos_list"
         fi
     done
 
@@ -372,7 +430,7 @@ main() {
         # Parallel execution
         log_info "Starting parallel builds..."
 
-        while IFS=: read -r exp_name yaml_file; do
+        while read -r exp_name; do
             wait_for_slot
 
             local exp_dir="$EXPERIMENTS_DIR/$exp_name"
@@ -381,7 +439,7 @@ main() {
             log_build "Starting: $exp_name"
 
             # Run build in background
-            (build_demo "$exp_dir" "$exp_name" "$yaml_file" "$log_file") &
+            (build_demo "$exp_dir" "$exp_name" "$log_file") &
             echo "$!:$exp_name" >> "$pids_file"
         done < "$demos_list"
 
@@ -418,13 +476,13 @@ main() {
         done < "$pids_file"
     else
         # Sequential execution
-        while IFS=: read -r exp_name yaml_file; do
+        while read -r exp_name; do
             local exp_dir="$EXPERIMENTS_DIR/$exp_name"
             local log_file="$log_dir/$exp_name.log"
 
             log_build "Building: $exp_name"
 
-            if build_demo "$exp_dir" "$exp_name" "$yaml_file" "$log_file"; then
+            if build_demo "$exp_dir" "$exp_name" "$log_file"; then
                 if grep -q "\[SKIP\]" "$log_file" 2>/dev/null; then
                     log_info "Skipped: $exp_name (no changes)"
                     ((skipped++)) || true

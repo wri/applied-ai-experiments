@@ -1,22 +1,24 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import '../styles/primitives.css';
-import '../styles/prototype.css';
-import '../styles/prototype-light.css';
-import '../styles/prototype-high-contrast.css';
+import Seo from '../components/Seo.astro';
+import '@wri-datalab/ui/styles';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
+  /** Site-root-relative OG image path (no base), e.g. "og/prompt-comparator.png". */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description = 'WRI AI Experiments Hub - Explore our AI research and experiments' } = Astro.props;
+const { title, description, image, imageAlt, type, jsonLd } = Astro.props;
 // Ensure base URL ends with a slash for proper path concatenation
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
-const canonicalURL = new URL(Astro.url.pathname, 'https://wri.github.io');
 ---
 
 <!DOCTYPE html>
@@ -24,19 +26,20 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://wri.github.io');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL.href} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={`${title} | WRI Applied AI Experiments`} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalURL.href} />
-    <meta property="og:site_name" content="WRI Applied AI Experiments" />
+    <Seo {title} {description} {image} {imageAlt} {type} {jsonLd} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <title>{title} | WRI Applied AI Experiments</title>
     <script is:inline>
-      // Initialize theme from localStorage or system preference
+      // Initialize theme from the "prototype-theme" key shared with the demos,
+      // migrating the hub's legacy "theme" key once, then system preference.
       (function() {
-        const stored = localStorage.getItem('theme');
+        const VALID = ['light', 'dark', 'high-contrast'];
+        let stored = localStorage.getItem('prototype-theme');
+        if (!VALID.includes(stored)) {
+          const legacy = localStorage.getItem('theme');
+          stored = VALID.includes(legacy) ? legacy : null;
+          if (stored) localStorage.setItem('prototype-theme', stored);
+        }
+        localStorage.removeItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = stored || (prefersDark ? 'dark' : 'light');
         if (theme !== 'dark') {

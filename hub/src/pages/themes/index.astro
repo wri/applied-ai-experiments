@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import taxonomy from '../../data/taxonomy.json';
+import { loadExperimentIndex, collectLearnings, getThemeConfig, aggregatable } from '../../utils/experiments';
+
+const index = await loadExperimentIndex();
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const { byTheme } = collectLearnings(index);
+
+// Counted off the filtered experiments rather than `index.by_theme`, which is
+// the raw facet over every directory — reference scaffolds included. These cards
+// have to agree with the theme pages they link to, and those exclude scaffolds.
+const scoped = aggregatable(index.experiments);
+const experimentCounts = new Map<string, number>();
+for (const exp of scoped) {
+  for (const key of exp.themes ?? []) {
+    experimentCounts.set(key, (experimentCounts.get(key) ?? 0) + 1);
+  }
+}
+
+// Pillar → theme cards, with experiment + learning counts per theme.
+const pillarGroups = taxonomy.pillars.map((pillar) => ({
+  name: pillar.name,
+  themes: pillar.themes.map((key) => ({
+    key,
+    cfg: getThemeConfig(key),
+    experimentCount: experimentCounts.get(key) ?? 0,
+    learningCount: byTheme.get(key)?.length ?? 0,
+  })),
+}));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Themes | WRI Applied AI Experiments',
+  description: 'The research themes the WRI Applied AI Group organizes its experiments under.',
+  url: `https://wri.github.io${base}themes/`,
+  isPartOf: { '@type': 'WebSite', name: 'WRI Applied AI Experiments', url: `https://wri.github.io${base}` },
+};
+---
+
+<BaseLayout
+  title="Themes"
+  description="The research themes the WRI Applied AI Group organizes its experiments under, grouped by pillar."
+  jsonLd={jsonLd}
+>
+  <section class="themes-intro">
+    <h1>Themes</h1>
+    <p class="subtitle">
+      Every experiment is tagged with one or more themes, grouped under three pillars.
+      Each theme page collects its experiments and the learnings they produced.
+    </p>
+  </section>
+
+  <div class="pillar-groups">
+    {pillarGroups.map((group) => (
+      <section class="pillar-group">
+        <h2 class="pillar-name">{group.name}</h2>
+        <div class="theme-grid">
+          {group.themes.map((t) => (
+            <a
+              href={`${base}themes/${t.key}/`}
+              class="theme-card"
+              style={`--theme-color: ${t.cfg?.color ?? 'var(--ui-2)'}`}
+            >
+              <span class="theme-title">{t.cfg?.name ?? t.key}</span>
+              <span class="theme-counts">
+                {t.experimentCount} experiment{t.experimentCount === 1 ? '' : 's'}
+                {t.learningCount > 0 && ` · ${t.learningCount} learning${t.learningCount === 1 ? '' : 's'}`}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .themes-intro {
+    margin-bottom: 1.5rem;
+  }
+  .themes-intro h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--tx-2);
+    max-width: 70ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .pillar-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .pillar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pillar-name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--tx-3);
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--ui);
+  }
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.625rem;
+  }
+  .theme-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background: var(--bg-2);
+    border: 1px solid var(--ui);
+    border-left: 3px solid var(--theme-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.875rem;
+    text-decoration: none;
+    transition: background var(--transition-fast) ease, border-color var(--transition-fast) ease;
+  }
+  .theme-card:hover {
+    background: var(--bg-3);
+    border-color: var(--ui-2);
+    border-left-color: var(--theme-color);
+    text-decoration: none;
+  }
+  .theme-title {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx);
+  }
+  .theme-counts {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tx-3);
+  }
+</style>

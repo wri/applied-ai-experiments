@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: AI Experiments Hub
+    url: https://wri.github.io/applied-ai-experiments/
+    about: Browse the published experiments, demos, learnings, and insights.

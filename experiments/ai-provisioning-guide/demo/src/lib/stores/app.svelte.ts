@@ -10,24 +10,27 @@ import type {
   MethodTCOExpanded,
 } from '../types.js';
 import { ALL_METHOD_IDS, ALL_CONSTRAINT_IDS } from '../types.js';
-import { defaultTCOInputs, defaultAssumptions } from '../data/defaults.js';
+import {
+  defaultTCOInputs,
+  defaultAssumptions,
+  DEFAULT_TAB,
+  DEFAULT_WIZARD_STEP,
+  DEFAULT_TIME_HORIZON,
+  DEFAULT_SELECTED_METHODS,
+} from '../data/defaults.js';
 import { computeViability, sortByViability } from '../logic/viability.js';
 import { calculateAllTCO, calculateAllTCOExpanded } from '../logic/tco.js';
 import { generateInsights } from '../logic/insights.js';
 
 // ---- Mutable state ----
 
-let activeTab = $state<TabId>('wizard');
-let wizardStep = $state(0);
+let activeTab = $state<TabId>(DEFAULT_TAB);
+let wizardStep = $state(DEFAULT_WIZARD_STEP);
 let constraintAnswers = $state<ConstraintAnswers>({});
 let tcoInputs = $state<TCOInputs>({ ...defaultTCOInputs });
 let assumptions = $state<Record<MethodId, MethodAssumptions>>(structuredClone(defaultAssumptions));
-let selectedMethods = $state<MethodId[]>([
-  'provider_direct',
-  'managed_router',
-  'managed_inference',
-]);
-let timeHorizonMonths = $state<number>(12);
+let selectedMethods = $state<MethodId[]>([...DEFAULT_SELECTED_METHODS]);
+let timeHorizonMonths = $state<number>(DEFAULT_TIME_HORIZON);
 
 // ---- Derived state ----
 
@@ -94,12 +97,12 @@ function setTimeHorizon(months: number) {
 }
 
 function reset() {
-  wizardStep = 0;
+  wizardStep = DEFAULT_WIZARD_STEP;
   constraintAnswers = {};
   tcoInputs = { ...defaultTCOInputs };
   assumptions = structuredClone(defaultAssumptions);
-  selectedMethods = ['provider_direct', 'managed_router', 'managed_inference'];
-  timeHorizonMonths = 12;
+  selectedMethods = [...DEFAULT_SELECTED_METHODS];
+  timeHorizonMonths = DEFAULT_TIME_HORIZON;
 }
 
 // ---- Export as single store object ----

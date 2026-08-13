@@ -1,153 +1,103 @@
+---
+# ---- Required ----
+title: "Deforestation Alerts Baseline Analysis"
+type: spike
+status: done
+
+# ---- Recommended ----
+created_at: 2023-12-08
+updated_at: 2024-01-21
+
+# ---- Classification ----
+targets: feature
+themes:
+  - geospatial
+tags:
+  - deforestation
+  - places-to-watch
+
+# ---- Demo (when there's something to show) ----
+demo:
+  enabled: false
+---
+
 # Deforestation Alerts Baseline Analysis
 
-Starting question: 
-> Could an LLM provide a useful AI summary of pixel-level geospatial data
-> from the GFW dataset? 
+> A proof-of-concept pipeline for generating policy-oriented deforestation alert summaries for Places to Watch sites. Queries the GFW Integrated Alerts API to build a temporal baseline, analyzes a target month against it, and produces a narrative via LLM. Implemented for Tesso Nilo National Park, Indonesia (July 2023).
 
-To run an experiment, we needed to identify a target dataset from GFW for
-such an LLM summary, and work with experts to identify a use-case and
-audience that would be an appopriate target for this experiment. 
-
-For this first experiment, we 
-* experts were the Places to Watch team
-* worked with the GFW deforestation alerts dataset
-* targeted Tesso Nilo National Park in Indonesia
-* identified 2-3 target personas / user profiles for whom the AI summary
-would be written. 
-
+Scoped with the Places to Watch team: the GFW Integrated Alerts dataset, Tesso Nilo National Park in Indonesia, and 2–3 target personas the summary would be written for.
 
 ## Before
 
 ### What problem or question does this address?
 
-The Places to Watch (PTW) program identifies protected areas at elevated
-deforestation risk, but communicating alert data to policy makers, journalists,
-and conservation practitioners requires interpretation. 
+Could an LLM write a useful summary of pixel-level GFW deforestation-alert data?
 
-Current PTW process is intensive and time-consuming. Often taking
-several months, and involving a collaboration with a partner with MongoBay,
-who author stories and articles about locations identified in collaboration
-with WRI teams. The reports utilize WRI datasets, including the
-Deforestation Alerts dataset. 
+Places to Watch (PTW) identifies protected areas at elevated deforestation risk, but alert data needs interpretation before policy makers, journalists, or practitioners can use it. Today there are two options and nothing between them:
 
-Link to example: tdtd
+- **PTW reports** — high value, but months of work in collaboration with Mongabay, who author the stories. The reports draw on WRI datasets, including the Deforestation Alerts dataset.
+- **GFW alert subscriptions** — fully automated, but the outputs are hard to interpret and of low value to many users.
 
-There is also a completely hands-off alerts system available to GFW users.
-In this case, the users select an area of interest and receive periodic
-alert messages. However these outputs are apparently hard to interpret and
-of low valuable to many users. 
-
-Link to example: tdtd
-
-**This experiment seeks a middle ground, an automated or semi-automated
-system that provides more interpretation and value than the current alerts
-subscription, and is faster and simpler than the current PTW reports.**
+**This experiment looks for the middle ground:** an automated or semi-automated summary with more interpretation than a subscription alert and far less effort than a PTW report.
 
 ### What does this experiment actually do?
 
-A three-step pipeline: query the GFW Integrated Alerts API to build a
-temporal baseline for the AOI, analyze a target month against it, then
-construct a structured prompt and submit it to an LLM to generate a
-policy-oriented narrative.
-
-See [pipeline.md](./pipeline.md) for the full technical walkthrough.
+A three-step pipeline: query the GFW Integrated Alerts API for a temporal baseline over the AOI, analyze a target month against it, then build a structured prompt and generate a policy-oriented narrative. Full walkthrough in [pipeline.md](./pipeline.md).
 
 ### What signals are we looking for?
 
-**Success:** The LLM output is accurate, coherent, and would be useful to a
-policy analyst without requiring significant editing. The pipeline is
-understandable well enough that it could be replicated for another PTW site.
-
-**Failure:** The narrative contains factual errors, misinterprets the baseline,
-or requires so much expert correction that it provides no time savings.
-
-**Hypothesis:** With carefully constructed prompt variables — especially
-`DATASET_INFO` (conveying the right caveats about alert methodology) and
-`USER_NEEDS` (defining the target audience) — the LLM can produce a useful
-first draft that a domain expert could refine in minutes rather than hours.
+- **Success:** output is accurate and coherent enough for a policy analyst to use without significant editing, and the pipeline is clear enough to replicate for another PTW site.
+- **Failure:** factual errors, a misread baseline, or so much expert correction that there's no time saved.
+- **Hypothesis:** with carefully built prompt variables — especially `DATASET_INFO` (alert-methodology caveats) and `USER_NEEDS` (target audience) — the LLM produces a first draft an expert refines in minutes rather than hours.
 
 ### What are the boundaries?
 
-- Single site, single target month (Tesso Nilo, July 2023)
-- Text output only — no visualization, no automated delivery
-- No formal evaluation against expert-written summaries
-- Prompt variables populated manually by copy-paste into Claude Workbench
-- Does not address alert classification (fire vs. clearing vs. natural) — that
-  data lags by ~90 days
+- Single site, single month (Tesso Nilo, July 2023); text output only — no visualization, no automated delivery.
+- No formal evaluation against expert-written summaries.
+- Prompt variables pasted manually into the Claude Workbench.
+- Alert classification (fire vs. clearing vs. natural) is out — that data lags ~90 days.
+
+---
+
+## Learnings
+
+- The seasonal baseline was insufficient: comparing July 2023 only to the prior 12 months misses year-over-year seasonality and needs more historical depth. July should be compared to prior Julys, not just the rolling average — this was the primary methodological weakness.
+- Variable quality dominates output quality. The structure of the prompt mattered less than the content of the variables; getting `DATASET_INFO` right — especially the caveats about what integrated alerts represent and don't — was the single most important factor in narrative accuracy.
+- The narrative handles uncertainty well when given the right context. The LLM correctly surfaced caveats about confirmation lag, driver uncertainty, and the baseline representing ongoing degradation rather than an intact reference condition — because `DATASET_INFO` carried that context.
+- LLM narrative quality was high enough to share with partners, but the interpretation of the alerts dataset needs improvement before this pipeline could be used operationally.
+- The approach is replicable and can be automated, but basic, and has not yet found a use case that generates value.
 
 ---
 
 ## After
 
+**Outcome:** Confirmed (feasibility only): demonstrated feasibility and a possible approach for
+an automated baseline-to-narrative pipeline for geospatial data. However, deforestation alert
+data specifically requires a different interpretation and may not ultimately be suited for this
+baseline-driven approach.
+
+### Signal check
+
+- **Accurate, coherent, usable without significant editing** — **Inconclusive — never formally assessed.** The narrative was judged good enough to share with PTW as a meaningful first draft, but formal evaluation against expert-written summaries was explicitly out of scope. Measuring would take that evaluation.
+- **Replicable for another PTW site** — **Confirmed.** A new site needs the polygon geometry, the `REGION_OF_INTEREST` text, and the target date; the rest is reusable.
+- **Failure condition (errors, misread baseline, no time saved)** — **Inconclusive — partially observed.** No factual errors were reported and the right caveats surfaced, but the seasonal baseline is a real methodological weakness and time savings were never measured.
+- **Hypothesis: good variables yield a minutes-not-hours draft** — **Inconclusive — the mechanism held, the time claim didn't get tested.** Variable quality clearly dominated output quality, but expert refinement time was never clocked.
+
 ### What happened?
 
-The pipeline was implemented end-to-end over six weeks (Dec 2023 – Jan 2024),
-in collaboration with the PTW team. Python scripts were built to query
-the GFW API and compute the baseline. Prompt variables were assembled
-separately — `DATASET_INFO` compressed from the GFW tech note, `USER_NEEDS`
-derived from a collaboration document with the PTW team, `REGION_OF_INTEREST`
-sourced from Wikipedia. The full prompt was drafted and tested in the Claude
-Developer Workbench. The resulting narrative was shared with the PTW team on
-January 21, 2024.
+Implemented end-to-end over six weeks (Dec 2023 – Jan 2024) with the PTW team. Python scripts queried the GFW API and computed the baseline. Prompt variables were assembled separately: `DATASET_INFO` compressed from the GFW tech note, `USER_NEEDS` from a PTW collaboration document, `REGION_OF_INTEREST` from Wikipedia. The prompt was drafted and tested in the Claude Developer Workbench, and the narrative went to the PTW team on 21 January 2024, with context on the pipeline and open questions about improving the seasonal baseline and refining the target persona.
 
-\<insert the team's response and feedback here>
-
-### What did you learn?
-
-1. **The pipeline is feasible.** The end-to-end flow from API query to
-   narrative works, and the output quality was sufficient to share with
-   partners as a meaningful first draft.
-
-2. **Variable quality dominates output quality.** The structure of the prompt
-   mattered less than the content of the variables. Getting `DATASET_INFO`
-   right — especially the caveats about what integrated alerts represent and
-   don't represent — was the single most important factor in narrative accuracy.
-
-3. **The seasonal baseline is insufficient.** Comparing a target month only to
-   the preceding 12 months misses year-over-year seasonality. July should be
-   compared to prior Julys, not just the rolling average. This was identified
-   as the primary methodological weakness.
-
-4. **The narrative handles uncertainty well when given the right context.** The
-   LLM correctly surfaced caveats about confirmation lag, driver uncertainty,
-   and the baseline representing ongoing degradation rather than an intact
-   reference condition — because `DATASET_INFO` contained that context.
-
-5. **Replicability is high.** Adapting the pipeline to another PTW site mainly
-   requires swapping the polygon geometry, the `REGION_OF_INTEREST` text, and
-   the target date. The rest is reusable.
-
+The team's response surfaced two areas for follow-up: correct and improve the interpretation of the alerts dataset, and better translate the analysis into the language and format most useful for their target audience. Both are carried into the recommendations below.
 
 ### What would you recommend?
 
-Recommendations: 
-* Deforestation Alerts methodology and interpretation may not match the
-current approach. Either needs revision with expert input, or a different
-target dataset. 
-* Refine `USER_NEEDS` with more input from the PTW team — the current version
-  is a reasonable first pass but the team had follow-up questions about tone
-  and format.
-* Improve `DATASET_INFO` to better convey what "integrated alerts" means versus
-  confirmed deforestation, and what the confidence levels actually represent.
-
-Further technical automation or streamlining of the pipeline is NOT
-recommended until we are able to produce AI summaries of clear and
-consistent value. Reducing technical friction at this point would likely be
-pre-mature optimization. 
+- **Revisit the dataset choice.** Integrated Alerts methodology and interpretation may not fit this use case. Either revise the approach with expert input or pick a different target dataset.
+- **Refine `USER_NEEDS` with the PTW team** — the current version is a reasonable first pass, but the team had follow-up questions on tone and format.
+- **Improve `DATASET_INFO`** on what "integrated alerts" means versus confirmed deforestation, and what the confidence levels actually represent.
+- **Don't automate further yet.** Reducing technical friction before the summaries have clear and consistent value would be premature optimization.
 
 ### What decisions and tradeoffs came up along the way?
 
-- **GFW Integrated Alerts vs. other datasets:** The integrated alerts dataset
-  was chosen because it's near-real-time and provides confidence levels.
-  GLAD alerts were considered but integrate less information per pixel.
-
-- **Polygon as bounding box:** The AOI is a hardcoded bounding box
-  approximation of the Tesso Nilo park grid cell, not the full park boundary
-  from the shapefile. This was a pragmatic choice to keep the initial query
-  simple; using the actual park polygon would be more precise.
-
-- **High + highest confidence filter:** Nominal-confidence alerts were excluded
-  to reduce noise. This is defensible but means the baseline undercounts
-  total disturbance activity — a caveat not fully surfaced in the first
-  narrative draft.
-
+- **Integrated Alerts over GLAD** — near-real-time and carries confidence levels; GLAD integrates less information per pixel.
+- **Bounding box, not the park polygon** — a hardcoded approximation of the Tesso Nilo grid cell kept the first query simple. The real polygon would be more precise.
+- **High + highest confidence only** — excluding nominal-confidence alerts cuts noise but undercounts total disturbance, a caveat the first draft didn't fully surface.

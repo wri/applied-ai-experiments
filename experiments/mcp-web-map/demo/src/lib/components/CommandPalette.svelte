@@ -19,18 +19,32 @@
   let searchQuery = $state('');
   let inputElement: HTMLInputElement = $state(null!);
 
-  // Predefined quick commands
+  // Predefined quick commands — grouped to showcase navigation, data, and
+  // multi-step workflows. Workflow prompts exercise the agentic tool-result loop.
   const quickCommands = [
-    { label: 'Fly to New York', command: 'Fly to New York City' },
-    { label: 'Fly to London', command: 'Fly to London, UK' },
-    { label: 'Fly to Tokyo', command: 'Fly to Tokyo, Japan' },
+    // Geocoding + navigation
+    { label: 'Search & fly', command: 'Find Nairobi, Kenya and fly there' },
+    { label: 'Fit a country', command: 'Search for Japan and fit the map to its bounds' },
+    // Markers (LLM-generated geodata)
+    { label: 'Pin cities', command: 'Pin the 5 largest cities in Brazil and label each with its name' },
+    { label: 'Clear markers', command: 'Remove all markers from the map' },
+    // Data layer + styling + filtering
+    { label: 'Add countries', command: 'Add the countries data layer to the map' },
+    { label: 'Choropleth by population', command: 'Add the countries layer and color it by population (pop_est)' },
+    { label: 'Filter a continent', command: 'Add the countries layer and show only countries in Africa' },
+    // Spatial analysis / query
+    { label: 'Measure distance', command: 'Measure the distance between Cairo and Cape Town' },
+    { label: 'What country is here?', command: 'What country is at the center of the map right now?' },
+    // Multi-step workflow
+    {
+      label: 'Workflow: cities + distance',
+      command:
+        'Map the three largest cities in Kenya, then measure the distance between the two farthest apart and show a popup with the result.',
+    },
+    // Layers / view / sharing
     { label: 'Show satellite', command: 'Show the satellite layer' },
-    { label: 'Hide satellite', command: 'Hide the satellite layer' },
     { label: 'List layers', command: 'What layers are available?' },
-    { label: 'Get current view', command: 'What is the current map view?' },
     { label: 'Copy share link', command: 'Copy a shareable link to this view' },
-    { label: 'Zoom in', command: 'Zoom in to level 15' },
-    { label: 'Reset view', command: 'Reset the map to the default view' },
   ];
 
   // Filter commands based on search

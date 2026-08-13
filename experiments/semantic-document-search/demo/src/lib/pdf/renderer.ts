@@ -48,11 +48,14 @@ export async function renderFullPage(
 }
 
 /**
- * Generate thumbnails for multiple pages with progress callback
+ * Generate thumbnails for multiple pages. `onThumbnail` fires as each page
+ * renders so the UI can apply thumbnails progressively (rendering is slow and
+ * runs independently of embedding).
  */
 export async function generateThumbnails(
 	pdf: pdfjsLib.PDFDocumentProxy,
-	onProgress?: (current: number, total: number) => void
+	onProgress?: (current: number, total: number) => void,
+	onThumbnail?: (pageNumber: number, dataUrl: string) => void
 ): Promise<Map<number, string>> {
 	const thumbnails = new Map<number, string>();
 	const pageCount = pdf.numPages;
@@ -61,6 +64,7 @@ export async function generateThumbnails(
 		const page = await pdf.getPage(i);
 		const thumbnail = await generateThumbnail(page);
 		thumbnails.set(i, thumbnail);
+		onThumbnail?.(i, thumbnail);
 		onProgress?.(i, pageCount);
 	}
 

@@ -50,6 +50,10 @@
       <p style="margin: 0 0 0.5rem 0; font-size: 0.75rem; color: var(--tx-3); text-transform: uppercase;">Medium (default)</p>
       <Tabs items={items} bind:active={activeSize} size="md" />
     </div>
+    <div>
+      <p style="margin: 0 0 0.5rem 0; font-size: 0.75rem; color: var(--tx-3); text-transform: uppercase;">Large</p>
+      <Tabs items={items} bind:active={activeSize} size="lg" />
+    </div>
   </div>
 </section>
 

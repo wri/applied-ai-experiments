@@ -62,17 +62,17 @@ interface LLMProvider {
   readonly name: string;
   readonly requiresKey: boolean;
   readonly supportsCORS: boolean;
-  
+
   // Key management
   validateKey(key: string): Promise<KeyValidationResult>;
-  
+
   // Core capabilities
   chat(request: ChatRequest): Promise<ChatResponse>;
   chatStream(request: ChatRequest): AsyncIterable<ChatStreamChunk>;
-  
+
   // Discovery
   listModels(): Promise<ModelInfo[]>;
-  
+
   // Optional capabilities (type-guarded)
   embeddings?(request: EmbeddingRequest): Promise<EmbeddingResponse>;
   images?(request: ImageRequest): Promise<ImageResponse>;
@@ -102,16 +102,16 @@ interface BYOKClient {
   // Provider management
   readonly providers: ReadonlyMap<string, LLMProvider>;
   getProvider(id: string): LLMProvider | undefined;
-  
+
   // Key management
   setKey(providerId: string, key: string): Promise<KeyValidationResult>;
   removeKey(providerId: string): Promise<void>;
   hasKey(providerId: string): boolean;
-  
+
   // Unified API
   chat(providerId: string, request: ChatRequest): Promise<ChatResponse>;
   chatStream(providerId: string, request: ChatRequest): AsyncIterable<ChatStreamChunk>;
-  
+
   // State observation
   subscribe(listener: StateListener): Unsubscribe;
   getState(): BYOKState;
@@ -129,6 +129,7 @@ Browser-based API calls face CORS restrictions. This package handles them via:
 | Gemini | ✅ | Direct browser calls supported |
 | Ollama | ✅ | Local, configurable CORS |
 | OpenRouter | ✅ | Designed for browser use |
+| Hugging Face | ✅ | Inference Providers router supports CORS |
 | Groq | ❌ | Requires proxy |
 
 For providers without CORS support, the package provides:
@@ -205,9 +206,9 @@ export const { keys, providers, chat } = createSvelteStores(client);
 ```svelte
 <script>
   import { keys, providers, chat } from '$lib/byok';
-  
+
   let apiKey = '';
-  
+
   async function saveKey() {
     const result = await keys.set('anthropic', apiKey);
     if (!result.valid) {
@@ -246,6 +247,7 @@ packages/
 │   │   ├── gemini.ts
 │   │   ├── ollama.ts
 │   │   ├── openrouter.ts
+│   │   ├── huggingface.ts
 │   │   ├── groq.ts
 │   │   └── together.ts
 │   └── package.json

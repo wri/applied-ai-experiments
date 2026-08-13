@@ -1,0 +1,55 @@
+{
+  "name": "@wri-datalab/llm-lab",
+  "version": "0.1.0",
+  "description": "Shared machinery for browser-only LLM demos: run history, request inspection, JSON Schema validation, cost tracking, export helpers",
+  "type": "module",
+  "svelte": "./src/index.ts",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "svelte": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./models": {
+      "types": "./src/models/index.ts",
+      "svelte": "./src/models/index.ts",
+      "default": "./src/models/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "dependencies": {
+    "@byo-keys/core": "workspace:*",
+    "@byo-keys/svelte": "workspace:*",
+    "@cfworker/json-schema": "^4.1.1",
+    "@wri-datalab/ui": "workspace:*",
+    "idb": "^8.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "fake-indexeddb": "^6.0.0",
+    "happy-dom": "^20.9.0",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "llm",
+    "demo",
+    "byok",
+    "json-schema",
+    "indexeddb"
+  ],
+  "license": "MIT"
+}

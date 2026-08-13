@@ -4,24 +4,64 @@
   import type { ProviderId } from '@byo-keys/core';
   import UserSettings from './user-settings/UserSettings.svelte';
   import ThemeSwitcher from './ThemeSwitcher.svelte';
+  import DemoInfoButton from './DemoInfoButton.svelte';
+  import HeaderModeBadge from './HeaderModeBadge.svelte';
 
+  /**
+   * The one demo header shape (DESIGN.md §4), standardised from
+   * ai-web-map-exploration:
+   *
+   *   Applied AI Experiments / Title            [mode] [info] [actions] [theme] [keys]
+   *
+   * Deliberately no subtitle — the tagline was a second competing title at a
+   * size that read as neither. What the demo is now lives behind the info
+   * button, sourced from the experiment's brief description.
+   *
+   * `actions` is for demo chrome only (session telemetry, an engine toggle).
+   * Anything with its own label — view tabs, export buttons, mode switches —
+   * belongs in DemoLayout's `banner` row beneath the header, not crammed in
+   * here.
+   */
   interface Props {
     title: string;
-    subtitle?: string;
+    /** Info-modal body. Defaults to the app.html meta description (from the brief). */
+    description?: string;
+    /** Link to this experiment's hub detail page, surfaced in the info modal. */
+    infoHref?: string;
+    /** Renders the info button. On by default — every demo should explain itself. */
+    showInfo?: boolean;
+    /** Live/mock indicator. Omit entirely for demos that make no model calls. */
+    mode?: 'mock' | 'live';
+    /** Badge text — conventionally the model id when live, "mock" when not. */
+    modeLabel?: string;
+    /** Tooltip override for the mode badge. */
+    modeHint?: string;
+    /**
+     * Click handler for the mode badge. Defaults to opening this header's own
+     * keys/settings popover — "mock" is almost always a prompt to add a key,
+     * so the badge should lead there without the demo wiring it up.
+     */
+    onModeClick?: () => void;
     stores?: BYOKStores;
     providers?: ProviderId[];
     showSettings?: boolean;
     showTheme?: boolean;
     showApiKeys?: boolean;
     maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+    /** DemoLayout exposes this as `headerActions`. */
     actions?: Snippet;
-    nav?: Snippet;
     class?: string;
   }
 
   let {
     title,
-    subtitle,
+    description,
+    infoHref,
+    showInfo = true,
+    mode,
+    modeLabel,
+    modeHint,
+    onModeClick,
     stores,
     providers,
     showSettings = true,
@@ -29,7 +69,6 @@
     showApiKeys = true,
     maxWidth = 'lg',
     actions,
-    nav,
     class: className = '',
   }: Props = $props();
 
@@ -40,106 +79,115 @@
     xl: 'max-width: var(--max-width, 1200px);',
     full: 'max-width: 100%;',
   };
+
+  const hasSettings = $derived(showSettings && showApiKeys && !!stores);
+  let settingsOpen = $state(false);
+
+  // Only clickable when there's somewhere for the click to go.
+  const modeClick = $derived(
+    onModeClick ?? (hasSettings ? () => (settingsOpen = true) : undefined),
+  );
 </script>
 
-<header
-  class="ui-demo-header {className}"
-  style="
-    background-color: var(--bg-2);
-    border-bottom: 1px solid var(--ui);
-    position: sticky;
-    top: 0;
-    z-index: var(--z-sticky);
-  "
->
-  <div
-    class="header-content"
-    style="
-      {maxWidthStyles[maxWidth]}
-      margin: 0 auto;
-      padding: 0 var(--space-4);
-      height: var(--header-height);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-    "
-  >
-    <div class="header-left" style="display: flex; align-items: center; gap: var(--space-3); min-width: 0;">
-      <div class="header-title-group" style="min-width: 0;">
-        <h1
-          style="
-            font-family: var(--font-mono);
-            font-size: var(--text-title-md);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--tx);
-            margin: 0;
-            line-height: 1.2;
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-          "
-        >
-          <span class="header-prefix" style="color: var(--tx-2);">Applied AI Experiments</span>
-          <span class="header-separator" style="color: var(--tx-3);">/</span>
-          <span class="header-title">{title}</span>
-        </h1>
-        {#if subtitle}
-          <p
-            style="
-              font-size: var(--text-ui);
-              color: var(--tx-2);
-              margin: 0.125rem 0 0 0;
-              line-height: 1.3;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
-          >{subtitle}</p>
-        {/if}
-      </div>
+<header class="ui-demo-header {className}">
+  <div class="header-content" style={maxWidthStyles[maxWidth]}>
+    <div class="brand">
+      <span class="brand-prefix">Applied AI Experiments</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-title">{title}</span>
     </div>
 
-    <div class="header-right" style="display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0;">
-      {#if nav}
-        <nav
-          class="header-nav"
-          style="
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            font-family: var(--font-mono);
-            font-size: var(--text-ui);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-          "
-        >
-          {@render nav()}
-        </nav>
+    <div class="header-actions">
+      {#if mode}
+        <HeaderModeBadge {mode} label={modeLabel} hint={modeHint} onclick={modeClick} />
+      {/if}
+
+      {#if showInfo}
+        <DemoInfoButton {title} {description} href={infoHref} />
       {/if}
 
       {#if actions}
-        <div class="header-actions" style="display: flex; align-items: center; gap: var(--space-2);">
-          {@render actions()}
-        </div>
+        {@render actions()}
       {/if}
 
       {#if showTheme}
         <ThemeSwitcher />
       {/if}
 
-      {#if showSettings && showApiKeys && stores}
+      {#if hasSettings}
         <UserSettings
-          {stores}
+          stores={stores!}
           {providers}
           showTheme={false}
           {showApiKeys}
           position="bottom-right"
+          bind:open={settingsOpen}
         />
       {/if}
     </div>
   </div>
 </header>
+
+<style>
+  .ui-demo-header {
+    background-color: var(--bg-2);
+    border-bottom: 1px solid var(--ui);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+  }
+
+  .header-content {
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  /* Standard demo header title treatment (DESIGN.md §4) */
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-title-md);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .brand-prefix {
+    color: var(--tx-2);
+  }
+
+  .brand-sep {
+    color: var(--tx-3);
+  }
+
+  .brand-title {
+    color: var(--tx);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  /* Narrow viewports: the prefix is context, the experiment name is the point. */
+  @media (max-width: 640px) {
+    .brand-prefix,
+    .brand-sep {
+      display: none;
+    }
+  }
+</style>

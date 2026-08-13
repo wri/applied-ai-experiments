@@ -1,0 +1,79 @@
+/* Fonts — the monorepo assumes IBM Plex locally; we load webfonts explicitly. */
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+
+/* Design tokens (prototype variant) — shared UI package */
+@import '@wri-datalab/ui/styles';
+
+/* MapLibre (imported exactly once, app-wide) */
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/* Map popups follow the design tokens */
+[data-variant='prototype'] .maplibregl-popup-content {
+	background: var(--bg-2);
+	color: var(--tx);
+	border: 1px solid var(--ui);
+	border-radius: var(--radius-md);
+	font-family: var(--font-mono);
+	font-size: var(--text-ui);
+	padding: var(--space-3, 0.75rem);
+	box-shadow: var(--shadow-default);
+}
+
+[data-variant='prototype'] .maplibregl-popup-close-button {
+	color: var(--tx-2);
+	font-size: 1rem;
+	padding: 0 0.35rem;
+}
+
+[data-variant='prototype'] .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+	border-top-color: var(--ui);
+}
+[data-variant='prototype'] .maplibregl-popup-anchor-top .maplibregl-popup-tip {
+	border-bottom-color: var(--ui);
+}
+
+/* Hover-attributes tooltip (HoverPopup.svelte): non-interactive, tighter */
+[data-variant='prototype'] .hover-popup {
+	pointer-events: none;
+}
+[data-variant='prototype'] .hover-popup .maplibregl-popup-content {
+	padding: 0.45rem 0.6rem;
+}
+
+[data-variant='prototype'] .maplibregl-ctrl-attrib {
+	background: color-mix(in srgb, var(--bg) 75%, transparent);
+	font-family: var(--font-mono);
+	font-size: 0.6rem;
+}
+[data-variant='prototype'] .maplibregl-ctrl-attrib a {
+	color: var(--tx-2);
+}
+
+/* Scrollbars in the lab spirit: thin and quiet */
+[data-variant='prototype'] ::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+[data-variant='prototype'] ::-webkit-scrollbar-thumb {
+	background: var(--ui);
+	border-radius: var(--radius-full);
+}
+[data-variant='prototype'] ::-webkit-scrollbar-track {
+	background: transparent;
+}

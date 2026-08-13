@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Slider } from '@wri-datalab/ui';
 	import { appStore } from '$lib/stores/app.svelte.js';
-	import { volumePresets, tokenSizePresets } from '$lib/data/defaults.js';
+	import { volumePresets, tokenSizePresets, SLIDER_RANGES } from '$lib/data/defaults.js';
 	import { formatVolume } from '$lib/utils/format.js';
 
 	// Local values bound to sliders, synced to store via $effect
@@ -39,9 +39,9 @@
 	<Slider
 		label="Monthly requests"
 		bind:value={volume}
-		min={100}
-		max={1_000_000}
-		step={100}
+		min={SLIDER_RANGES.monthlyVolume.min}
+		max={SLIDER_RANGES.monthlyVolume.max}
+		step={SLIDER_RANGES.monthlyVolume.step}
 		formatValue={formatVolume}
 		presets={volumePresets}
 	/>
@@ -49,18 +49,18 @@
 	<Slider
 		label="Avg input tokens"
 		bind:value={inputTokens}
-		min={50}
-		max={16_000}
-		step={50}
+		min={SLIDER_RANGES.inputTokens.min}
+		max={SLIDER_RANGES.inputTokens.max}
+		step={SLIDER_RANGES.inputTokens.step}
 		formatValue={(v) => v.toLocaleString()}
 	/>
 
 	<Slider
 		label="Avg output tokens"
 		bind:value={outputTokens}
-		min={25}
-		max={8_000}
-		step={25}
+		min={SLIDER_RANGES.outputTokens.min}
+		max={SLIDER_RANGES.outputTokens.max}
+		step={SLIDER_RANGES.outputTokens.step}
 		formatValue={(v) => v.toLocaleString()}
 	/>
 

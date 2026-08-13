@@ -45,17 +45,27 @@
     }
   }
 
-  // Initialize from localStorage or system preference
-  if (typeof window !== 'undefined') {
+  const VALID_THEMES: Theme[] = ['light', 'dark', 'high-contrast'];
+
+  function resolveInitialTheme(): Theme {
     const stored = localStorage.getItem('prototype-theme') as Theme | null;
-    if (stored && ['light', 'dark', 'high-contrast'].includes(stored)) {
-      currentTheme = stored;
-      setTimeout(() => setTheme(stored), 0);
-    } else if (window.matchMedia?.('(prefers-color-scheme: light)').matches) {
-      currentTheme = 'light';
-      setTimeout(() => setTheme('light'), 0);
-    }
+    if (stored && VALID_THEMES.includes(stored)) return stored;
+    // The attribute may already be stamped by a pre-paint script in app.html
+    const attr = document.documentElement.getAttribute('data-theme') as Theme | null;
+    if (attr && VALID_THEMES.includes(attr)) return attr;
+    return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
+
+  if (typeof window !== 'undefined') {
+    currentTheme = resolveInitialTheme();
+  }
+
+  // Apply on mount (and after every change): by effect time the [data-variant]
+  // layout wrapper exists in the DOM, and effects flush before paint, so the
+  // wrapper never renders in the wrong theme.
+  $effect(() => {
+    setTheme(currentTheme);
+  });
 </script>
 
 <button
@@ -72,7 +82,7 @@
     height: 2rem;
     padding: 0;
     border: 1px solid var(--ui);
-    border-radius: 0.125rem;
+    border-radius: var(--radius-sm);
     background-color: var(--bg);
     color: var(--tx-2);
     cursor: pointer;

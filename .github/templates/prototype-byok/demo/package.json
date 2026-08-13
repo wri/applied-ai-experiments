@@ -1,0 +1,29 @@
+{
+  "name": "proto-CHANGEME",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "dependencies": {
+    "@byo-keys/core": "workspace:*",
+    "@byo-keys/providers": "workspace:*",
+    "@byo-keys/svelte": "workspace:*",
+    "@wri-datalab/llm-lab": "workspace:*",
+    "@wri-datalab/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "catalog:",
+    "@sveltejs/kit": "catalog:",
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "type": "module"
+}

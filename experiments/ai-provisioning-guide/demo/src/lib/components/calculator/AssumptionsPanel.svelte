@@ -2,6 +2,7 @@
 	import { Panel } from '@wri-datalab/ui';
 	import { appStore } from '$lib/stores/app.svelte.js';
 	import { methods } from '$lib/data/methods.js';
+	import { SLIDER_RANGES } from '$lib/data/defaults.js';
 	import type { MethodId } from '$lib/types.js';
 	import { formatCurrency } from '$lib/utils/format.js';
 	import AssumptionSlider from './AssumptionSlider.svelte';
@@ -28,14 +29,14 @@
 						<AssumptionSlider
 							label="Input $/M tokens"
 							value={assumptions.inputTokenPricePerMillion}
-							min={0} max={50} step={0.25}
+							min={SLIDER_RANGES.inputPrice.min} max={SLIDER_RANGES.inputPrice.max} step={SLIDER_RANGES.inputPrice.step}
 							formatValue={(v) => '$' + v.toFixed(2)}
 							onchange={(v) => appStore.updateAssumptions(id, { inputTokenPricePerMillion: v })}
 						/>
 						<AssumptionSlider
 							label="Output $/M tokens"
 							value={assumptions.outputTokenPricePerMillion}
-							min={0} max={200} step={0.5}
+							min={SLIDER_RANGES.outputPrice.min} max={SLIDER_RANGES.outputPrice.max} step={SLIDER_RANGES.outputPrice.step}
 							formatValue={(v) => '$' + v.toFixed(2)}
 							onchange={(v) => appStore.updateAssumptions(id, { outputTokenPricePerMillion: v })}
 						/>
@@ -45,7 +46,7 @@
 						<AssumptionSlider
 							label="Router markup"
 							value={assumptions.routerMarkupPercent}
-							min={0} max={50} step={1}
+							min={SLIDER_RANGES.routerMarkup.min} max={SLIDER_RANGES.routerMarkup.max} step={SLIDER_RANGES.routerMarkup.step}
 							formatValue={(v) => v + '%'}
 							onchange={(v) => appStore.updateAssumptions(id, { routerMarkupPercent: v })}
 						/>
@@ -55,7 +56,7 @@
 						<AssumptionSlider
 							label="Monthly infra"
 							value={assumptions.monthlyInfraCost}
-							min={0} max={5000} step={25}
+							min={SLIDER_RANGES.monthlyInfra.min} max={SLIDER_RANGES.monthlyInfra.max} step={SLIDER_RANGES.monthlyInfra.step}
 							formatValue={formatCurrency}
 							onchange={(v) => appStore.updateAssumptions(id, { monthlyInfraCost: v })}
 						/>
@@ -64,7 +65,7 @@
 					<AssumptionSlider
 						label="Dev hours (initial)"
 						value={assumptions.devHoursInitial}
-						min={0} max={400} step={8}
+						min={SLIDER_RANGES.devHours.min} max={SLIDER_RANGES.devHours.max} step={SLIDER_RANGES.devHours.step}
 						formatValue={(v) => v + 'h'}
 						onchange={(v) => appStore.updateAssumptions(id, { devHoursInitial: v })}
 					/>
@@ -72,7 +73,7 @@
 					<AssumptionSlider
 						label="Ops hours/mo"
 						value={assumptions.opsHoursMonthly}
-						min={0} max={80} step={1}
+						min={SLIDER_RANGES.opsHours.min} max={SLIDER_RANGES.opsHours.max} step={SLIDER_RANGES.opsHours.step}
 						formatValue={(v) => v + 'h'}
 						onchange={(v) => appStore.updateAssumptions(id, { opsHoursMonthly: v })}
 					/>

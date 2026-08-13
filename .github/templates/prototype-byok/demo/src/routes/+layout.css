@@ -1,0 +1,48 @@
+/* Import UI styles from @wri-datalab/ui */
+@import '@wri-datalab/ui/styles';
+
+/* Base styles using design tokens */
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--tx);
+  line-height: var(--text-body-line-height);
+}
+
+/* Typography using design tokens */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--tx);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+}
+
+/* Link styles */
+a {
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+/* Code blocks */
+code {
+  font-family: var(--font-mono);
+  background-color: var(--bg-2);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875em;
+}
+
+pre {
+  background-color: var(--bg-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}

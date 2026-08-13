@@ -1,19 +1,14 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import '@wri-datalab/ui/styles';
 	import './+layout.css';
+	import { ToastContainer } from '@wri-datalab/ui';
 
 	let { children } = $props();
 
-	if (browser) {
-		const stored = localStorage.getItem('theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		const theme = stored || (prefersDark ? 'dark' : 'light');
-		document.documentElement.setAttribute('data-theme', theme);
-		document.documentElement.setAttribute('data-variant', 'prototype');
-	}
+	// Pre-paint theme bootstrap lives in app.html (shared "prototype-theme" key).
 </script>
 
 <div data-variant="prototype">
 	{@render children()}
+	<ToastContainer />
 </div>

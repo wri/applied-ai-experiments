@@ -1,0 +1,91 @@
+# Classification eval cases.
+# Task: classify each text into one of:
+#   - "supportive"   (the author endorses the policy/project/finding)
+#   - "critical"     (the author argues against it or raises serious concerns)
+#   - "neutral"      (descriptive / informational, no clear stance)
+#
+# Scored with macro-averaged precision/recall/F1 across the three classes.
+#
+# Seeded issues to look for:
+#   - case_03 uses positive-sounding language to describe a critical
+#     finding ("encouragingly modest" is dry sarcasm). Models that
+#     surface-skim sentiment will misclassify as supportive.
+#   - case_05 hedges heavily and looks neutral, but the conclusion is
+#     unambiguously critical.
+#   - case_07 contains both supportive and critical clauses; the OVERALL
+#     stance is critical because the supportive clause is conceded.
+
+cases:
+  - id: case_01
+    tags: [supportive, baseline]
+    input: >
+      The new Land Tenure Verification protocol is a major step forward
+      for indigenous communities seeking title to ancestral lands. Early
+      pilots in Kenya have already secured tenure for over 12,000 families.
+    expected: "supportive"
+
+  - id: case_02
+    tags: [critical, baseline]
+    input: >
+      The proposed 30x30 conservation target sounds ambitious on paper
+      but lacks any binding mechanism for enforcement. Without sanctions
+      for non-compliance, the target is essentially aspirational.
+    expected: "critical"
+
+  - id: case_03
+    tags: [critical, sarcasm]
+    input: >
+      The framework's emissions-reduction commitments are encouragingly
+      modest — a 0.4% annual decline target through 2035, well within the
+      range that would have happened anyway under business-as-usual
+      projections.
+    expected: "critical"
+    notes: >
+      "Encouragingly" + the actual content (target = BAU) flips the surface
+      sentiment. A model classifying on token sentiment will get this wrong.
+
+  - id: case_04
+    tags: [neutral, baseline]
+    input: >
+      The dataset includes 4,200 georeferenced observations from 2010 to
+      2024 across 14 countries. Each record contains species, GPS
+      coordinates, observer ID, and a date stamp.
+    expected: "neutral"
+
+  - id: case_05
+    tags: [critical, hedged]
+    input: >
+      While the methodology has clear scientific merit and the team's
+      credentials are strong, the sample size of 8 sites cannot support
+      the global generalisations the executive summary makes.
+    expected: "critical"
+    notes: >
+      Two long supportive clauses precede the critical conclusion. Models
+      may anchor on the first clauses.
+
+  - id: case_06
+    tags: [supportive, short]
+    input: >
+      Adopting the new MRV standard will materially improve project
+      credibility and we recommend WRI move to it for all forest carbon
+      projects starting in 2026.
+    expected: "supportive"
+
+  - id: case_07
+    tags: [critical, conceded-clause]
+    input: >
+      The pilot achieved its monitoring milestones on time, which is
+      genuinely impressive. That said, it failed every one of its three
+      stated outcome targets and the cost overrun was 220%.
+    expected: "critical"
+    notes: >
+      First clause is supportive but the dominant claim is critical. The
+      "that said" turn signals where the author actually lands.
+
+  - id: case_08
+    tags: [neutral, methodology]
+    input: >
+      The model uses gradient-boosted decision trees with 200 estimators
+      and a max depth of 6. Training data was split 80/20 into train and
+      validation sets.
+    expected: "neutral"

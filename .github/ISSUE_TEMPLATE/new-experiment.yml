@@ -32,6 +32,7 @@ body:
     id: type
     attributes:
       label: Experiment Type
+      description: What kind of artifact this is. Separate from the template it's scaffolded from.
       options:
         - spike
         - prototype
@@ -43,6 +44,21 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: template
+    attributes:
+      label: Template
+      description: >
+        Which scaffold to start from. Leave blank to use the template matching
+        the type above. `prototype-byok` adds LLM wiring (model selector,
+        runLLM, telemetry); `experiment-minimal` is a bare structure.
+      options:
+        - ""
+        - prototype-byok
+        - experiment-minimal
+    validations:
+      required: false
+
   - type: textarea
     id: description
     attributes:
@@ -52,12 +68,29 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: owner
+  - type: textarea
+    id: falsifiable_signal
     attributes:
-      label: Owner
-      description: GitHub username of the experiment owner (defaults to issue author)
-      placeholder: "@username"
+      label: Falsifiable success signal
+      description: >
+        What measurable result would change your mind? Include a number —
+        a threshold, sample size, latency/cost figure, or named model.
+      placeholder: "e.g. >=3 teams run their first eval in under 60 minutes; p95 latency < 2s on N=50 queries"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: targets
+    attributes:
+      label: Targets
+      description: >
+        What conceptual layer this targets — capability (what can the tools
+        do?), infra (can we build and run this?), or feature (should we build
+        this, and how?)
+      options:
+        - capability
+        - infra
+        - feature
     validations:
       required: false
 
@@ -65,7 +98,7 @@ body:
     id: themes
     attributes:
       label: Themes
-      description: Select any applicable themes
+      description: Select any applicable themes — the first one you pick is the primary theme
       options:
         - label: cost-perf
         - label: evals
@@ -75,6 +108,7 @@ body:
         - label: agents
         - label: scouting
         - label: prototyping
+        - label: development
 
   - type: input
     id: tags

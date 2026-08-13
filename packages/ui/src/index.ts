@@ -22,6 +22,7 @@ export { default as StepIndicator } from './components/StepIndicator.svelte';
 export { default as EmptyState } from './components/EmptyState.svelte';
 export { default as SearchInput } from './components/SearchInput.svelte';
 export { default as Tabs } from './components/Tabs.svelte';
+export { default as Tooltip } from './components/Tooltip.svelte';
 
 // New UI Components (Tier 1 - Foundational)
 export { default as Toggle } from './components/Toggle.svelte';
@@ -86,6 +87,10 @@ export { default as UserSettingsPopover } from './components/user-settings/UserS
 export { default as DemoHeader } from './components/DemoHeader.svelte';
 export { default as DemoFooter } from './components/DemoFooter.svelte';
 export { default as DemoLayout } from './components/DemoLayout.svelte';
+export { default as HeaderButton } from './components/HeaderButton.svelte';
+export { default as HeaderNav, type HeaderNavItem } from './components/HeaderNav.svelte';
+export { default as HeaderModeBadge } from './components/HeaderModeBadge.svelte';
+export { default as DemoInfoButton } from './components/DemoInfoButton.svelte';
 
 // Re-export BYOK stores and utilities for convenience
 export {
