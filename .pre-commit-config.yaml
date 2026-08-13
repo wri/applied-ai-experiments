@@ -1,21 +1,61 @@
 repos:
-  # Python formatting and linting
+  # Python formatting and linting, scoped to the repo's own tooling.
+  #
+  # Deliberately NOT repo-wide: experiment code is prototype code (marimo
+  # notebooks especially), and a hook that reformats someone's notebook on the way
+  # into a commit is friction, not a safeguard. The pipeline scripts are different
+  # — every contributor's tooling runs them — so they're linted here and in CI.
+  # Run ruff by hand on experiment code whenever you want it.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.16
     hooks:
       - id: ruff          # Linting
         args: [--fix]
+        files: ^(\.github/scripts|tests)/.*\.py$
       - id: ruff-format   # Formatting
+        files: ^(\.github/scripts|tests)/.*\.py$
 
   # Experiment metadata validation
   - repo: local
     hooks:
       - id: validate-experiments
         name: Validate experiment metadata
-        entry: uv run python .github/scripts/validate-experiments.py
+        entry: uv run .github/scripts/validate-experiments.py
         language: system
-        files: info\.yaml$
+        # Anchored to experiments/ — the validator only walks that tree, and
+        # template frontmatter intentionally carries CHANGEME placeholders that it
+        # rejects. Templates are covered by `just smoke-scaffold`.
+        files: ^experiments/.*/brief\.md$
         pass_filenames: false
+      # The TS types and hub taxonomy restate the schema enums; fail the commit
+      # if they drift from .github/scripts/experiment_schema.py.
+      - id: check-schema-sync
+        name: Check schema copies are in sync
+        entry: uv run .github/scripts/check-schema-sync.py
+        language: system
+        files: (experiment_schema\.py$|packages/shared-types/src/index\.ts$|hub/src/data/taxonomy\.json$)
+        pass_filenames: false
+      # CI checks out only committed files. A tracked script that imports an
+      # untracked sibling passes locally and fails on every PR, so catch it at
+      # commit time — the moment the mistake is actually made.
+      - id: check-committed
+        name: Committed pipeline is self-contained
+        entry: python3 .github/scripts/check-committed.py
+        language: system
+        files: ^\.github/(scripts|templates|workflows)/
+        pass_filenames: false
+      # Regenerate demo SEO meta (app.html) from the brief's frontmatter so the two
+      # can't drift in a local commit. Runs in write mode on purpose: it fixes the
+      # drift for you and leaves the corrected app.html in your working tree, so
+      # "hook failed" means "re-stage and commit again" — not "go run a command".
+      # CI checks the same thing with --check.
+      - id: sync-demo-meta
+        name: Sync demo SEO meta from the brief
+        entry: uv run .github/scripts/sync-demo-meta.py
+        language: system
+        files: (experiments/.*/brief\.md$|demo/src/app\.html$)
+        pass_filenames: false
+
 
   # Prevent secrets from being committed
   - repo: https://github.com/Yelp/detect-secrets
@@ -40,7 +80,11 @@ repos:
         args: [--unsafe]  # Allow custom YAML tags
       - id: check-json
       - id: check-added-large-files
-        args: ['--maxkb=1000']
+        # 1500, not 1000: map demos ship real geospatial fixtures, and
+        # ai-web-map-exploration's can-tho-places.geojson is 1.3MB of Overture
+        # points that the deep-research and Overture scenes actually load. Still a
+        # ceiling — anything bigger belongs behind a fetch, not in the repo.
+        args: ['--maxkb=1500']
         # marimo exports bundle large vendored assets (plotly, wasm) by design
         exclude: /exports/
       - id: check-merge-conflict
