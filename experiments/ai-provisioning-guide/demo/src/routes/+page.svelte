@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { DemoLayout, Tabs, Button, CopyButton } from '@wri-datalab/ui';
-	import { ToastContainer, toast } from '@wri-datalab/ui';
+	import { DemoLayout, HeaderNav, Button, CopyButton } from '@wri-datalab/ui';
+	import { toast } from '@wri-datalab/ui';
 	import { appStore } from '$lib/stores/app.svelte.js';
 	import { encodeStateToParams, decodeStateFromParams } from '$lib/utils/url.js';
 	import { exportToMarkdown, exportToCSV } from '$lib/utils/export.js';
@@ -11,10 +11,10 @@
 	import GuideView from '$lib/components/guide/GuideView.svelte';
 
 	const tabs = [
-		{ id: 'wizard', label: 'Wizard' },
-		{ id: 'calculator', label: 'Calculator' },
-		{ id: 'compare', label: 'Compare' },
-		{ id: 'guide', label: 'Guide' },
+		{ id: 'wizard', label: 'Wizard', onclick: () => appStore.setTab('wizard') },
+		{ id: 'calculator', label: 'Calculator', onclick: () => appStore.setTab('calculator') },
+		{ id: 'compare', label: 'Compare', onclick: () => appStore.setTab('compare') },
+		{ id: 'guide', label: 'Guide', onclick: () => appStore.setTab('guide') },
 	];
 
 	let activeTab = $derived(appStore.activeTab);
@@ -87,25 +87,22 @@
 
 <DemoLayout
 	title="AI Provisioning Guide"
-	subtitle="Navigate AI delivery decisions"
 	maxWidth="xl"
 	showApiKeys={false}
 >
-	<div class="page-content">
-		<div class="page-toolbar">
-			<Tabs
-				items={tabs}
-				active={activeTab}
-				size="sm"
-				onchange={(id: any) => appStore.setTab(id as any)}
-			/>
-			<div class="toolbar-actions">
-				<CopyButton text={getShareUrl()} label="Share" />
-				<Button variant="ghost" size="sm" onclick={handleExportMarkdown}>Export MD</Button>
-				<Button variant="ghost" size="sm" onclick={handleExportCSV}>Export CSV</Button>
-			</div>
+	<!-- View tabs and exports live in the banner row, not the header: the header
+	     is the same shape in every demo (DESIGN.md §4) and carries icon chrome
+	     only. Anything with a word on it belongs down here. -->
+	{#snippet banner()}
+		<HeaderNav items={tabs} active={activeTab} ariaLabel="Views" />
+		<div class="banner-actions">
+			<CopyButton text={getShareUrl()} label="Share" />
+			<Button variant="ghost" size="sm" onclick={handleExportMarkdown}>Export markdown</Button>
+			<Button variant="ghost" size="sm" onclick={handleExportCSV}>Export CSV</Button>
 		</div>
+	{/snippet}
 
+	<div class="page-content">
 		{#if appStore.activeTab === 'wizard'}
 			<WizardView />
 		{:else if appStore.activeTab === 'calculator'}
@@ -118,9 +115,13 @@
 	</div>
 </DemoLayout>
 
-<ToastContainer />
-
 <style>
+	.banner-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
 	.page-content {
 		max-width: 80rem;
 		width: 100%;
@@ -133,35 +134,11 @@
 		overflow-x: hidden;
 	}
 
-	.page-toolbar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		flex-wrap: wrap;
-	}
-
-	.toolbar-actions {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
 	@media (max-width: 640px) {
 		.page-content {
 			padding: 0.75rem;
 			min-width: 0;
-		overflow-x: visible;
-
-		}
-
-		.page-toolbar {
-			flex-direction: column;
-			align-items: stretch;
-		}
-
-		.toolbar-actions {
-			justify-content: flex-end;
+			overflow-x: visible;
 		}
 	}
 </style>
