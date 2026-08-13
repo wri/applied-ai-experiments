@@ -15,6 +15,11 @@
     description?: string;
     /** Link to this experiment's hub detail page, surfaced in the info modal. */
     infoHref?: string;
+    /**
+     * Where the "Applied AI Experiments" prefix links — the hub homepage. Pass
+     * `hubHomeHref(base)` with `base` from `$app/paths`.
+     */
+    homeHref?: string;
     showInfo?: boolean;
     /** Live/mock indicator in the header. Omit for demos with no model calls. */
     mode?: 'mock' | 'live';
@@ -54,6 +59,7 @@
     title,
     description,
     infoHref,
+    homeHref,
     showInfo = true,
     mode,
     modeLabel,
@@ -95,6 +101,7 @@
     {title}
     {description}
     {infoHref}
+    {homeHref}
     {showInfo}
     {mode}
     {modeLabel}

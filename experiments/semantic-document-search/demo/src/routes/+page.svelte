@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { DemoLayout, Button, Alert, Panel } from '@wri-datalab/ui';
+	import { base } from '$app/paths';
+	import { DemoLayout, Button, Alert, Panel, hubHomeHref } from '@wri-datalab/ui';
 	import {
 		DocumentInput,
 		ExampleDocPicker,
@@ -496,6 +497,7 @@
 
 <DemoLayout
 	title="Semantic Search"
+	homeHref={hubHomeHref(base)}
 	maxWidth="xl"
 	showSettings={false}
 	showApiKeys={false}

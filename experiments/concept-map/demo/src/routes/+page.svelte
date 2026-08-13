@@ -12,7 +12,9 @@
 		Spinner,
 		TokenCounter,
 		toast,
+		hubHomeHref,
 	} from '@wri-datalab/ui';
+	import { base } from '$app/paths';
 	import { modelSelectorConfigForDemo } from '@wri-datalab/llm-lab/models';
 	import {
 		RequestInspector,
@@ -108,6 +110,7 @@
 
 <DemoLayout
 	title="Concept Map Generator"
+	homeHref={hubHomeHref(base)}
 	{stores}
 	providers={['anthropic', 'openai', 'gemini']}
 	maxWidth="full"

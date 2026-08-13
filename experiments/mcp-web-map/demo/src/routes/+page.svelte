@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { DemoLayout } from '@wri-datalab/ui';
+  import { base } from '$app/paths';
+  import { DemoLayout, hubHomeHref } from '@wri-datalab/ui';
   import { runLLM, SessionTelemetryTrigger } from '@wri-datalab/llm-lab';
   import { defaultModelForDemo } from '@wri-datalab/llm-lab/models';
   import type { KeyStatus, ProviderId } from '@byo-keys/core';
@@ -141,6 +142,7 @@
 
 <DemoLayout
   title="MCP Web Map"
+  homeHref={hubHomeHref(base)}
   {stores}
   providers={providerIds}
   showSettings={true}

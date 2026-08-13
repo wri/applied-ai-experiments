@@ -8,6 +8,25 @@ import {
   formatTimestamp,
 } from '../utils/formatters';
 import { computeDiff } from '../utils/diff';
+import { hubHomeHref } from '../utils/hub';
+
+describe('hubHomeHref', () => {
+  it('drops the slug segment from a deployed base path', () => {
+    expect(hubHomeHref('/applied-ai-experiments/ai-web-map-exploration')).toBe(
+      '/applied-ai-experiments/',
+    );
+  });
+
+  it('tolerates a trailing slash on the base', () => {
+    expect(hubHomeHref('/applied-ai-experiments/concept-map/')).toBe('/applied-ai-experiments/');
+  });
+
+  // LOCAL_DEV=true serves the whole site from one origin with no repo prefix,
+  // so a demo's base is just `/<slug>` and the hub sits at the root.
+  it('resolves to the root under the local combined serve', () => {
+    expect(hubHomeHref('/concept-map')).toBe('/');
+  });
+});
 
 describe('formatTokens', () => {
   it('formats small numbers as-is', () => {

@@ -28,6 +28,12 @@
     description?: string;
     /** Link to this experiment's hub detail page, surfaced in the info modal. */
     infoHref?: string;
+    /**
+     * Where the "Applied AI Experiments" prefix links — the hub homepage. Pass
+     * `hubHomeHref(base)` with `base` from `$app/paths`. Omit it and the prefix
+     * renders as plain text, so a demo served outside the hub has no dead link.
+     */
+    homeHref?: string;
     /** Renders the info button. On by default — every demo should explain itself. */
     showInfo?: boolean;
     /** Live/mock indicator. Omit entirely for demos that make no model calls. */
@@ -57,6 +63,7 @@
     title,
     description,
     infoHref,
+    homeHref,
     showInfo = true,
     mode,
     modeLabel,
@@ -92,7 +99,11 @@
 <header class="ui-demo-header {className}">
   <div class="header-content" style={maxWidthStyles[maxWidth]}>
     <div class="brand">
-      <span class="brand-prefix">Applied AI Experiments</span>
+      {#if homeHref}
+        <a class="brand-prefix brand-home" href={homeHref}>Applied AI Experiments</a>
+      {:else}
+        <span class="brand-prefix">Applied AI Experiments</span>
+      {/if}
       <span class="brand-sep">/</span>
       <span class="brand-title">{title}</span>
     </div>
@@ -164,6 +175,25 @@
 
   .brand-prefix {
     color: var(--tx-2);
+  }
+
+  /* Reads as part of the breadcrumb, not as a styled link — the underline on
+     hover is the whole affordance. */
+  .brand-home {
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-sm);
+  }
+
+  .brand-home:hover {
+    color: var(--tx);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .brand-home:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 
   .brand-sep {

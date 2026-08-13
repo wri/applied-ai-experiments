@@ -20,7 +20,8 @@
 		ThemeSwitcher,
 		UserSettingsTrigger,
 		HeaderModeBadge,
-		DemoInfoButton
+		DemoInfoButton,
+		hubHomeHref
 	} from '@wri-datalab/ui';
 	import Badge from '$lib/ui/Badge.svelte';
 	import { SessionTelemetry, SessionTelemetryTrigger } from '@wri-datalab/llm-lab';
@@ -100,7 +101,7 @@
 <div class="app">
 	<header class="header">
 		<div class="brand">
-			<span class="prefix">Applied AI Experiments</span>
+			<a class="prefix home" href={hubHomeHref(base)}>Applied AI Experiments</a>
 			<span class="sep">/</span>
 			<span class="name">AI Web Map Exploration</span>
 		</div>
@@ -187,6 +188,21 @@
 	}
 	.prefix {
 		color: var(--tx-2);
+	}
+	/* Reads as breadcrumb, not as a styled link — matches ui's DemoHeader. */
+	.home {
+		text-decoration: none;
+		color: inherit;
+		border-radius: var(--radius-sm);
+	}
+	.home:hover {
+		color: var(--tx);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+	.home:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
 	}
 	.sep {
 		color: var(--tx-3);
