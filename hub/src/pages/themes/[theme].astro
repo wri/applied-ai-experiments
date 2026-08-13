@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { loadExperimentIndex } from '../../utils/experiments';
+import { loadExperimentIndex, renderLearningInline, aggregatable } from '../../utils/experiments';
 import taxonomy from '../../data/taxonomy.json';
 
 export async function getStaticPaths() {
@@ -25,8 +25,11 @@ const index = await loadExperimentIndex();
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-// All experiments that include this theme (any position in themes array)
-const themeExperiments = index.experiments.filter((e) =>
+// All experiments that include this theme (any position in themes array).
+// Reference scaffolds are tagged with themes like anything else, but a theme
+// page is a claim about what we've learned in that area — repo mechanics don't
+// belong in it, or in the status tallies and learnings below.
+const themeExperiments = aggregatable(index.experiments).filter((e) =>
   (e.themes ?? []).includes(themeKey)
 );
 
@@ -35,7 +38,7 @@ const STATUS_ORDER: Record<string, number> = {
   started: 0,
   paused: 1,
   idea: 2,
-  completed: 3,
+  done: 3,
   archived: 4
 };
 
@@ -50,15 +53,15 @@ const byStatus = {
   started: themeExperiments.filter((e) => e.status === 'started').length,
   paused: themeExperiments.filter((e) => e.status === 'paused').length,
   idea: themeExperiments.filter((e) => e.status === 'idea').length,
-  completed: themeExperiments.filter((e) => e.status === 'completed').length
+  done: themeExperiments.filter((e) => e.status === 'done').length
 };
 
-// Aggregated lessons from completed experiments in this theme
-const lessons = themeExperiments
-  .filter((e) => e.status === 'completed' && e.results?.lessons?.length)
+// Aggregated learnings from experiments in this theme (any status)
+const learnings = themeExperiments
+  .filter((e) => e.results?.learnings?.length)
   .flatMap((e) =>
-    e.results!.lessons!.map((lesson) => ({
-      lesson,
+    e.results!.learnings!.map((learning) => ({
+      learning,
       experimentSlug: e.slug,
       experimentTitle: e.title
     }))
@@ -73,7 +76,7 @@ const lessons = themeExperiments
     <div class="breadcrumb">
       <a href={base}>Home</a>
       <span>/</span>
-      <span>Themes</span>
+      <a href={`${base}themes/`}>Themes</a>
       <span>/</span>
       <span>{themeConfig.short}</span>
     </div>
@@ -86,7 +89,7 @@ const lessons = themeExperiments
       {byStatus.started > 0 && <span class="stat stat-started">{byStatus.started} active</span>}
       {byStatus.paused > 0 && <span class="stat stat-paused">{byStatus.paused} paused</span>}
       {byStatus.idea > 0 && <span class="stat stat-idea">{byStatus.idea} idea{byStatus.idea === 1 ? '' : 's'}</span>}
-      {byStatus.completed > 0 && <span class="stat stat-completed">{byStatus.completed} completed</span>}
+      {byStatus.done > 0 && <span class="stat stat-done">{byStatus.done} done</span>}
     </div>
   </section>
 
@@ -94,8 +97,7 @@ const lessons = themeExperiments
     <div class="empty">
       <p>No experiments under this theme yet.</p>
       <p class="empty-hint">
-        Scope one with <code>themes: [{themeKey}]</code> in <code>info.yaml</code>, or see
-        <a href={`${base}docs/backlog/`}>the backlog</a> for candidates.
+        Scope one with <code>themes: [{themeKey}]</code> in its <code>brief.md</code> frontmatter.
       </p>
     </div>
   ) : (
@@ -111,23 +113,20 @@ const lessons = themeExperiments
               </div>
               <div class="experiment-row-meta">
                 <span class={`status-chip status-${exp.status}`}>{exp.status}</span>
-                {exp.maturity && (
-                  <span class="maturity-chip">{exp.maturity}</span>
-                )}
               </div>
             </a>
           ))}
         </div>
       </section>
 
-      {lessons.length > 0 && (
-        <section class="lessons-section">
-          <h2>Lessons from this theme</h2>
-          <div class="lesson-list">
-            {lessons.map((entry) => (
-              <div class="lesson-card">
-                <p class="lesson-text">{entry.lesson}</p>
-                <a href={`${base}experiments/${entry.experimentSlug}/`} class="lesson-source">
+      {learnings.length > 0 && (
+        <section class="learnings-section">
+          <h2>Learnings from this theme</h2>
+          <div class="learning-list">
+            {learnings.map((entry) => (
+              <div class="learning-card">
+                <p class="learning-text" set:html={renderLearningInline(entry.learning)} />
+                <a href={`${base}experiments/${entry.experimentSlug}/`} class="learning-source">
                   {entry.experimentTitle}
                 </a>
               </div>
@@ -196,7 +195,7 @@ const lessons = themeExperiments
   }
   .stat-started { color: var(--info, #38bdf8); }
   .stat-paused { color: var(--warning, #fbbf24); }
-  .stat-completed { color: var(--success, #4ade80); }
+  .stat-done { color: var(--success, #4ade80); }
 
   h2 {
     font-family: var(--font-mono);
@@ -256,8 +255,7 @@ const lessons = themeExperiments
     gap: 0.5rem;
     flex-shrink: 0;
   }
-  .status-chip,
-  .maturity-chip {
+  .status-chip {
     font-family: var(--font-mono);
     font-size: 0.65rem;
     text-transform: uppercase;
@@ -270,21 +268,21 @@ const lessons = themeExperiments
   }
   .status-started { color: var(--info, #38bdf8); border-color: var(--info, #38bdf8); }
   .status-paused  { color: var(--warning, #fbbf24); border-color: var(--warning, #fbbf24); }
-  .status-completed { color: var(--success, #4ade80); border-color: var(--success, #4ade80); }
+  .status-done { color: var(--success, #4ade80); border-color: var(--success, #4ade80); }
 
-  .lessons-section {
+  .learnings-section {
     padding-top: 1.5rem;
     border-top: 1px solid var(--ui);
   }
-  .lesson-list {
+  .learning-list {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.625rem;
   }
   @media (min-width: 720px) {
-    .lesson-list { grid-template-columns: 1fr 1fr; }
+    .learning-list { grid-template-columns: 1fr 1fr; }
   }
-  .lesson-card {
+  .learning-card {
     background: var(--bg-2);
     border: 1px solid var(--ui);
     border-radius: var(--radius-sm);
@@ -293,14 +291,14 @@ const lessons = themeExperiments
     flex-direction: column;
     gap: 0.5rem;
   }
-  .lesson-text {
+  .learning-text {
     font-family: var(--font-body);
     font-size: 0.875rem;
     line-height: 1.55;
     color: var(--tx);
     margin: 0;
   }
-  .lesson-source {
+  .learning-source {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -310,7 +308,7 @@ const lessons = themeExperiments
     padding-top: 0.375rem;
     border-top: 1px dashed var(--ui);
   }
-  .lesson-source:hover {
+  .learning-source:hover {
     color: var(--primary);
   }
   .empty {

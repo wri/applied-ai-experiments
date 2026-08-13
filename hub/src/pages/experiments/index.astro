@@ -8,9 +8,20 @@ const experiments = index.experiments;
 const types = Object.keys(index.by_type);
 const themes = Object.keys(index.by_theme);
 const demoCount = experiments.filter((e) => e._has_demo).length;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'All Experiments | WRI Applied AI Experiments',
+  description: 'Every experiment from the WRI Applied AI Group.',
+  url: `https://wri.github.io${base}experiments/`,
+  isPartOf: { '@type': 'WebSite', name: 'WRI Applied AI Experiments', url: `https://wri.github.io${base}` },
+};
 ---
 
-<BaseLayout title="All Experiments">
+<BaseLayout title="All Experiments" description="Every experiment from the WRI Applied AI Group — prototypes, evaluations, benchmarks, and notebooks." jsonLd={jsonLd}>
   <section class="page-header">
     <h1>All Experiments</h1>
     <p class="subtitle">
@@ -29,40 +40,40 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
       />
     </div>
 
-    <div class="filter-group">
-      <label>Type:</label>
+    <div class="filter-group" role="group" aria-labelledby="filter-label-type">
+      <span class="filter-group-label" id="filter-label-type">Type:</span>
       <div class="filter-tags">
-        <button class="filter-tag active" data-filter="type" data-value="all">All</button>
+        <button class="filter-tag active" aria-pressed="true" data-filter="type" data-value="all">All</button>
         {types.map(type => (
-          <button class="filter-tag" data-filter="type" data-value={type}>
+          <button class="filter-tag" aria-pressed="false" data-filter="type" data-value={type}>
             {type} ({index.by_type[type as keyof typeof index.by_type].length})
           </button>
         ))}
       </div>
     </div>
 
-    <div class="filter-group">
-      <label>Theme:</label>
+    <div class="filter-group" role="group" aria-labelledby="filter-label-theme">
+      <span class="filter-group-label" id="filter-label-theme">Theme:</span>
       <div class="filter-tags">
-        <button class="filter-tag active" data-filter="theme" data-value="all">All</button>
+        <button class="filter-tag active" aria-pressed="true" data-filter="theme" data-value="all">All</button>
         {themes.map(theme => (
-          <button class="filter-tag" data-filter="theme" data-value={theme}>
+          <button class="filter-tag" aria-pressed="false" data-filter="theme" data-value={theme}>
             {getThemeConfig(theme)?.short ?? theme} ({index.by_theme[theme].length})
           </button>
         ))}
       </div>
     </div>
 
-    <div class="filter-group">
-      <label>Demo:</label>
+    <div class="filter-group" role="group" aria-labelledby="filter-label-demo">
+      <span class="filter-group-label" id="filter-label-demo">Demo:</span>
       <div class="filter-tags">
-        <button class="filter-tag active" data-filter="demo" data-value="all">All</button>
-        <button class="filter-tag" data-filter="demo" data-value="true">Interactive demo ({demoCount})</button>
+        <button class="filter-tag active" aria-pressed="true" data-filter="demo" data-value="all">All</button>
+        <button class="filter-tag" aria-pressed="false" data-filter="demo" data-value="true">Interactive demo ({demoCount})</button>
       </div>
     </div>
   </section>
 
-  <div class="results-count" id="results-count">
+  <div class="results-count" id="results-count" aria-live="polite">
     Showing {experiments.length} experiment{experiments.length !== 1 ? 's' : ''}
   </div>
 
@@ -146,7 +157,7 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
     border-bottom: none;
   }
 
-  .filter-group label {
+  .filter-group-label {
     font-family: var(--font-mono);
     font-size: var(--text-label);
     font-weight: var(--font-weight-medium);
@@ -237,6 +248,11 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
     search: ''
   };
 
+  function setPressed(btn: Element, pressed: boolean) {
+    btn.classList.toggle('active', pressed);
+    btn.setAttribute('aria-pressed', String(pressed));
+  }
+
   function updateResults() {
     let visibleCount = 0;
 
@@ -283,8 +299,8 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
       const value = btn.getAttribute('data-value') || 'all';
 
       // Update active state
-      document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => setPressed(b, false));
+      setPressed(btn, true);
 
       activeFilters[filterType] = value;
       updateResults();
@@ -302,8 +318,7 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
     activeFilters = { type: 'all', theme: 'all', demo: 'all', search: '' };
 
     filterButtons.forEach(btn => {
-      const isAll = btn.getAttribute('data-value') === 'all';
-      btn.classList.toggle('active', isAll);
+      setPressed(btn, btn.getAttribute('data-value') === 'all');
     });
 
     if (searchInput) searchInput.value = '';
@@ -316,7 +331,7 @@ const demoCount = experiments.filter((e) => e._has_demo).length;
   if (urlParams.get('demos') === 'true') {
     activeFilters.demo = 'true';
     document.querySelectorAll('[data-filter="demo"]').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-value') === 'true');
+      setPressed(b, b.getAttribute('data-value') === 'true');
     });
     updateResults();
   }

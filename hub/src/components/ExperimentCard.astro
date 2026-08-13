@@ -1,7 +1,7 @@
 ---
 import type { Experiment } from '../utils/experiments';
+import { displayType as typeLabel } from '../utils/experiments';
 import ThemeTag from './ThemeTag.astro';
-import StatusBadge from './StatusBadge.astro';
 
 interface Props {
   experiment: Experiment;
@@ -13,10 +13,12 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
 const themes = experiment.themes ?? [];
-const lessonCount = experiment.results?.lessons?.length ?? 0;
-const showLessons = experiment.status === 'completed' && lessonCount > 0;
-// marimo experiments present as "notebook" chips
-const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
+const MAX_THEMES = 2;
+const visibleThemes = themes.slice(0, MAX_THEMES);
+const overflowCount = themes.length - visibleThemes.length;
+const learningCount = experiment.results?.learnings?.length ?? 0;
+const showLearnings = learningCount > 0;
+const displayType = typeLabel(experiment.type);
 ---
 
 <article class="card">
@@ -26,7 +28,11 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
         {displayType}
       </span>
     </div>
-    <StatusBadge status={experiment.status} />
+    {showLearnings && (
+      <a href={`${base}experiments/${experiment.slug}/#learnings`} class="learnings-hint">
+        <span aria-hidden="true">✓</span> {learningCount} learning{learningCount === 1 ? '' : 's'} captured
+      </a>
+    )}
   </header>
 
   <div class="card-body">
@@ -36,18 +42,18 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
       </a>
     </h3>
     <p class="card-description">{experiment.description}</p>
-    {showLessons && (
-      <a href={`${base}experiments/${experiment.slug}/#lessons`} class="lessons-hint">
-        ✓ {lessonCount} lesson{lessonCount === 1 ? '' : 's'} captured
-      </a>
-    )}
   </div>
 
   <footer class="card-footer">
     <div class="themes">
-      {themes.map(theme => (
+      {visibleThemes.map(theme => (
         <ThemeTag theme={theme} link={false} />
       ))}
+      {overflowCount > 0 && (
+        <span class="theme-overflow" title={themes.slice(MAX_THEMES).join(', ')}>
+          +{overflowCount}
+        </span>
+      )}
     </div>
     <div class="actions">
       <a href={`${base}experiments/${experiment.slug}/`} class="btn btn-sm btn-secondary">
@@ -118,7 +124,7 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
   }
 
   .card-title a:hover {
-    color: var(--tx);
+    color: var(--primary);
   }
 
   .card-description {
@@ -128,13 +134,13 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
     line-height: var(--font-lineHeight-normal);
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  .lessons-hint {
-    display: inline-block;
-    margin-top: var(--space-3);
+  .learnings-hint {
+    flex-shrink: 0;
     font-family: var(--font-mono);
     font-size: var(--text-badge);
     text-transform: uppercase;
@@ -143,7 +149,7 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
     text-decoration: none;
   }
 
-  .lessons-hint:hover {
+  .learnings-hint:hover {
     color: var(--tx);
     text-decoration: none;
   }
@@ -159,10 +165,20 @@ const displayType = experiment.type === 'marimo' ? 'notebook' : experiment.type;
 
   .themes {
     display: flex;
+    align-items: center;
     gap: var(--space-1);
     flex-wrap: wrap;
     flex: 1;
     min-width: 0;
+  }
+
+  .theme-overflow {
+    font-family: var(--font-mono);
+    font-size: var(--text-badge);
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-3);
+    white-space: nowrap;
+    cursor: default;
   }
 
   .actions {

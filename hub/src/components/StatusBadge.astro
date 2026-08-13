@@ -10,10 +10,10 @@ interface Props {
 const { status, label = true } = Astro.props;
 
 // Quiet by default. Per DESIGN.md, semantic colour is reserved for states that
-// genuinely carry meaning (completed = success, paused = warning); every other
+// genuinely carry meaning (done = success, paused = warning); every other
 // state is neutral. No rainbow of hues on chrome.
 const STATUS_COLORS: Record<string, string> = {
-  completed: 'var(--success)',
+  done: 'var(--success)',
   paused: 'var(--warning)',
 };
 const color = STATUS_COLORS[status] ?? 'var(--tx-3)';

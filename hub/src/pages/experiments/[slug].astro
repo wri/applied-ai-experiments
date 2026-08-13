@@ -1,17 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import StatusBadge from '../../components/StatusBadge.astro';
-import MediaGallery from '../../components/MediaGallery.astro';
-import { loadExperimentIndex, loadBriefContent, splitBriefMarkdown, visibleInsights } from '../../utils/experiments';
+import { loadExperimentIndex, loadBriefContent, splitBriefMarkdown, visibleInsights, renderLearningInline } from '../../utils/experiments';
 import { getCollection } from 'astro:content';
 import taxonomy from '../../data/taxonomy.json';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
   const index = await loadExperimentIndex();
-
-  // Build a slug → experiment map for related-experiment resolution
-  const bySlug = new Map(index.experiments.map((e) => [e.slug, e]));
 
   // Curated insights that reference each experiment
   const allInsights = await getCollection('insights');
@@ -30,72 +25,70 @@ export async function getStaticPaths() {
         }
       }
 
-      // Resolve related experiments from depends_on (upstream) + reverse-lookup (downstream)
-      // Fall back to legacy related_experiments list if depends_on is absent.
-      const upstream = (exp.depends_on ?? [])
-        .map((slug) => bySlug.get(slug))
-        .filter(Boolean)
-        .map((e: any) => ({ slug: e.slug, title: e.title, status: e.status }));
-      const downstream = index.experiments
-        .filter((e) => (e.depends_on ?? []).includes(exp.slug))
-        .map((e) => ({ slug: e.slug, title: e.title, status: e.status }));
-      const legacyRelated = (exp.related_experiments ?? [])
-        .map((slug) => bySlug.get(slug))
-        .filter(Boolean)
-        .filter((e: any) =>
-          !upstream.some((u) => u.slug === e.slug) &&
-          !downstream.some((d) => d.slug === e.slug)
-        )
-        .map((e: any) => ({ slug: e.slug, title: e.title, status: e.status }));
-
       const relatedInsights = insights
         .filter((i) => i.data.related_experiments.includes(exp.slug))
         .map((i) => ({ id: i.id, title: i.data.title }));
 
       return {
         params: { slug: exp.slug },
-        props: { experiment: exp, beforeHtml, afterHtml, upstream, downstream, legacyRelated, relatedInsights },
+        props: { experiment: exp, beforeHtml, afterHtml, relatedInsights },
       };
     })
   );
   return paths;
 }
 
-const { experiment, beforeHtml, afterHtml, upstream, downstream, legacyRelated, relatedInsights } = Astro.props;
+const { experiment, beforeHtml, afterHtml, relatedInsights } = Astro.props;
 // Ensure base URL ends with a slash for proper path concatenation
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-// Lookup helpers for sidebar display
-const maturityConfig = experiment.maturity ? (taxonomy.maturity as any)[experiment.maturity] : null;
-const investmentConfig = experiment.investment_type
-  ? (taxonomy.investment_types as any)[experiment.investment_type]
+// What the experiment targets (capability / infra / feature)
+const targetsConfig = experiment.targets
+  ? (taxonomy.targets as any)[experiment.targets]
   : null;
 
 // Check if sidebar has any content
 const hasThemes = experiment.themes && experiment.themes.length > 0;
 const hasTags = experiment.tags && experiment.tags.length > 0;
-const hasRelated = upstream.length > 0 || downstream.length > 0 || legacyRelated.length > 0;
 const hasInsights = relatedInsights.length > 0;
-const hasPortfolioFields = !!(experiment.maturity || experiment.investment_type || experiment.origin || experiment.surface);
-const hasSidebarContent = hasThemes || hasTags || hasRelated || hasInsights || hasPortfolioFields;
+const hasSidebarContent = hasThemes || hasTags || hasInsights || !!targetsConfig;
 
 // Check for main content sections
-const isCompleted = experiment.status === 'completed';
+const isDone = experiment.status === 'done';
 const hasResultsSummary = !!(experiment.results?.summary && experiment.results.summary.trim());
-const hasLessons = experiment.results?.lessons && experiment.results.lessons.length > 0;
+const hasLearnings = experiment.results?.learnings && experiment.results.learnings.length > 0;
 const hasBrief = !!beforeHtml;
 const hasAfter = !!afterHtml;
-// For completed experiments, lead with an "outcome at a glance" callout instead of
+// For done experiments, lead with an "outcome at a glance" callout instead of
 // burying the summary in a late section.
-const showOutcomeCallout = isCompleted && hasResultsSummary;
+const showOutcomeCallout = isDone && hasResultsSummary;
 const showSummarySection = hasResultsSummary && !showOutcomeCallout;
-const recordings = experiment.media?.recordings ?? [];
-const hasMedia = recordings.length > 0;
-const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons || hasMedia;
+const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLearnings;
+
+// Structured data: demos are web apps, everything else is a creative work.
+const detailUrl = `https://wri.github.io${base}experiments/${experiment.slug}/`;
+const isApp = experiment._has_demo && !experiment._is_notebook;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': isApp ? 'WebApplication' : 'CreativeWork',
+  name: experiment.title,
+  description: experiment.description,
+  url: detailUrl,
+  ...(isApp ? { applicationCategory: 'DeveloperApplication', operatingSystem: 'Web', browserRequirements: 'Requires JavaScript' } : {}),
+  author: { '@type': 'Organization', name: 'World Resources Institute', url: 'https://www.wri.org' },
+  ...(experiment.created_at ? { dateCreated: String(experiment.created_at) } : {}),
+  ...(experiment.updated_at ? { dateModified: String(experiment.updated_at) } : {}),
+};
 ---
 
-<BaseLayout title={experiment.title} description={experiment.description}>
+<BaseLayout
+  title={experiment.title}
+  description={experiment.description}
+  image={`og/${experiment.slug}.png`}
+  type="article"
+  jsonLd={jsonLd}
+>
   <article class="experiment-detail">
     <header class="experiment-header">
       <div class="breadcrumb">
@@ -108,11 +101,12 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
 
       <h1>{experiment.title}</h1>
 
+      {/* Status is a fact about the work, not a headline about it — it lives in
+          the Details panel. The header carries what the thing *is*. */}
       <div class="meta">
         <span class={`badge badge-type-${experiment.type}`}>
           {experiment.type}
         </span>
-        <StatusBadge status={experiment.status} />
       </div>
 
       <p class="description">{experiment.description}</p>
@@ -148,15 +142,10 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
 
         {showOutcomeCallout && (
           <section class="section outcome-callout">
-            <div class="outcome-head">
-              <span class="outcome-label">Outcome at a glance</span>
-              <StatusBadge status={experiment.status} />
-            </div>
+            <span class="outcome-label">Outcome at a glance</span>
             <p class="outcome-summary">{experiment.results?.summary}</p>
           </section>
         )}
-
-        {hasMedia && <MediaGallery recordings={recordings} />}
 
         {hasBrief && (
           <section class="section brief-content">
@@ -178,12 +167,12 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
           </section>
         )}
 
-        {hasLessons && (
-          <section class="section" id="lessons">
-            <h2>Lessons Learned</h2>
-            <div class="lessons-grid">
-              {(experiment.results?.lessons ?? []).map((lesson: string, i: number) => (
-                <div class="lesson-card" id={`lesson-${i}`}>{lesson}</div>
+        {hasLearnings && (
+          <section class="section" id="learnings">
+            <h2>Learnings</h2>
+            <div class="learnings-grid">
+              {(experiment.results?.learnings ?? []).map((learning: string, i: number) => (
+                <div class="learning-card" id={`learning-${i}`} set:html={renderLearningInline(learning)} />
               ))}
             </div>
           </section>
@@ -200,34 +189,10 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
               <dt>Status</dt>
               <dd>{experiment.status}</dd>
 
-              {experiment.runtime && (
+              {targetsConfig && (
                 <>
-                  <dt>Runtime</dt>
-                  <dd>{experiment.runtime}</dd>
-                </>
-              )}
-              {maturityConfig && (
-                <>
-                  <dt>Maturity</dt>
-                  <dd>{maturityConfig.name}</dd>
-                </>
-              )}
-              {investmentConfig && (
-                <>
-                  <dt>Investment</dt>
-                  <dd>{investmentConfig.label}</dd>
-                </>
-              )}
-              {experiment.origin && (
-                <>
-                  <dt>Origin</dt>
-                  <dd>{experiment.origin}</dd>
-                </>
-              )}
-              {experiment.surface && (
-                <>
-                  <dt>Surface</dt>
-                  <dd>{experiment.surface}</dd>
+                  <dt>Targets</dt>
+                  <dd title={targetsConfig.question}>{targetsConfig.label}</dd>
                 </>
               )}
             </dl>
@@ -260,50 +225,6 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
                   <span class="tag">{tag}</span>
                 ))}
               </div>
-            </div>
-          )}
-
-          {hasRelated && (
-            <div class="sidebar-card">
-              <h3>Related</h3>
-              {upstream.length > 0 && (
-                <div class="related-group">
-                  <div class="related-group-label">Requires</div>
-                  <ul class="related-list">
-                    {upstream.map((r: any) => (
-                      <li>
-                        <a href={`${base}experiments/${r.slug}/`}>{r.title}</a>
-                        <span class={`related-status related-status-${r.status}`}>{r.status}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {downstream.length > 0 && (
-                <div class="related-group">
-                  <div class="related-group-label">Unlocks</div>
-                  <ul class="related-list">
-                    {downstream.map((r: any) => (
-                      <li>
-                        <a href={`${base}experiments/${r.slug}/`}>{r.title}</a>
-                        <span class={`related-status related-status-${r.status}`}>{r.status}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {legacyRelated.length > 0 && (
-                <div class="related-group">
-                  <div class="related-group-label">Related</div>
-                  <ul class="related-list">
-                    {legacyRelated.map((r: any) => (
-                      <li>
-                        <a href={`${base}experiments/${r.slug}/`}>{r.title}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           )}
 
@@ -432,15 +353,9 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     padding: var(--space-4);
   }
 
-  .outcome-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    margin-bottom: var(--space-2);
-  }
-
   .outcome-label {
+    display: block;
+    margin-bottom: var(--space-2);
     font-family: var(--font-mono);
     font-size: 0.7rem;
     font-weight: var(--font-weight-medium);
@@ -457,19 +372,19 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     margin: 0;
   }
 
-  .lessons-grid {
+  .learnings-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-2);
   }
 
   @media (min-width: 640px) {
-    .lessons-grid {
+    .learnings-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
 
-  .lesson-card {
+  .learning-card {
     background: var(--bg-2);
     border: 1px solid var(--ui);
     border-radius: var(--radius-sm);
@@ -481,7 +396,7 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     scroll-margin-top: calc(var(--header-height) + var(--space-3));
   }
 
-  .lesson-card:target {
+  .learning-card:target {
     border-color: var(--primary);
   }
 
@@ -565,27 +480,15 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     border-color: var(--ui-2);
   }
 
-  .related-group {
-    padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--ui);
-  }
 
-  .related-group:last-child {
-    border-bottom: none;
-  }
 
-  .related-group-label {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--tx-3);
-    margin-bottom: 0.25rem;
-  }
 
+  /* Matches the 0.75rem inset the other sidebar-card bodies (.tags,
+     .details-list) use — without it the text butts against the card border. */
   .related-list {
     list-style: none;
-    padding: 0;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
   }
@@ -611,27 +514,9 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     color: var(--primary);
   }
 
-  .related-status {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--tx-3);
-    padding: 0.05rem 0.3rem;
-    background: var(--bg);
-    border-radius: var(--radius-sm);
-  }
 
-  .related-status-completed {
-    color: var(--success, #4ade80);
-  }
 
-  .related-status-started {
-    color: var(--info, #38bdf8);
-  }
 
-  .related-status-paused {
-    color: var(--warning, #fbbf24);
-  }
 
   .after-section {
     position: relative;
@@ -656,8 +541,37 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     padding: 0 0.5rem;
   }
 
+  /* A close-out section that can't be answered yet, with the reason the author
+     gave. Deliberately quiet — it's an honest status line, not a warning. Empty
+     sections with no stated reason are dropped upstream and never reach the page. */
+  :global(.after-section .pending-note) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    border-left: 2px solid var(--ui-2);
+    padding-left: 0.75rem;
+    color: var(--tx-2);
+    font-style: italic;
+  }
+
+  :global(.after-section .pending-label) {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-style: normal;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tx-3);
+  }
+
+  /* Long-form reading scale — see DESIGN.md §3 "Reading vs UI type scales". */
+  .brief-content {
+    max-width: var(--text-prose-measure);
+  }
+
   .brief-content :global(h1) {
-    font-size: 1.125rem;
+    font-size: var(--text-prose-h1);
     font-weight: var(--font-weight-semibold);
     margin-top: 0;
     margin-bottom: var(--space-3);
@@ -667,29 +581,29 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
   .brief-content :global(h2),
   .brief-content :global(h3),
   .brief-content :global(h4) {
-    font-size: 0.8125rem;
+    font-size: var(--text-prose-h3);
     font-weight: var(--font-weight-semibold);
-    margin-top: var(--space-4);
+    margin-top: var(--space-5);
     margin-bottom: var(--space-2);
     color: var(--tx);
   }
 
   .brief-content :global(p) {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
     color: var(--tx);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--text-prose-gap);
   }
 
   .brief-content :global(ul),
   .brief-content :global(ol) {
     font-family: var(--font-body);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: var(--text-prose-size);
+    line-height: var(--text-prose-line-height);
     color: var(--tx);
-    margin-bottom: var(--space-3);
-    padding-left: var(--space-4);
+    margin-bottom: var(--text-prose-gap);
+    padding-left: 1.5rem;
   }
 
   .brief-content :global(li) {
@@ -712,5 +626,41 @@ const hasMainContent = hasBrief || hasAfter || hasResultsSummary || hasLessons |
     background: var(--bg-2);
     padding: 0.125rem 0.25rem;
     border-radius: var(--radius-sm);
+  }
+
+  /* Tables — mirrors the insight prose rules in pages/insights/[slug].astro.
+     Cells wrap rather than scroll, so keep tables to about three columns. */
+  .brief-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    margin-bottom: var(--text-prose-gap);
+    font-size: var(--text-prose-size);
+  }
+  .brief-content :global(th) {
+    font-family: var(--component-table-font-family);
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--font-letterSpacing-wide);
+    color: var(--tx-2);
+    background: var(--component-table-header-background);
+    border-bottom: 1px solid var(--ui);
+  }
+  .brief-content :global(td) {
+    font-family: var(--font-body);
+    line-height: var(--text-prose-line-height);
+    color: var(--tx);
+    border-bottom: 1px solid var(--ui);
+    vertical-align: top;
+  }
+  .brief-content :global(th),
+  .brief-content :global(td) {
+    padding: var(--component-table-cell-padding-y) var(--component-table-cell-padding-x);
+    text-align: left;
+    overflow-wrap: break-word;
+  }
+  .brief-content :global(tbody tr:last-child td) {
+    border-bottom: none;
   }
 </style>
