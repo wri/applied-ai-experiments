@@ -20,5 +20,14 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["node_modules", "dist"]
+  // Scoped to shipped source. Without an `include`, each sub-package's
+  // `tsc --noEmit` walked up to this file and compiled the whole byo-keys tree —
+  // three identical whole-tree runs, one per package, and never green:
+  //   - examples/sveltekit/* import `./$types`, which only exists inside a real
+  //     SvelteKit app, so they cannot typecheck standalone;
+  //   - `noUncheckedIndexedAccess` (on deliberately, it's good for source) makes
+  //     every `arr.find(...)` in a test file possibly-undefined.
+  // Tests are exercised by vitest, which is the tool that can actually run them.
+  "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.svelte"],
+  "exclude": ["node_modules", "dist", "examples", "**/__tests__/**", "**/*.test.ts"]
 }
