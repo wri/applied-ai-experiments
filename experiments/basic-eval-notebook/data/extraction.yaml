@@ -1,0 +1,97 @@
+# Field-extraction eval cases.
+# Each case: input text + a dict of expected field values.
+# Scored field-by-field with exact match on normalised strings.
+#
+# Seeded issues to look for:
+#   - case_02 has an ambiguous date format ("03/04/2025"). Models that
+#     default to MM/DD/YYYY will return March 4; the source is European
+#     and means April 3.
+#   - case_04 mixes "$" (USD) and "US$" notation. Some models will
+#     normalise to USD currency code, others will keep the raw symbol.
+#   - case_05 has a number written two ways ("1.2 million" and
+#     "1,200,000"). Models inconsistent about whether to canonicalise.
+
+cases:
+  - id: case_01
+    tags: [project, baseline]
+    input: >
+      Project: Sumatra Peatland Restoration Phase II
+      Lead: Dr. Aisyah Putri, Wetlands International
+      Hectares: 4,800
+      Funding: $12,500,000
+      Timeline: 2025-2028
+    expected:
+      project_name: "Sumatra Peatland Restoration Phase II"
+      lead: "Dr. Aisyah Putri"
+      organization: "Wetlands International"
+      hectares: 4800
+      funding_usd: 12500000
+      start_year: 2025
+      end_year: 2028
+
+  - id: case_02
+    tags: [date-format-ambiguity]
+    input: >
+      The European Commission announced on 03/04/2025 a new Just
+      Transition Fund allocation of €1.8 billion to coal-dependent
+      regions. The fund will run through 2030 with annual reporting
+      requirements. Contact: jtf-info@ec.europa.eu
+    expected:
+      announcement_date: "2025-04-03"
+      fund_amount_eur: 1800000000
+      end_year: 2030
+      contact_email: "jtf-info@ec.europa.eu"
+    notes: >
+      Watch for MM/DD vs DD/MM extraction. Source is European => DD/MM.
+
+  - id: case_03
+    tags: [project, multi-org]
+    input: >
+      The Amazonia Forever initiative is a partnership between WRI,
+      IDB, and the governments of Brazil, Peru, and Colombia. Total
+      committed funding is US$ 250 million over 5 years starting Q3 2024.
+    expected:
+      initiative: "Amazonia Forever"
+      partners: ["WRI", "IDB", "Brazil", "Peru", "Colombia"]
+      funding_usd: 250000000
+      duration_years: 5
+      start_quarter: "Q3 2024"
+
+  - id: case_04
+    tags: [currency-ambiguity]
+    input: >
+      Annual operating budget for the FY2026 program is $4.2M USD;
+      additional matched funds of US$1.8M are expected from the Norwegian
+      government. Total available: $6 million.
+    expected:
+      operating_budget_usd: 4200000
+      matched_funds_usd: 1800000
+      matched_funds_source: "Norwegian government"
+      total_usd: 6000000
+
+  - id: case_05
+    tags: [number-canonicalisation]
+    input: >
+      The reforestation campaign aims to plant 1.2 million trees by 2027.
+      To date, 1,200,000 seedlings have been distributed to local nurseries
+      and 340,000 trees have been planted in the field.
+    expected:
+      target_trees: 1200000
+      target_year: 2027
+      seedlings_distributed: 1200000
+      trees_planted: 340000
+    notes: >
+      The same number is written two ways. Inconsistent normalisation is
+      a common failure mode worth documenting.
+
+  - id: case_06
+    tags: [project, short]
+    input: >
+      Site visit scheduled for Bogotá office on 2026-06-15, led by
+      María González (Climate Watch team). 8 stakeholders confirmed.
+    expected:
+      city: "Bogotá"
+      visit_date: "2026-06-15"
+      lead: "María González"
+      team: "Climate Watch"
+      stakeholder_count: 8

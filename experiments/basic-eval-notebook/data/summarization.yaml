@@ -1,0 +1,85 @@
+# Summarization eval cases.
+# Each case: short input text + a 1-sentence reference summary.
+# Scored two ways:
+#   1. ROUGE-L (lexical overlap with reference) — fast, deterministic.
+#   2. LLM-as-judge for faithfulness — does the output add unsupported claims?
+#
+# Seeded issues to look for when running:
+#   - case_03 contains a subtle attribution ambiguity. Many models will
+#     misattribute the quoted commitment to the wrong stakeholder.
+#   - case_05 has a number that's easy to round incorrectly. Watch for
+#     rounding drift in the summary.
+
+cases:
+  - id: case_01
+    tags: [climate, short]
+    input: >
+      The 2025 Global Forest Watch report found that primary forest loss in
+      the tropics totaled 3.7 million hectares in 2024, an 18% decline from
+      the previous year. Indonesia and Brazil saw the largest decreases,
+      while Bolivia recorded its highest annual loss on record.
+    expected: >
+      Tropical primary forest loss fell 18% to 3.7M hectares in 2024, with
+      decreases in Indonesia and Brazil but record loss in Bolivia.
+
+  - id: case_02
+    tags: [restoration, short]
+    input: >
+      The TerraMatch platform now tracks 4,200 active restoration projects
+      across 87 countries, up from 2,800 projects in 2023. Project sponsors
+      reported planting 1.1 billion trees through the platform during 2024.
+    expected: >
+      TerraMatch now hosts 4,200 restoration projects in 87 countries and
+      logged 1.1 billion trees planted in 2024.
+
+  - id: case_03
+    tags: [policy, attribution-ambiguity]
+    input: >
+      At the Bonn climate talks, EU negotiator Marta Hopf told reporters
+      that "we will triple our adaptation finance commitments by 2030."
+      The Indian delegation, led by Vijay Reddy, responded that any such
+      commitment must be matched by developing-country contributions.
+    expected: >
+      At Bonn, EU negotiator Marta Hopf pledged to triple EU adaptation
+      finance by 2030; India's delegation said matching commitments are
+      needed.
+    notes: >
+      Models sometimes attribute the tripling commitment to "the Bonn
+      talks" generically, or to the Indian delegation. Worth flagging.
+
+  - id: case_04
+    tags: [data, short]
+    input: >
+      Resource Watch added 23 new datasets in Q1 2026, bringing the total
+      catalog to 412. The most-downloaded new dataset was the global air
+      quality forecast layer, with 8,400 downloads in its first month.
+    expected: >
+      Resource Watch added 23 datasets in Q1 2026 (412 total); the air
+      quality forecast layer was most downloaded with 8,400 first-month
+      downloads.
+
+  - id: case_05
+    tags: [numbers, rounding-drift]
+    input: >
+      The Climate Watch dashboard reported global emissions of
+      57.4 gigatonnes of CO2-equivalent in 2024, a 0.6% increase over
+      2023's 57.06 gigatonnes. Energy-sector emissions accounted for 73.8%
+      of the total.
+    expected: >
+      Global GHG emissions reached 57.4 Gt CO2e in 2024 (+0.6% vs 2023),
+      with energy responsible for 73.8% of the total.
+    notes: >
+      Models often round 73.8% to 74% or report 0.6% as "less than 1%",
+      both of which lose precision the source provided.
+
+  - id: case_06
+    tags: [policy, short]
+    input: >
+      The Global Methane Pledge added six new signatories at the COP30
+      preparatory meeting, including Vietnam and Egypt. The pledge now
+      covers 158 countries representing approximately 60% of global
+      methane emissions.
+    expected: >
+      Six new countries (including Vietnam and Egypt) joined the Global
+      Methane Pledge at COP30 prep, bringing it to 158 countries and
+      ~60% of global methane emissions.
