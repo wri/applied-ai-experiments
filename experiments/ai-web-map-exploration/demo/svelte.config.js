@@ -15,7 +15,13 @@ const config = {
 		adapter: adapter({
 			pages: 'dist',
 			assets: 'dist',
-			fallback: 'index.html',
+			// Every route is prerendered (see src/routes/+layout.ts), so `/` gets a
+			// real index.html and the fallback is only a net for URLs that don't
+			// match a demo slug. Naming it 404.html rather than index.html keeps it
+			// from overwriting that index, and lets a host that serves a directory's
+			// 404.html hand an unknown slug to the app — which renders its own "no
+			// demo named X" panel — instead of the host's error page.
+			fallback: '404.html',
 			precompress: false,
 			strict: true
 		}),
