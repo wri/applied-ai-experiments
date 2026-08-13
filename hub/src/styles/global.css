@@ -25,13 +25,27 @@
   --size-avatar-sm: 2rem;
   --size-avatar-md: 2.5rem;
 
-  /* Typography size tokens (semantic) */
+  /* Typography size tokens (semantic).
+     Intentionally one step larger than the @wri-datalab/ui compact scale:
+     the hub is a reading-heavy site, so it diverges from the demo UI sizes
+     (see DESIGN.md compact-scale table for the canonical demo values). */
   --text-label: 0.7rem;
-  --text-body: 0.8125rem;
-  --text-ui: 0.75rem;
-  --text-badge: 0.65rem;
-  --text-title-sm: 0.8rem;
-  --text-title-md: 0.875rem;
+  --text-body: 0.875rem;
+  --text-ui: 0.8125rem;
+  --text-badge: 0.7rem;
+  --text-title-sm: 0.875rem;
+  --text-title-md: 0.9375rem;
+
+  /* Reading / prose scale — long-form content (briefs, insights, learnings).
+     Mirrors @wri-datalab/ui prototype.css; keep the two in sync (see DESIGN.md). */
+  --text-prose-size: 1rem; /* 16px (hub bump; ui prototype.css keeps 15px) */
+  --text-prose-line-height: 1.7;
+  --text-prose-measure: 68ch;
+  --text-prose-h1: 1.375rem; /* 22px */
+  --text-prose-h2: 1.125rem; /* 18px */
+  --text-prose-h3: 1rem; /* 16px */
+  --text-prose-h4: 0.9375rem; /* 15px */
+  --text-prose-gap: 0.85em;
 
   /* Padding tokens */
   --padding-panel-header: 0.75rem 1rem;
@@ -53,12 +67,24 @@
   --color-ma: var(--color-magenta-500);
 }
 
+/* Keep the root at 16px: the ui package's [data-variant="prototype"] base rule
+   would otherwise shrink <html>'s font-size to 0.8125rem, deflating every
+   rem-based token on the page to 81% of its intended size. */
+html[data-variant='prototype'] {
+  font-size: 100%;
+}
+
 html {
   font-family: var(--font-body);
-  font-size: var(--text-body-font-size);
   line-height: var(--font-lineHeight-normal);
   color: var(--tx);
   background: var(--bg);
+}
+
+/* Selector matches the ui package's html[data-variant] body rule so the hub's
+   larger --text-body wins on cascade order (global.css imports after ui styles). */
+html[data-variant='prototype'] body {
+  font-size: var(--text-body);
 }
 
 body {
@@ -317,32 +343,6 @@ h3 {
   color: var(--primary-content);
 }
 
-/* Card pattern */
-.card {
-  background: var(--bg-2);
-  border: 1px solid var(--ui);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--padding-panel-header);
-  background: var(--bg-3);
-  border-bottom: 1px solid var(--ui);
-}
-
-.card-body {
-  padding: var(--padding-panel-body);
-}
-
-.card-footer {
-  padding: var(--padding-panel-header);
-  border-top: 1px solid var(--ui);
-}
-
 /* Avatar utility */
 .avatar {
   display: flex;
@@ -367,7 +367,7 @@ h3 {
 .badge-type-spike { background: var(--color-cy); color: white; }
 .badge-type-research { background: var(--color-bl); color: white; }
 .badge-type-notebook { background: var(--color-ma); color: white; }
-.badge-type-micro { background: var(--color-rd); color: white; }
+.badge-type-micro { background: var(--color-re); color: white; }
 
 /* Alert patterns */
 .alert {
