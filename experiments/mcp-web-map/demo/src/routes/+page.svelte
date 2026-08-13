@@ -1,5 +1,7 @@
 <script lang="ts">
   import { DemoLayout } from '@wri-datalab/ui';
+  import { runLLM, SessionTelemetryTrigger } from '@wri-datalab/llm-lab';
+  import { defaultModelForDemo } from '@wri-datalab/llm-lab/models';
   import type { KeyStatus, ProviderId } from '@byo-keys/core';
   import MapView from '$lib/components/MapView.svelte';
   import ChatPanel from '$lib/components/ChatPanel.svelte';
@@ -10,7 +12,7 @@
   import { chatStore } from '$lib/stores/chat.svelte';
   import { mapStore } from '$lib/stores/map.svelte';
   import { engineStore } from '$lib/stores/engine.svelte';
-  import { runAgent, type ApiMessage, type StreamChunk } from '$lib/agent/loop';
+  import { runAgent, type ModelCaller } from '$lib/agent/loop';
 
   // Track store initialization
   let isStoresReady = $state(false);
@@ -45,21 +47,19 @@
     return unsubscribe;
   });
 
+  // A provider is usable if it has a valid key, or — for keyless Ollama — once
+  // its local models have been discovered (populated by refreshModels on load).
+  const isReady = (id: ProviderId): boolean => {
+    const status = keys[id];
+    if (status?.hasKey && status?.isValid !== false) return true;
+    return id === 'ollama' && (status?.models?.length ?? 0) > 0;
+  };
+
   // Check if we have a ready provider
-  const hasReadyProvider = $derived(
-    providerIds.some((id) => {
-      const status = keys[id];
-      return status?.hasKey && status?.isValid !== false;
-    })
-  );
+  const hasReadyProvider = $derived(providerIds.some(isReady));
 
   // Get the first ready provider
-  const readyProvider = $derived(
-    providerIds.find((id) => {
-      const status = keys[id];
-      return status?.hasKey && status?.isValid !== false;
-    }) as ProviderId | undefined
-  );
+  const readyProvider = $derived(providerIds.find(isReady) as ProviderId | undefined);
 
   // Initialize WebMCP eagerly if it's the saved/active engine, so the toggle
   // can show its status before the first message.
@@ -88,31 +88,38 @@
     const provider = readyProvider;
     const model = getDefaultModel(provider);
 
-    // Bridge the loop's ModelCaller to the BYOK streaming API
-    const callModel = (system: string, messages: ApiMessage[]): AsyncIterable<StreamChunk> =>
-      stores.chatStream(provider, {
+    // Bridge the loop's ModelCaller to runLLM rather than stores.chatStream
+    // directly: runLLM is the choke point @wri-datalab/llm-lab taps, so every
+    // agent turn lands in the session-telemetry dashboard with its own tokens,
+    // latency and cost. Labelling by turn keeps those rows readable.
+    const callModel: ModelCaller = async (system, messages, { label, onDelta }) => {
+      const result = await runLLM(stores, {
+        providerId: provider,
         model,
         messages,
         system,
         maxTokens: 2048,
         temperature: 0.7,
-      }) as AsyncIterable<StreamChunk>;
+        label,
+        onDelta: (delta) => onDelta(delta),
+      });
+      return { content: result.content, error: result.error };
+    };
 
     await runAgent({ engine: engineStore.engine, userMessage: message, callModel });
   }
 
-  // Get default model for provider
+  // Default model per provider — sourced from the central registry. This demo's
+  // slice (providers + functionCalling filter) lives in DEMO_MODEL_SETS in
+  // @wri-datalab/llm-lab/models; change what it offers there, not here.
   function getDefaultModel(provider: ProviderId): string {
-    switch (provider) {
-      case 'anthropic':
-        return 'claude-haiku-4-5-20251001';
-      case 'gemini':
-        return 'gemini-3.0-flash';
-      case 'openrouter':
-        return 'anthropic/claude-4.5-haiku';
-      default:
-        return '';
-    }
+    // Ollama has no curated registry default — fall back to the first
+    // locally-discovered model.
+    return (
+      defaultModelForDemo('mcp-web-map', provider) ||
+      keys[provider]?.models?.[0]?.id ||
+      ''
+    );
   }
 
   // Handle command palette command
@@ -134,15 +141,26 @@
 
 <DemoLayout
   title="MCP Web Map"
-  subtitle="AI-powered geospatial chat"
   {stores}
   providers={providerIds}
   showSettings={true}
   showApiKeys={true}
   showFooter={false}
+  fillHeight
   maxWidth="full"
+  mode={hasReadyProvider ? 'live' : 'mock'}
+  modeLabel={hasReadyProvider ? readyProvider : 'no key'}
+  modeHint={hasReadyProvider
+    ? `Running live on ${readyProvider}`
+    : 'No API key — this demo has no keyless mode, so add a key to chat'}
 >
   {#snippet headerActions()}
+    <SessionTelemetryTrigger />
+  {/snippet}
+
+  <!-- The engine toggle is a labelled control, so it sits in the banner row
+       rather than the header (DESIGN.md §4). -->
+  {#snippet banner()}
     <EngineToggle />
   {/snippet}
 
@@ -195,7 +213,6 @@
     display: flex;
     flex: 1;
     min-height: 0;
-    height: calc(100vh - 60px); /* Subtract header height */
   }
 
   .map-area {
@@ -318,7 +335,6 @@
   @media (max-width: 768px) {
     .map-layout {
       flex-direction: column;
-      height: calc(100vh - 60px);
     }
 
     .map-area {

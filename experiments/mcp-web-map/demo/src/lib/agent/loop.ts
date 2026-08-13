@@ -11,21 +11,35 @@ import type { ToolEngine } from '$lib/mcp/engine';
 import { chatStore } from '$lib/stores/chat.svelte';
 import { mapStore } from '$lib/stores/map.svelte';
 
-export interface StreamChunk {
-  type: 'delta' | 'thinking_delta' | 'done' | 'error' | string;
-  content?: string;
-  error?: { message: string };
-}
-
 export interface ApiMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
+export interface ModelTurnOptions {
+  /** Stable per-turn label — carried into session telemetry and replay matching. */
+  label: string;
+  /** Called for each streamed token so the transcript types out live. */
+  onDelta: (delta: string) => void;
+}
+
+export interface ModelTurnResult {
+  content: string;
+  /** Set when the call failed or was cancelled; content holds whatever streamed. */
+  error?: string;
+}
+
+/**
+ * One model turn. Deliberately not an AsyncIterable: the caller wires this to
+ * `runLLM`, which is the single choke point @wri-datalab/llm-lab taps for session
+ * telemetry and replay. The loop only ever needed deltas plus a terminal error,
+ * so a callback + result is the whole contract.
+ */
 export type ModelCaller = (
   system: string,
-  messages: ApiMessage[]
-) => AsyncIterable<StreamChunk>;
+  messages: ApiMessage[],
+  opts: ModelTurnOptions
+) => Promise<ModelTurnResult>;
 
 function mapStateSuffix(): string {
   const v = mapStore.view;
@@ -81,17 +95,12 @@ export async function runAgent(opts: RunAgentOptions): Promise<void> {
     let streamError: string | null = null;
 
     try {
-      for await (const chunk of callModel(system, apiMessages)) {
-        if (chunk.type === 'delta' && chunk.content) {
-          fullContent += chunk.content;
-          chatStore.appendContent(chunk.content);
-        } else if (chunk.type === 'error') {
-          streamError = chunk.error?.message ?? 'Stream error';
-          break;
-        } else if (chunk.type === 'done') {
-          break;
-        }
-      }
+      const result = await callModel(system, apiMessages, {
+        label: `turn ${turn + 1}`,
+        onDelta: (delta) => chatStore.appendContent(delta),
+      });
+      fullContent = result.content;
+      streamError = result.error ?? null;
     } catch (e) {
       streamError = e instanceof Error ? e.message : 'Unknown error';
     }

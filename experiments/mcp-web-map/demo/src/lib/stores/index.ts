@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { createBYOKClient, createStorage } from '@byo-keys/core';
 import { createBYOKStores, type BYOKStores } from '@byo-keys/svelte';
-import { anthropic, gemini, openrouter } from '@byo-keys/providers';
+import { anthropic, gemini, openrouter, ollama } from '@byo-keys/providers';
 
 // Create BYOK client with supported providers
 const client = createBYOKClient({
@@ -10,6 +10,7 @@ const client = createBYOKClient({
     anthropic({ dangerouslyAllowBrowser: true }),
     gemini(),
     openrouter(),
+    ollama(),
   ],
   storage: browser
     ? createStorage({ backend: 'localStorage', prefix: 'mcp-web-map:keys:' })
@@ -40,6 +41,8 @@ export function initStores(): Promise<void> {
   initPromise = stores.initialize()
     .then(() => {
       storesReady.set(true);
+      // Auto-discover locally-pulled Ollama models, if the server is reachable.
+      stores.refreshModels('ollama').catch(() => {});
     })
     .catch((error) => {
       console.error('Failed to initialize BYOK stores:', error);
@@ -51,4 +54,4 @@ export function initStores(): Promise<void> {
 
 import type { ProviderId } from '@byo-keys/core';
 
-export const providerIds: ProviderId[] = ['anthropic', 'gemini', 'openrouter'];
+export const providerIds: ProviderId[] = ['anthropic', 'gemini', 'openrouter', 'ollama'];
