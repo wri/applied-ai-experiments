@@ -34,3 +34,14 @@ overrides:
 # WASM, not the native node binding).
 onlyBuiltDependencies:
   - esbuild
+
+# Every dependency with a build script needs an explicit verdict here. pnpm 11
+# treats an undeclared one as a question it cannot answer: it appends a
+# `set this to true or false` stub to this file and exits 1. That is invisible
+# locally, where node_modules already exists, and fatal in CI, where every
+# install is a fresh one.
+allowBuilds:
+  esbuild: true
+  onnxruntime-node: false
+  protobufjs: false
+  sharp: false
