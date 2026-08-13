@@ -31,7 +31,13 @@
 	.overlay.fill {
 		bottom: var(--space-4);
 	}
+	/* `flex: none` matters: as flex items the panels default to flex-shrink: 1, so
+	   tall content squashed them to fit the max-height instead of overflowing it.
+	   The column then never overflowed, so `overflow-y: auto` above never engaged
+	   and the clipped panel bodies (.ui-panel is overflow: hidden) had no way to
+	   scroll. Refusing to shrink hands the overflow to the scroll container. */
 	.overlay > :global(*) {
+		flex: none;
 		pointer-events: auto;
 	}
 	.left {

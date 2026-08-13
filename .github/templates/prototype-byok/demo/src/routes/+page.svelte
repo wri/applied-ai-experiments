@@ -18,8 +18,10 @@
 		LatencyBadge,
 		StreamingMarkdown,
 		EmptyState,
-		Modal
+		Modal,
+		hubHomeHref,
 	} from '@wri-datalab/ui';
+	import { base } from '$app/paths';
 	import { modelSelectorConfigForDemo } from '@wri-datalab/llm-lab/models';
 	import {
 		createLLMRun,
@@ -70,6 +72,7 @@
 
 <DemoLayout
 	title="CHANGEME: Prototype Title"
+	homeHref={hubHomeHref(base)}
 	subtitle="CHANGEME: one-line subtitle"
 	description="CHANGEME: what this prototype demonstrates."
 	{stores}

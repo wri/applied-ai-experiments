@@ -75,8 +75,8 @@ All take a `stores: BYOKStores` (from `@byo-keys/svelte`). Model lists/config co
 
 | Component | Props | Snippets |
 |-----------|-------|----------|
-| `DemoLayout` | `title` `string` · `description?` · `subtitle?` · `stores?` · `providers?` · `showSettings?` · `showTheme?` · `showApiKeys?` · `showFooter?` · `maxWidth?` `'sm'\|'md'\|'lg'\|'xl'\|'full'` | `children`, `headerActions`, `headerNav`, `footer` |
-| `DemoHeader` | `title` `string` · `subtitle?` · `stores?` · `providers?` · `showSettings?` · `showTheme?` · `showApiKeys?` · `maxWidth?` | `actions`, `nav` (DemoLayout exposes these as `headerActions`/`headerNav`) |
+| `DemoLayout` | `title` `string` · `description?` · `subtitle?` · `homeHref?` (hub homepage — `hubHomeHref(base)`) · `stores?` · `providers?` · `showSettings?` · `showTheme?` · `showApiKeys?` · `showFooter?` · `maxWidth?` `'sm'\|'md'\|'lg'\|'xl'\|'full'` | `children`, `headerActions`, `headerNav`, `footer` |
+| `DemoHeader` | `title` `string` · `subtitle?` · `homeHref?` (hub homepage — `hubHomeHref(base)`) · `stores?` · `providers?` · `showSettings?` · `showTheme?` · `showApiKeys?` · `maxWidth?` | `actions`, `nav` (DemoLayout exposes these as `headerActions`/`headerNav`) |
 | `DemoFooter` | `maxWidth?` | `children` |
 | `HeaderButton` | `variant?` `'icon'\|'text'` · `label` `string` (sentence case; becomes `aria-label`+`title`) · `active?` · _+HTMLButtonAttributes_ | `children` (icon SVG or text) |
 | `HeaderNav` | `items` `HeaderNavItem[]` (`{id, label, href?, onclick?}`) · `active?` `string` · `ariaLabel?` | — |
@@ -99,9 +99,9 @@ All take a `stores: BYOKStores` (from `@byo-keys/svelte`). Model lists/config co
 
 ## Utilities
 
-Formatters and diff helpers exported from the package root:
+Formatters, diff helpers, and link helpers exported from the package root:
 `formatTokens` · `formatLatency` · `formatBytes` · `formatPercent` · `formatRelativeTime`
-· `formatTimestamp` · `computeDiff` · `generateUnifiedDiff`.
+· `formatTimestamp` · `computeDiff` · `generateUnifiedDiff` · `hubHomeHref`.
 
 ---
 

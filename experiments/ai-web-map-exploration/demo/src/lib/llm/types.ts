@@ -9,7 +9,15 @@
 
 import type { Message as ByoMessage } from '@byo-keys/core';
 
-export type ModelId = 'claude-opus-4-8' | 'claude-sonnet-4-6' | 'claude-haiku-4-5-20251001';
+/**
+ * The models this app offers. Ids and tiers mirror the current Anthropic slice of
+ * @wri-datalab/llm-lab's registry (packages/llm-lab/src/models/registry.ts) —
+ * that file is the source of truth for pricing and capabilities; this list is
+ * just the subset the map demos target. Fable 5 is deliberately absent for the
+ * same reason it is there: it needs 30-day data retention and can answer with a
+ * refusal the byo-keys Anthropic provider does not yet fall back from.
+ */
+export type ModelId = 'claude-opus-5' | 'claude-sonnet-5' | 'claude-haiku-4-5';
 
 export interface ModelInfo {
 	id: ModelId;
@@ -19,15 +27,20 @@ export interface ModelInfo {
 }
 
 export const MODELS: ModelInfo[] = [
-	{ id: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5', tier: 'budget', vision: true },
-	{ id: 'claude-sonnet-4-6', label: 'Sonnet 4.6', tier: 'mid', vision: true },
-	{ id: 'claude-opus-4-8', label: 'Opus 4.8', tier: 'frontier', vision: true }
+	{ id: 'claude-haiku-4-5', label: 'Haiku 4.5', tier: 'budget', vision: true },
+	{ id: 'claude-sonnet-5', label: 'Sonnet 5', tier: 'mid', vision: true },
+	{ id: 'claude-opus-5', label: 'Opus 5', tier: 'frontier', vision: true }
 ];
 
-export const DEFAULT_MODEL: ModelId = 'claude-haiku-4-5-20251001';
+export const DEFAULT_MODEL: ModelId = 'claude-haiku-4-5';
 
 export function modelLabel(id: ModelId): string {
 	return MODELS.find((m) => m.id === id)?.label ?? id;
+}
+
+/** Whether `id` is still on offer — guards model ids restored from localStorage. */
+export function isKnownModel(id: string): id is ModelId {
+	return MODELS.some((m) => m.id === id);
 }
 
 export type ContentPart =

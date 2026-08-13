@@ -68,6 +68,7 @@ import {
   formatTimestamp,
   computeDiff,
   generateUnifiedDiff,
+  hubHomeHref,   // '/applied-ai-experiments/<slug>' → '/applied-ai-experiments/'
 } from '@wri-datalab/ui';
 ```
 

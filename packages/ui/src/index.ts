@@ -65,6 +65,7 @@ export {
   formatTimestamp,
 } from './utils/formatters';
 export { getHighlighter, highlightCode, isHighlighterReady } from './utils/highlighter';
+export { hubHomeHref } from './utils/hub';
 
 // BYOK Integration Components
 export { default as ApiKeyManager } from './byok/ApiKeyManager.svelte';

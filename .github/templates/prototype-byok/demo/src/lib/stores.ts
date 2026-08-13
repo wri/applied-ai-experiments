@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { createBYOKClient, createStorage } from '@byo-keys/core';
 import { createBYOKStores, type BYOKStores } from '@byo-keys/svelte';
-import { anthropic, openai, gemini, openrouter, huggingface, ollama } from '@byo-keys/providers';
+import { anthropic, openai, gemini, openrouter, huggingface, ollama, isLoopbackOrigin } from '@byo-keys/providers';
 import { SLUG } from './slug';
 
 // One BYOK client wired with every provider the design system supports. Keys
@@ -42,8 +42,10 @@ export function initStores(): Promise<void> {
 		})
 		.then(() => {
 			storesReady.set(true);
-			// Auto-discover locally-pulled Ollama models, if the server is reachable.
-			stores.refreshModels('ollama').catch(() => {});
+			// Auto-discover locally-pulled Ollama models. Only worth attempting from a
+			// loopback origin: on a deployed https:// page the request to
+			// localhost:11434 cannot succeed and only logs a CORS error.
+			if (isLoopbackOrigin()) stores.refreshModels('ollama').catch(() => {});
 		});
 
 	return initPromise;

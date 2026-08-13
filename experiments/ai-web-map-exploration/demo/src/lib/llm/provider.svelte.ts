@@ -20,6 +20,7 @@ import { structured, StructuredOutputError, type StructuredResult } from './stru
 import {
 	DEFAULT_MODEL,
 	MODELS,
+	isKnownModel,
 	toByoMessages,
 	type LlmClient,
 	type LlmRequest,
@@ -30,9 +31,16 @@ import {
 
 const live = createLiveClient(stores);
 
+function restoreModel(): ModelId {
+	const saved = storageGet<string>('model', DEFAULT_MODEL);
+	return isKnownModel(saved) ? saved : DEFAULT_MODEL;
+}
+
 class LlmProvider {
 	forceMock = $state<boolean>(storageGet('forceMock', false));
-	model = $state<ModelId>(storageGet<ModelId>('model', DEFAULT_MODEL));
+	// A model id saved by an earlier build can name a model this app no longer
+	// offers; fall back rather than surface a raw id in the header badge.
+	model = $state<ModelId>(restoreModel());
 
 	/** Mirrors @byo-keys key presence for Anthropic (reactive). */
 	private hasAnthropicKey = $state(false);

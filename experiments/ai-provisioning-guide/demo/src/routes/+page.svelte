@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
-	import { DemoLayout, HeaderNav, Button, CopyButton } from '@wri-datalab/ui';
+	import { DemoLayout, HeaderNav, Button, CopyButton, hubHomeHref } from '@wri-datalab/ui';
 	import { toast } from '@wri-datalab/ui';
 	import { appStore } from '$lib/stores/app.svelte.js';
 	import { encodeStateToParams, decodeStateFromParams } from '$lib/utils/url.js';
@@ -87,6 +88,7 @@
 
 <DemoLayout
 	title="AI Provisioning Guide"
+	homeHref={hubHomeHref(base)}
 	maxWidth="xl"
 	showApiKeys={false}
 >
