@@ -5,7 +5,7 @@
 # ]
 # ///
 """
-Generate experiment-index.json from all info.yaml files.
+Generate experiment-index.json from every experiment's brief.md.
 
 Usage: python .github/scripts/generate-index.py
        uv run .github/scripts/generate-index.py
@@ -17,36 +17,52 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import yaml
+# Enums come from experiment_schema.py — the single source of truth.
+import experiment_doc  # noqa: E402
+from experiment_schema import NOTEBOOK_DEMO_TYPES, REFERENCE_SCAFFOLDS, REQUIRED_FIELDS
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPERIMENTS_DIR = REPO_ROOT / "experiments"
 OUTPUT_FILE = REPO_ROOT / "experiment-index.json"
 
-REQUIRED_FIELDS = ["slug", "title", "type", "status", "description"]
-NOTEBOOK_DEMO_TYPES = {"notebook-html", "marimo-html", "marimo-wasm"}
 
+def load_experiment(exp_dir: Path) -> dict[str, Any] | None:
+    """Load an experiment's metadata from its brief.md.
 
-def load_experiment(yaml_path: Path) -> dict[str, Any] | None:
-    """Load and validate an info.yaml file."""
-    try:
-        with open(yaml_path) as f:
-            data = yaml.safe_load(f)
-    except Exception as e:
-        print(f"Warning: Failed to parse {yaml_path}: {e}", file=sys.stderr)
+    Prose that lives in the brief body (description, results.summary,
+    results.learnings) is read from there directly, so there is no second copy of
+    it anywhere and nothing to keep in sync.
+    """
+    data, body, error = experiment_doc.load_meta(exp_dir)
+    if error:
+        print(f"Warning: Failed to parse metadata for {exp_dir}: {error}", file=sys.stderr)
         return None
 
     if not data:
-        print(f"Warning: Empty YAML file: {yaml_path}", file=sys.stderr)
+        print(f"Warning: No metadata for {exp_dir}", file=sys.stderr)
         return None
+
+    # Prose fields come from the body. The `results.get(...)` fallbacks below only
+    # cover a brief that has the key in frontmatter but nothing in the body yet.
+    if body:
+        description = experiment_doc.extract_description(body)
+        if description:
+            data["description"] = description
+        summary = experiment_doc.extract_summary(body)
+        learnings, _ = experiment_doc.extract_learnings(body)
+        # Always emit `results` so the index shape is uniform whether or not an
+        # experiment has findings yet; the hub reads .results?.learnings?.length.
+        results = dict(data.get("results") or {})
+        results["summary"] = summary if summary else results.get("summary")
+        results["learnings"] = learnings if learnings else (results.get("learnings") or [])
+        data["results"] = results
 
     # Check for required fields (warn but don't fail)
     missing = [f for f in REQUIRED_FIELDS if f not in data]
     if missing:
-        print(f"Warning: {yaml_path} missing fields: {missing}", file=sys.stderr)
+        print(f"Warning: {exp_dir} missing fields: {missing}", file=sys.stderr)
 
     # Ensure slug exists (use directory name as fallback)
-    exp_dir = yaml_path.parent
     if "slug" not in data:
         data["slug"] = exp_dir.name
 
@@ -54,12 +70,20 @@ def load_experiment(yaml_path: Path) -> dict[str, Any] | None:
     demo_cfg = data.get("demo", {})
     demo_enabled = demo_cfg.get("enabled", False)
     output_dir = demo_cfg.get("output_dir", "demo/dist")
-    data["_has_demo"] = demo_enabled and (exp_dir / output_dir).exists()
+    # Keyed on demo.enabled, NOT on the build output existing — the deploy runs
+    # generate-index BEFORE build-demos, so on a cold cache every demo's dist was
+    # still absent here and the hub published with every "Open demo" link hidden
+    # and a demo count of 0. astro.config.mjs already keys the sitemap this way for
+    # the same reason. `_demo_built` keeps the on-disk fact for local debugging.
+    data["_has_demo"] = bool(demo_enabled)
+    data["_demo_built"] = bool(demo_enabled and (exp_dir / output_dir).exists())
     data["_is_notebook"] = demo_enabled and demo_cfg.get("type", "") in NOTEBOOK_DEMO_TYPES
     data["_has_brief"] = (exp_dir / "brief.md").exists()
-    media_cfg = data.get("media") or {}
-    recordings = media_cfg.get("recordings") if isinstance(media_cfg, dict) else None
-    data["_has_media"] = bool(recordings)
+    # Demonstrates the repo's own conventions rather than asking an AI question.
+    # Stays listed and browsable; the hub withholds it from every cross-experiment
+    # aggregation. Computed here so the hub filters on a flag rather than keeping
+    # its own copy of the slug list.
+    data["_reference_scaffold"] = data["slug"] in REFERENCE_SCAFFOLDS
 
     return data
 
@@ -71,7 +95,6 @@ def main():
 
     experiments = []
 
-    # Look for both info.yaml (preferred) and experiment.yaml (legacy)
     for exp_dir in sorted(EXPERIMENTS_DIR.iterdir()):
         if not exp_dir.is_dir():
             continue
@@ -80,16 +103,11 @@ def main():
         if exp_dir.name.startswith("."):
             continue
 
-        # Try info.yaml first, fall back to experiment.yaml for migration
-        yaml_path = exp_dir / "info.yaml"
-        if not yaml_path.exists():
-            yaml_path = exp_dir / "experiment.yaml"
-
-        if not yaml_path.exists():
-            print(f"Warning: No metadata file in {exp_dir}", file=sys.stderr)
+        if not (exp_dir / "brief.md").exists():
+            print(f"Warning: No brief.md in {exp_dir}", file=sys.stderr)
             continue
 
-        exp = load_experiment(yaml_path)
+        exp = load_experiment(exp_dir)
         if exp:
             experiments.append(exp)
 
@@ -105,9 +123,7 @@ def main():
     by_type: dict[str, list[str]] = {}
     by_theme: dict[str, list[str]] = {}
     by_status: dict[str, list[str]] = {}
-    by_maturity: dict[str, list[str]] = {}
-    by_investment_type: dict[str, list[str]] = {}
-    by_origin: dict[str, list[str]] = {}
+    by_targets: dict[str, list[str]] = {}
 
     for exp in experiments:
         slug = exp["slug"]
@@ -124,18 +140,10 @@ def main():
         status = exp.get("status", "unknown")
         by_status.setdefault(status, []).append(slug)
 
-        # Index by portfolio-view fields (skip if absent — not every experiment has them)
-        maturity = exp.get("maturity")
-        if maturity:
-            by_maturity.setdefault(maturity, []).append(slug)
-
-        investment_type = exp.get("investment_type")
-        if investment_type:
-            by_investment_type.setdefault(investment_type, []).append(slug)
-
-        origin = exp.get("origin")
-        if origin:
-            by_origin.setdefault(origin, []).append(slug)
+        # Index by what the work targets (capability / infra / feature)
+        targets = exp.get("targets")
+        if targets:
+            by_targets.setdefault(targets, []).append(slug)
 
     # Build final index
     index = {
@@ -144,9 +152,7 @@ def main():
         "by_type": by_type,
         "by_theme": by_theme,
         "by_status": by_status,
-        "by_maturity": by_maturity,
-        "by_investment_type": by_investment_type,
-        "by_origin": by_origin,
+        "by_targets": by_targets,
         "experiments": experiments,
     }
 

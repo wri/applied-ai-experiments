@@ -6,9 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 
-# Core dependencies for repo management scripts
+# Core dependencies for the repo-management scripts. Keep this list tiny: every
+# contributor and three of four CI jobs pay for it just to run `just validate`.
+# marimo lives in `notebooks` for exactly that reason — only marimo experiments
+# and the demo build need it.
 dependencies = [
-    "marimo>=0.23.4",
     "pyyaml>=6.0",
 ]
 
@@ -19,8 +21,9 @@ dev = [
     "pytest>=8.0.0",
 ]
 
-# For notebook experiments
+# For notebook experiments (and building their demos)
 notebooks = [
+    "marimo>=0.23.4",
     "jupyter>=1.0.0",
     "nbconvert>=7.0.0",
 ]
@@ -35,7 +38,9 @@ packages = ["packages"]
 # Ruff configuration
 [tool.ruff]
 line-length = 100
-target-version = "py314"
+# Must match requires-python: a higher target lets `UP` autofixes emit syntax
+# that the oldest supported interpreter can't parse.
+target-version = "py312"
 
 [tool.ruff.lint]
 select = [

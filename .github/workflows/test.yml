@@ -1,0 +1,135 @@
+name: Test & Build
+
+# Two jobs, one purpose: don't let a change that breaks the site reach `main`.
+#
+# Deploys only run when a commit carries `[deploy]`, so without a PR-time build a
+# broken demo sits on `main` looking fine right up until someone publishes. That
+# is the gap the `build` job closes.
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'hub/**'
+      - 'experiments/*/demo/**'
+      - 'pnpm-workspace.yaml'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - '.github/scripts/build-demos.sh'
+      - '.github/workflows/test.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+      - 'hub/**'
+      - 'experiments/*/demo/**'
+      - 'pnpm-workspace.yaml'
+      - 'pnpm-lock.yaml'
+
+jobs:
+  test:
+    name: Package unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      # No `version:` — pnpm/action-setup reads `packageManager` from the root
+      # package.json, so the pin lives in exactly one place.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Recursive with --if-present, not a hand-written filter list: a new package
+      # that ships tests used to go silently uncovered until somebody remembered
+      # to add it here.
+      - name: Run unit tests
+        run: pnpm -r --if-present test
+
+      - name: Type-check every package that defines a check
+        run: |
+          pnpm -r --if-present check
+          pnpm -r --if-present typecheck
+
+  build:
+    name: Build hub + affected demos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Need the merge base to diff against.
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --extra notebooks
+
+      # Which demos does this PR put at risk? Only the ones it touched — unless it
+      # touched a shared package or the lockfile, in which case any demo could
+      # break and we build them all.
+      - name: Decide which demos to build
+        id: scope
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE="origin/${{ github.base_ref }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          CHANGED=$(git diff --name-only "$BASE"...HEAD || git diff --name-only HEAD~1...HEAD)
+          echo "Changed files:"; echo "$CHANGED" | sed 's/^/  /'
+
+          if echo "$CHANGED" | grep -qE '^(packages/|pnpm-lock\.yaml|pnpm-workspace\.yaml|package\.json|\.github/scripts/build-demos\.sh)'; then
+            echo "reason=shared code changed — building every demo" >> "$GITHUB_OUTPUT"
+            echo "only=" >> "$GITHUB_OUTPUT"
+          else
+            SLUGS=$(echo "$CHANGED" | sed -n 's|^experiments/\([^/]*\)/demo/.*|\1|p' | sort -u | paste -sd, -)
+            echo "reason=demos touched by this diff: ${SLUGS:-none}" >> "$GITHUB_OUTPUT"
+            echo "only=${SLUGS}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The hub reads experiment-index.json, which is generated (and gitignored).
+      - name: Generate experiment index
+        run: uv run .github/scripts/generate-index.py
+
+      - name: Build the hub
+        run: cd hub && pnpm build
+
+      - name: Build demos
+        run: |
+          echo "Scope: ${{ steps.scope.outputs.reason }}"
+          ONLY='${{ steps.scope.outputs.only }}'
+          if [[ -n "$ONLY" ]]; then
+            WORKSPACE_INSTALL=true ./.github/scripts/build-demos.sh dist --only "$ONLY" --force
+          elif echo "${{ steps.scope.outputs.reason }}" | grep -q "every demo"; then
+            WORKSPACE_INSTALL=true ./.github/scripts/build-demos.sh dist --force
+          else
+            echo "No demo sources touched — nothing to build."
+          fi
+
+      # A demo that builds but bakes the wrong base path serves a blank page, and
+      # the build itself can't tell. Assert the production paths landed.
+      - name: Verify demo base paths
+        run: ./.github/scripts/verify-base-paths.sh dist --strict

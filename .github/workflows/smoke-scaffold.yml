@@ -1,0 +1,31 @@
+name: Smoke-test Templates
+
+# Only runs when scaffolding inputs change — not a gate on ordinary PRs.
+on:
+  pull_request:
+    paths:
+      - '.github/templates/**'
+      - 'justfile'
+      - '.github/scripts/smoke-scaffold.sh'
+      - '.github/scripts/fill-metadata.py'
+      - '.github/scripts/validate-experiments.py'
+      - '.github/scripts/sync-demo-meta.py'
+
+jobs:
+  smoke-scaffold:
+    name: Scaffold every template
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Scaffold and validate every template
+        run: ./.github/scripts/smoke-scaffold.sh

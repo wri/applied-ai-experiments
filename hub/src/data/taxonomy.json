@@ -5,9 +5,9 @@
     { "name": "Innovation Discovery", "themes": ["scouting", "prototyping", "development"] }
   ],
   "themes": {
-    "cost-perf":   { "name": "Cost & Performance",      "short": "Cost/Perf",    "color": "#2563eb" },
+    "cost-perf":   { "name": "Cost, Performance & Carbon", "short": "Cost/Perf", "color": "#2563eb" },
     "evals":       { "name": "Evals & Benchmarking",    "short": "Evals",        "color": "#4f46e5" },
-    "patterns":    { "name": "Integration Patterns",    "short": "Patterns",     "color": "#7c3aed" },
+    "patterns":    { "name": "Product Integration Patterns", "short": "Patterns", "color": "#7c3aed" },
     "geospatial":  { "name": "Geospatial Intelligence", "short": "Geospatial",   "color": "#059669" },
     "reliability": { "name": "Reliability & Grounding", "short": "Reliability",  "color": "#d97706" },
     "agents":      { "name": "Agentic Workflows",       "short": "Agents",       "color": "#dc2626" },
@@ -15,15 +15,10 @@
     "prototyping": { "name": "Bespoke Prototyping",     "short": "Prototyping",  "color": "#ea580c" },
     "development": { "name": "AI-Assisted Development", "short": "Development",  "color": "#64748b" }
   },
-  "maturity": {
-    "L1": { "name": "L1 Explore",        "sub": "1–2 days"    },
-    "L2": { "name": "L2 Demonstrate",    "sub": "1–2 weeks"   },
-    "L3": { "name": "L3 Operationalize", "sub": "1–2 months"  }
+  "targets": {
+    "capability": { "label": "Capability probe",      "short": "Capability", "question": "What can the tools do?" },
+    "infra":      { "label": "Infrastructure spike", "short": "Infra",      "question": "Can we build and run this?" },
+    "feature":    { "label": "Feature exploration",  "short": "Feature",    "question": "Should we build this, and how?" }
   },
-  "investment_types": {
-    "probe":       { "label": "Capability Probe",      "short": "Probe" },
-    "spike":       { "label": "Infrastructure Spike",  "short": "Spike" },
-    "exploration": { "label": "Feature Exploration",   "short": "Exploration" }
-  },
-  "statuses": ["idea", "started", "paused", "completed", "archived"]
+  "statuses": ["idea", "started", "paused", "done", "archived"]
 }

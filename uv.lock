@@ -1897,7 +1897,6 @@ name = "wri-ai-experiments"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "marimo" },
     { name = "pyyaml" },
 ]
 
@@ -1908,13 +1907,14 @@ dev = [
 ]
 notebooks = [
     { name = "jupyter" },
+    { name = "marimo" },
     { name = "nbconvert" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "jupyter", marker = "extra == 'notebooks'", specifier = ">=1.0.0" },
-    { name = "marimo", specifier = ">=0.23.4" },
+    { name = "marimo", marker = "extra == 'notebooks'", specifier = ">=0.23.4" },
     { name = "nbconvert", marker = "extra == 'notebooks'", specifier = ">=7.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "pyyaml", specifier = ">=6.0" },

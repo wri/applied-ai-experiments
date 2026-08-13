@@ -1,7 +1,7 @@
 set quiet := true
 # justfile
 # Run: `just new-experiment`
-# Or:  `just new-experiment name=my-run template=experiment-minimal`
+# Or:  `just new-experiment my-run experiment-minimal`  (positional: name, template)
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
@@ -25,48 +25,29 @@ help:
 # Setup Commands
 # ============================================
 
-# Prints one template name per line.
-@list-templates:
+# List the available templates with descriptions.
+list-templates:
     #!/usr/bin/env bash
-    if [[ ! -d "{{TEMPLATES_DIR}}" ]]; then
-      echo "No templates directory found at '{{TEMPLATES_DIR}}'." >&2
-      exit 1
-    fi
-    # Collect names using BSD/GNU-compatible flags
-    LIST="$(find "{{TEMPLATES_DIR}}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null | LC_ALL=C sort)"
-    if [[ -z "$LIST" ]]; then
-      echo "No templates found under '{{TEMPLATES_DIR}}'." >&2
-      exit 1
-    fi
+    # scaffold_template.py owns both the "what counts as a template" rule
+    # (skips _shared/) and the descriptions, so there's one copy of each.
     printf "Available templates:\n"
-    printf "  - %s\n" $LIST
+    python3 .github/scripts/scaffold_template.py --list --describe | sed 's/^/  /'
 
-# Scaffold a new experiment from a template (interactive, or pass name= and template=)
-@new-experiment name='' template='':
+# Scaffold a new experiment from a template (interactive; or positional: just new-experiment <name> <template>)
+new-experiment name='' template='':
     #!/usr/bin/env bash
     # Ensure base dirs exist
     [[ -d "{{TEMPLATES_DIR}}" ]] || { echo "Missing '{{TEMPLATES_DIR}}' directory." >&2; exit 1; }
     mkdir -p "{{EXPERIMENTS_DIR}}"
 
-    # Function to get template description
+    # Template descriptions live in scaffold_template.py (single source).
     get_template_desc() {
-      case "$1" in
-        micro) echo "Quick exploration (< 1 day)" ;;
-        spike) echo "Time-boxed investigation (1-2 days)" ;;
-        prototype) echo "Interactive demo with SvelteKit" ;;
-        evaluation) echo "Formal comparison with metrics" ;;
-        benchmark) echo "Dataset-based model evaluation" ;;
-        research) echo "User research with interviews" ;;
-        notebook) echo "Jupyter notebook exploration" ;;
-        marimo) echo "Marimo notebook exploration" ;;
-        experiment-minimal) echo "Basic experiment structure" ;;
-        *) echo "" ;;
-      esac
+      python3 -c "import sys; sys.path.insert(0, '.github/scripts'); import scaffold_template as s; print(s.describe(sys.argv[1]))" "$1"
     }
 
-    # Function to list templates (one per line)
+    # Function to list templates (one per line); skips composition dirs like _shared/
     templates_list() {
-      find "{{TEMPLATES_DIR}}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null | LC_ALL=C sort
+      python3 .github/scripts/scaffold_template.py --list 2>/dev/null
     }
 
     # Build an array of templates without using `mapfile`
@@ -110,13 +91,8 @@ help:
       fi
     fi
 
-    # Validate chosen template
-    SRC="{{TEMPLATES_DIR}}/$SELECTED_TEMPLATE"
-    if [[ ! -d "$SRC" ]]; then
-      echo "Template '$SELECTED_TEMPLATE' not found in '{{TEMPLATES_DIR}}'." >&2
-      echo "Available: ${TEMPLATES[*]}" >&2
-      exit 1
-    fi
+    # Template validity is checked by scaffold_template.py at copy time, which
+    # also rejects composition dirs like _shared/ and prints the valid list.
 
     # Ask for experiment name (dest = experiments/<name>)
     NAME="{{name}}"
@@ -138,32 +114,32 @@ help:
       exit 1
     fi
 
-    # Copy template into destination (preserve dotfiles)
-    mkdir -p "$DEST"
-    shopt -s dotglob nullglob
-    if command -v rsync >/dev/null 2>&1; then
-      rsync -a "$SRC"/ "$DEST"/
-    else
-      cp -R "$SRC"/* "$DEST"/ || true  # ok if template is empty
-    fi
+    # Compose the scaffold: _shared/ first, then the type template overlaid on top
+    # (so a type template can override a shared file — prototype-byok does).
+    # copytree handles dotfiles natively, so no dotglob dance is needed.
+    python3 .github/scripts/scaffold_template.py \
+      --template "$SELECTED_TEMPLATE" --dest "$DEST" || exit 1
 
-    # Auto-populate slug and dates in info.yaml
-    TODAY="$(date +%Y-%m-%d)"
-    if [[ -f "$DEST/info.yaml" ]]; then
-      # Use sed to replace placeholders (macOS compatible)
-      sed -i '' "s/slug: CHANGEME/slug: $NAME/g" "$DEST/info.yaml" 2>/dev/null || \
-        sed -i "s/slug: CHANGEME/slug: $NAME/g" "$DEST/info.yaml"
-      sed -i '' "s/slug: spike-CHANGEME/slug: $NAME/g" "$DEST/info.yaml" 2>/dev/null || \
-        sed -i "s/slug: spike-CHANGEME/slug: $NAME/g" "$DEST/info.yaml"
-      sed -i '' "s/YYYY-MM-DD/$TODAY/g" "$DEST/info.yaml" 2>/dev/null || \
-        sed -i "s/YYYY-MM-DD/$TODAY/g" "$DEST/info.yaml"
+    # Fill metadata via the canonical script (dates, title/description, targets,
+    # demo package name; also syncs the app.html SEO block for prototypes) so a
+    # fresh scaffold passes `just validate-strict` with no hand edits.
+    #
+    # Two defaults are load-bearing. Never fall back to "CHANGEME" — that string
+    # is on the validator's placeholder blacklist, so it guarantees the failure
+    # this step exists to prevent. And always set `targets`: templates ship it
+    # empty, an empty `targets` is a warning, and `--strict` makes warnings errors.
+    TITLE="" DESC="" TARGETS=""
+    if [[ -t 0 ]]; then
+      read -rp "Title [${NAME}]: " TITLE
+      read -rp "One-line description [${TITLE:-$NAME}]: " DESC
+      echo "  capability = what can the tools do?  infra = can we build and run this?  feature = should we build this?"
+      read -rp "Targets (capability/infra/feature) [capability]: " TARGETS
     fi
-
-    # Auto-populate slug in svelte.config.js for prototype template
-    if [[ -f "$DEST/demo/svelte.config.js" ]]; then
-      sed -i '' "s/proto-CHANGEME/$NAME/g" "$DEST/demo/svelte.config.js" 2>/dev/null || \
-        sed -i "s/proto-CHANGEME/$NAME/g" "$DEST/demo/svelte.config.js"
-    fi
+    TITLE="${TITLE:-$NAME}"
+    DESC="${DESC:-$TITLE}"
+    TARGETS="${TARGETS:-capability}"
+    uv run .github/scripts/fill-metadata.py "$DEST" \
+      --title "$TITLE" --description "$DESC" --targets "$TARGETS"
 
     echo "✅ Created '$DEST' from template '$SELECTED_TEMPLATE'"
     echo ""
@@ -181,42 +157,115 @@ help:
     fi
     echo ""
     echo "Next steps:"
-    echo "  cd \"$DEST\""
-    echo "  # Edit info.yaml - slug and dates are pre-filled"
-    echo "  # Update the CHANGEME placeholders"
-    echo "  # See .claude/skills/new-experiment/references/info-yaml-schema.md for all available fields"
+    echo "  - Write brief.md — the Before section (what question, what signals, what boundaries)"
+    if [[ -d "$DEST/demo" ]]; then
+      echo "  - cd \"$DEST/demo\" && pnpm install && pnpm dev"
+    fi
+    echo "  - just validate"
 
 # ============================================
 # Experiment Management Commands
 # ============================================
 
-# Generate the experiment index from all info.yaml files
+# Generate the experiment index from every experiment brief
 generate-index:
-    python .github/scripts/generate-index.py
+    uv run .github/scripts/generate-index.py
 
 # Validate all experiment metadata
-validate:
-    python .github/scripts/validate-experiments.py
+validate *ARGS:
+    uv run .github/scripts/validate-experiments.py {{ARGS}}
 
 # Validate strictly (warnings become errors)
 validate-strict:
-    python .github/scripts/validate-experiments.py --strict
+    uv run .github/scripts/validate-experiments.py --strict
 
-# Health check: metadata validation + coach gate sweep + demo base paths
+# Check the TS types and taxonomy.json still match experiment_schema.py
+check-schema-sync:
+    uv run .github/scripts/check-schema-sync.py
+
+# Copy the canonical design tokens into the prototype-frontend skill's assets.
+# The skill ships copies so it works outside this repo; this is how they stay
+# honest. `--check` exits 1 on drift instead of copying.
+sync-tokens *ARGS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    SRC="packages/ui/src/styles"
+    DEST=".claude/skills/prototype-frontend/assets/css"
+    if [[ ! -d "$DEST" ]]; then
+      echo "prototype-frontend skill not present (.claude/ is local-only) — nothing to sync"
+      exit 0
+    fi
+    drift=0
+    for f in primitives prototype prototype-light prototype-high-contrast; do
+      if [[ "{{ARGS}}" == *--check* ]]; then
+        if ! diff -q "$SRC/$f.css" "$DEST/$f.css" >/dev/null 2>&1; then
+          echo "DRIFT: $DEST/$f.css differs from $SRC/$f.css"
+          drift=1
+        fi
+      else
+        cp "$SRC/$f.css" "$DEST/$f.css"
+        echo "synced $f.css"
+      fi
+    done
+    if [[ "$drift" -eq 1 ]]; then
+      echo "Run \`just sync-tokens\` to update the skill's copies." >&2
+      exit 1
+    fi
+    [[ "{{ARGS}}" == *--check* ]] && echo "✓ Skill design tokens match packages/ui/src/styles" || true
+
+# Scaffold every template into a throwaway experiment and verify it validates (template regression check)
+smoke-scaffold:
+    ./.github/scripts/smoke-scaffold.sh
+
+# Capture a learning right now: appends to the brief's ## Learnings section
+learning slug text:
+    uv run .github/scripts/add-learning.py {{quote(slug)}} {{quote(text)}}
+
+# Sync demo SEO meta (app.html) from the brief's frontmatter — single source of truth
+sync-meta:
+    uv run .github/scripts/sync-demo-meta.py
+
+# Check demo SEO meta is in sync with the brief (CI parity, exits 1 on drift)
+sync-meta-check:
+    uv run .github/scripts/sync-demo-meta.py --check
+
+
+# Check the docs don't lie: every `just` recipe they name exists, every link resolves
+check-docs *ARGS:
+    python3 .github/scripts/check-docs.py {{ARGS}}
+
+# Check CI can run everything it references (nothing tracked depends on something untracked)
+check-committed:
+    python3 .github/scripts/check-committed.py
+
+# Health check: metadata + schema sync + gate sweep + docs + demo base paths
 doctor:
     #!/usr/bin/env bash
     echo "=== Metadata validation ==="
-    python .github/scripts/validate-experiments.py --quiet
+    uv run .github/scripts/validate-experiments.py --quiet
+    echo ""
+    echo "=== Schema sync (TS types + taxonomy vs experiment_schema.py) ==="
+    uv run .github/scripts/check-schema-sync.py
     echo ""
     echo "=== Coach gate sweep ==="
-    python .github/scripts/coach-sweep.py
+    uv run .github/scripts/coach-sweep.py
+    echo ""
+    echo "=== Demo SEO meta in sync ==="
+    uv run .github/scripts/sync-demo-meta.py --check
+    echo ""
+    echo "=== Docs (recipes exist, links resolve) ==="
+    python3 .github/scripts/check-docs.py
+    echo ""
+    echo "=== Committed pipeline is self-contained ==="
+    python3 .github/scripts/check-committed.py
     echo ""
     echo "=== Demo base paths (built output, if any) ==="
     just verify-base-paths
 
-# Build all demos (outputs to dist/experiments/)
-build-demos:
-    ./.github/scripts/build-demos.sh
+# Build all demos (outputs to dist/experiments/). Sync SEO meta first so app.html
+# tags always match the brief (mirrors the deploy workflow).
+build-demos *ARGS: sync-meta
+    ./.github/scripts/build-demos.sh {{ARGS}}
 
 # Full build: validate + index + demos
 build-all: validate generate-index build-demos
@@ -225,33 +274,25 @@ build-all: validate generate-index build-demos
 # Development Helpers
 # ============================================
 
-# List all experiments with their status
+# List all experiments with their status and type
 list-experiments:
-    @python -c "import yaml; from pathlib import Path; \
-    [print(f\"{d.name}: {yaml.safe_load((d/'info.yaml').open()).get('status', 'unknown') if (d/'info.yaml').exists() else yaml.safe_load((d/'experiment.yaml').open()).get('status', 'unknown') if (d/'experiment.yaml').exists() else 'no metadata'}\") \
-    for d in sorted(Path('experiments').iterdir()) if d.is_dir() and not d.name.startswith('.')]"
+    uv run .github/scripts/list-experiments.py
 
-# Show experiment types and counts
+# Show experiment counts by type and status
 stats:
-    @python -c "import yaml; from pathlib import Path; from collections import Counter; \
-    types = Counter(); \
-    [types.update([yaml.safe_load((d/'info.yaml').open()).get('type', 'unknown')]) \
-    for d in Path('experiments').iterdir() if d.is_dir() and (d/'info.yaml').exists()]; \
-    [types.update([yaml.safe_load((d/'experiment.yaml').open()).get('type', 'unknown')]) \
-    for d in Path('experiments').iterdir() if d.is_dir() and not (d/'info.yaml').exists() and (d/'experiment.yaml').exists()]; \
-    print('Experiments by type:'); \
-    [print(f'  {t}: {c}') for t, c in sorted(types.items())]"
+    uv run .github/scripts/list-experiments.py --stats
 
 # ============================================
 # Hub Commands
 # ============================================
 
-# Build the Astro hub site
-build-hub:
+# Build the Astro hub site. Depends on generate-index: experiment-index.json is
+# gitignored, so without it a fresh clone fails on an unexplained ENOENT.
+build-hub: generate-index
     cd hub && pnpm install && pnpm build
 
 # Run hub in development mode
-dev-hub:
+dev-hub: generate-index
     cd hub && pnpm install && pnpm dev
 
 # Preview hub build
@@ -279,42 +320,7 @@ clean:
     rm -rf dist/
     rm -rf hub/node_modules
     rm -rf experiments/*/demo/node_modules
-    @echo "Cleaned build outputs"
-
-# ============================================
-# Eval Sprint Runners (idea→completed L1 evals)
-# ============================================
-
-# Run the spatial-reasoning-benchmark across every model in
-# experiments/spatial-reasoning-benchmark/configs/grid.yaml. Writes
-# per-model JSON to results/ and aggregates results/comparisons.md.
-# Falls back to a stub when ANTHROPIC_API_KEY is not set, so this
-# command always completes — set the env var to get real results.
-run-spatial:
-    cd experiments/spatial-reasoning-benchmark && uv sync && uv run python src/run_all.py
-
-# Run confidence-calibration across every (model × prompt_variant) in
-# experiments/confidence-calibration/configs/grid.yaml. Writes
-# per-cell JSON and a calibration-curve / ECE comparisons.md.
-run-calibration:
-    cd experiments/confidence-calibration && uv sync && uv run python src/run_all.py
-
-# Run multilingual-reliability across every model in
-# experiments/multilingual-reliability/configs/grid.yaml. Each model
-# evaluates all (language × method) cells and writes a per-language
-# automated-score table to comparisons.md.
-run-multilingual:
-    cd experiments/multilingual-reliability && uv sync && uv run python src/run_all.py
-
-# Run all three evals end-to-end (the L1 sprint). With
-# ANTHROPIC_API_KEY unset this completes in ~10s using stubs;
-# with it set, expect a few minutes of real model calls.
-run-all-evals: run-spatial run-calibration run-multilingual
-    @echo ""
-    @echo "✅ All three evals complete. Comparison reports:"
-    @echo "   experiments/spatial-reasoning-benchmark/results/comparisons.md"
-    @echo "   experiments/confidence-calibration/results/comparisons.md"
-    @echo "   experiments/multilingual-reliability/results/comparisons.md"
+    echo "Cleaned build outputs"
 
 # ============================================
 # CI & Build Helpers
@@ -327,7 +333,7 @@ build-demos-force:
 # Clear build cache to force fresh builds
 clear-build-cache:
     rm -rf .build-cache
-    @echo "Build cache cleared"
+    echo "Build cache cleared"
 
 # Simulate CI build locally (production paths, workspace install)
 ci-build:
@@ -343,24 +349,6 @@ ci-build:
     echo "=== CI build complete ==="
     echo "Output in dist/"
 
-# Verify production base paths in built demos
-verify-base-paths:
-    #!/usr/bin/env bash
-    echo "Checking base paths in built demos..."
-    found=0
-    for dir in dist/*/; do
-      [[ -d "$dir" ]] || continue
-      name=$(basename "$dir")
-      # Skip non-demo directories
-      [[ "$name" == "hub" ]] && continue
-      [[ -f "$dir/index.html" ]] || continue
-      found=1
-      if grep -q "/applied-ai-experiments/$name" "$dir/index.html" 2>/dev/null; then
-        echo "  ✓ $name: production path"
-      elif grep -q "base.*'/$name" "$dir/_app/"*.js 2>/dev/null; then
-        echo "  ~ $name: local dev path (run 'just ci-build' for production)"
-      else
-        echo "  ✗ $name: path unclear (check manually)"
-      fi
-    done
-    [[ $found -eq 0 ]] && echo "  No demos found in dist/"
+# Verify production base paths in built demos (--strict makes drift fatal, as in CI)
+verify-base-paths *ARGS:
+    ./.github/scripts/verify-base-paths.sh dist {{ARGS}}

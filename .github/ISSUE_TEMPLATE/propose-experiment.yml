@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Have an idea but aren't ready to build? Pitch it here — no slug, no scaffold.
-        Candidates are triaged into [docs/backlog.md](../blob/main/docs/backlog.md).
+        Candidates are triaged into the team's `docs/backlog.md`.
         Ready to start instead? Use the **New Experiment** form.
 
   - type: input

@@ -19,39 +19,20 @@ Outputs (appended to $GITHUB_OUTPUT):
 
 import os
 import re
-import shutil
+import subprocess
 import sys
-from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = REPO_ROOT / ".github" / "templates"
 EXPERIMENTS_DIR = REPO_ROOT / "experiments"
 
-# Duplicated from .github/scripts/validate-experiments.py (can't import – filename has hyphen)
-VALID_TYPES = [
-    "evaluation",
-    "benchmark",
-    "spike",
-    "prototype",
-    "research",
-    "notebook",
-    "marimo",
-]
-VALID_THEMES = [
-    "cost-perf",
-    "evals",
-    "patterns",
-    "geospatial",
-    "reliability",
-    "agents",
-    "scouting",
-    "prototyping",
-]
+# Enums come from experiment_schema.py — the single source of truth.
+from experiment_schema import VALID_TARGETS, VALID_THEMES, VALID_TYPES  # noqa: E402
 
-VALID_MATURITY = ["L1", "L2", "L3"]
-VALID_INVESTMENT_TYPES = ["probe", "spike", "exploration"]
-VALID_ORIGINS = ["team-driven", "prospecting"]
+# Scaffolding (the _shared/ + type-template overlay, and what counts as a
+# template at all) lives in one place so the justfile and smoke test agree.
+from scaffold_template import list_templates, scaffold  # noqa: E402
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 
@@ -154,14 +135,15 @@ def validate(fields: dict) -> list[str]:
             file=sys.stderr,
         )
 
-    for key, valid in (
-        ("maturity", VALID_MATURITY),
-        ("investment_type", VALID_INVESTMENT_TYPES),
-        ("origin", VALID_ORIGINS),
-    ):
-        value = (fields.get(key) or "").strip()
-        if value and value not in valid:
-            errors.append(f"Invalid {key} '{value}'. Must be one of: {', '.join(valid)}")
+    targets = (fields.get("targets") or "").strip()
+    if targets and targets not in VALID_TARGETS:
+        errors.append(f"Invalid targets '{targets}'. Must be one of: {', '.join(VALID_TARGETS)}")
+
+    # An explicit template must exist — fail here with a useful message rather
+    # than at copytree time.
+    template = (fields.get("template") or "").strip()
+    if template and template not in list_templates():
+        errors.append(f"Unknown template '{template}'. Available: {', '.join(list_templates())}")
 
     # Warn on unknown themes (non-fatal, but log)
     for theme in fields.get("themes", []):
@@ -176,117 +158,33 @@ def validate(fields: dict) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def fill_info_yaml(path: Path, fields: dict) -> None:
-    """Replace placeholders in info.yaml using string replacement (preserves comments)."""
-    text = path.read_text()
-    today = date.today().isoformat()
+def fill_metadata(exp_dir: Path, fields: dict) -> None:
+    """Fill the scaffold's metadata by delegating to the canonical filler.
 
-    slug = fields["slug"]
-    title = fields["title"]
-    description = fields["description"]
-    owner = fields["owner"]
-    themes = fields.get("themes", [])
-    user_tags = fields.get("tags", [])
+    `fill-metadata.py` is what `just new-experiment` and the template smoke test
+    both run, so going through it is the only way the issue-driven path and the
+    local path can't drift — and it already handles the brief's H1 and lede, the
+    demo package name, and the app.html SEO block.
+    """
+    cmd = [
+        sys.executable,
+        str(Path(__file__).parent / "fill-metadata.py"),
+        str(exp_dir),
+        "--title",
+        fields["title"],
+        "--description",
+        fields["description"],
+        "--type",
+        fields["type"],
+    ]
+    for theme in fields.get("themes") or []:
+        cmd += ["--theme", theme]
+    for tag in fields.get("tags") or []:
+        cmd += ["--tag", tag]
+    if (fields.get("targets") or "").strip():
+        cmd += ["--targets", fields["targets"].strip()]
 
-    # Replace slug — handle both `slug: CHANGEME` and type-prefixed variants
-    text = re.sub(
-        r"^(slug:\s*).*$",
-        rf"\g<1>{slug}",
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-
-    # Replace title
-    text = re.sub(
-        r"^(title:\s*).*$",
-        rf'\g<1>"{title}"',
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-
-    # Replace type (set the correct type in case the template default differs)
-    text = re.sub(
-        r"^(type:\s*)\S+",
-        rf"\g<1>{fields['type']}",
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-
-    # Replace description (the YAML >-block line after `description: >`)
-    text = re.sub(
-        r"(description: >\n\s+)CHANGEME:.*",
-        rf"\g<1>{description}",
-        text,
-        count=1,
-    )
-
-    # Replace owner
-    text = re.sub(
-        r"^(owner:\s*).*$",
-        rf'\g<1>"{owner}"',
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-
-    # Replace dates
-    text = text.replace("YYYY-MM-DD", today)
-
-    # Insert portfolio fields (templates don't carry them; add before the Demo
-    # or Results section so the file stays grouped)
-    portfolio_lines = []
-    for key in ("maturity", "investment_type", "origin"):
-        value = (fields.get(key) or "").strip()
-        if value:
-            portfolio_lines.append(f"{key}: {value}")
-    if portfolio_lines:
-        block = "# ---- Portfolio ----\n" + "\n".join(portfolio_lines) + "\n\n"
-        anchor = re.search(r"^# ---- (?:Demo|Results)", text, re.MULTILINE)
-        if anchor:
-            text = text[: anchor.start()] + block + text[anchor.start() :]
-        else:
-            text = text.rstrip("\n") + "\n\n" + block
-
-    # Replace themes
-    themes_yaml = "[" + ", ".join(themes) + "]" if themes else "[]"
-    text = re.sub(
-        r"^(themes:\s*)\[.*?\]",
-        rf"\g<1>{themes_yaml}",
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-
-    # Append user tags to existing tags list
-    if user_tags:
-        # Find existing tags block and append new ones
-        tag_lines = "\n".join(f"  - {tag}" for tag in user_tags)
-        # If there's already a tags list with entries, append after the last `  - ...` line
-        # If it's `tags: []`, replace with the list form
-        if re.search(r"^tags:\s*\[\]", text, re.MULTILINE):
-            existing_type_tag = fields["type"]
-            all_tag_lines = (
-                f"  - {existing_type_tag}\n{tag_lines}" if existing_type_tag else tag_lines
-            )
-            text = re.sub(
-                r"^tags:\s*\[\].*$",
-                f"tags:\n{all_tag_lines}",
-                text,
-                count=1,
-                flags=re.MULTILINE,
-            )
-        else:
-            # Tags already has entries (e.g. `- prototype`), append after last tag line
-            # Find the tags: section and its indented items
-            tag_section = re.search(r"^tags:\s*\n((?:\s+-\s+.+\n)*)", text, re.MULTILINE)
-            if tag_section:
-                insert_pos = tag_section.end()
-                text = text[:insert_pos] + tag_lines + "\n" + text[insert_pos:]
-
-    path.write_text(text)
+    subprocess.run(cmd, cwd=REPO_ROOT, check=True)
 
 
 def fill_brief_md(path: Path, fields: dict) -> None:
@@ -371,41 +269,28 @@ def main() -> None:
         "title": sections.get("Experiment Title", "").strip(),
         "slug": sections.get("Slug", "").strip().lower(),
         "type": sections.get("Experiment Type", "").strip().lower(),
+        "template": "" if is_empty(sections.get("Template", "")) else sections["Template"].strip(),
         "description": sections.get("Description", "").strip(),
-        "owner": sections.get("Owner", "").strip(),
         "falsifiable_signal": sections.get("Falsifiable success signal", "").strip(),
         "themes": parse_checkboxes(sections.get("Themes", "")),
         "tags": [],
         "context": sections.get("Additional Context", "").strip(),
     }
 
-    # Optional portfolio dropdowns ("_No response_" when unselected)
-    for key, label in (
-        ("maturity", "Maturity"),
-        ("investment_type", "Investment type"),
-        ("origin", "Origin"),
-    ):
-        value = sections.get(label, "").strip()
-        fields[key] = "" if is_empty(value) else value
+    # Optional dropdown ("_No response_" when unselected)
+    targets_value = sections.get("Targets", "").strip()
+    fields["targets"] = "" if is_empty(targets_value) else targets_value
 
     # Parse comma-separated tags
     raw_tags = sections.get("Tags", "").strip()
     if raw_tags and raw_tags != "_No response_":
         fields["tags"] = [t.strip() for t in raw_tags.split(",") if t.strip()]
 
-    # Default owner to issue author
-    if is_empty(fields["owner"]):
-        fields["owner"] = issue_author
-    # Strip leading @ from owner if present
-    if fields["owner"].startswith("@"):
-        fields["owner"] = fields["owner"][1:]
-
     print(f"Issue #{issue_number} by @{issue_author}")
     print(f"  Title:       {fields['title']}")
     print(f"  Slug:        {fields['slug']}")
     print(f"  Type:        {fields['type']}")
     print(f"  Description: {fields['description'][:80]}...")
-    print(f"  Owner:       {fields['owner']}")
     print(f"  Themes:      {fields['themes']}")
     print(f"  Tags:        {fields['tags']}")
 
@@ -417,25 +302,24 @@ def main() -> None:
             print(f"  - {err}", file=sys.stderr)
         sys.exit(1)
 
-    # Copy template
-    template_dir = TEMPLATES_DIR / fields["type"]
+    # Copy template. The issue form can name a template explicitly (that is the
+    # only way to reach `prototype-byok` and `experiment-minimal`, which have no
+    # matching type); otherwise fall back to the template named after the type.
+    template_name = fields.get("template") or fields["type"]
     exp_dir = EXPERIMENTS_DIR / fields["slug"]
 
-    if not template_dir.exists():
-        print(f"Error: template directory not found: {template_dir}", file=sys.stderr)
+    print(f"\nScaffolding _shared/ + {template_name} → experiments/{fields['slug']}/")
+    try:
+        scaffold(template_name, exp_dir)
+    except SystemExit as exc:
+        print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"\nCopying template {fields['type']} → experiments/{fields['slug']}/")
-    shutil.copytree(template_dir, exp_dir)
-
     # Fill placeholders
-    info_yaml = exp_dir / "info.yaml"
-    if info_yaml.exists():
-        fill_info_yaml(info_yaml, fields)
-
+    fill_metadata(exp_dir, fields)
     fill_brief_md(exp_dir / "brief.md", fields)
 
-    # Prototype-specific replacements
+    # Prototype-specific replacements the shared filler doesn't cover
     if fields["type"] == "prototype":
         fill_prototype_extras(exp_dir, fields)
 
