@@ -79,6 +79,7 @@ export {
 export {
   OllamaProvider,
   ollama,
+  isLoopbackOrigin,
   type OllamaProviderOptions
 } from './ollama';
 

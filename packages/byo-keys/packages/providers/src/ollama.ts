@@ -73,8 +73,8 @@ interface OllamaModelsResponse {
 // -----------------------------------------------------------------------------
 
 export interface OllamaProviderOptions extends BaseProviderOptions {
-  /** 
-   * Ollama server URL 
+  /**
+   * Ollama server URL
    * @default 'http://localhost:11434'
    */
   baseUrl?: string;
@@ -86,7 +86,7 @@ export interface OllamaProviderOptions extends BaseProviderOptions {
 
 export class OllamaProvider extends BaseProvider {
   readonly config: ProviderConfig;
-  
+
   readonly capabilities: ProviderCapabilities = {
     chat: true,
     streaming: true,
@@ -97,10 +97,10 @@ export class OllamaProvider extends BaseProvider {
     functionCalling: false,
     extendedThinking: false,
   };
-  
+
   constructor(options: OllamaProviderOptions = {}) {
     super(options);
-    
+
     this.config = {
       id: 'ollama',
       name: 'Ollama (Local)',
@@ -109,30 +109,30 @@ export class OllamaProvider extends BaseProvider {
       baseUrl: options.baseUrl ?? 'http://localhost:11434',
     };
   }
-  
+
   // Override to not require auth headers
   protected addAuthHeaders(_headers: Headers): void {
     // Ollama doesn't need authentication
   }
-  
+
   // Override initialize since no key is needed
   initialize(_key?: string): void {
     // No-op for Ollama
   }
-  
+
   isInitialized(): boolean {
     return true; // Always "initialized" since no key needed
   }
-  
+
   protected getApiKey(): string {
     return ''; // No key needed
   }
-  
+
   async validateKey(_key: string): Promise<KeyValidationResult> {
     // For Ollama, "validation" means checking if the server is reachable
     try {
       const models = await this.listModels();
-      
+
       return {
         valid: true,
         providerId: 'ollama',
@@ -140,7 +140,7 @@ export class OllamaProvider extends BaseProvider {
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      
+
       return {
         valid: false,
         providerId: 'ollama',
@@ -149,7 +149,7 @@ export class OllamaProvider extends BaseProvider {
       };
     }
   }
-  
+
   /**
    * Check if Ollama server is running and reachable
    */
@@ -161,10 +161,10 @@ export class OllamaProvider extends BaseProvider {
       return false;
     }
   }
-  
+
   async listModels(): Promise<ModelInfo[]> {
     const response = await this.request<OllamaModelsResponse>('/api/tags');
-    
+
     return response.models.map(m => ({
       id: m.name,
       name: this.formatModelName(m.name),
@@ -175,57 +175,57 @@ export class OllamaProvider extends BaseProvider {
       },
     }));
   }
-  
+
   async chat(request: ChatRequest): Promise<ChatResponse> {
     const ollamaRequest = this.toOllamaRequest({ ...request, stream: false });
-    
+
     const response = await this.request<OllamaResponse>('/api/chat', {
       method: 'POST',
       body: JSON.stringify(ollamaRequest),
     });
-    
+
     return this.fromOllamaResponse(response, request.model);
   }
-  
+
   async *chatStream(request: ChatRequest): AsyncIterable<ChatStreamChunk> {
     const ollamaRequest = this.toOllamaRequest({ ...request, stream: true });
-    
+
     const url = `${this.getBaseUrl()}/api/chat`;
-    
+
     const response = await this.fetchFn(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(ollamaRequest),
     });
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     if (!response.body) {
       throw new Error('No response body');
     }
-    
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
     let started = false;
-    
+
     try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() ?? '';
-        
+
         for (const line of lines) {
           if (!line.trim()) continue;
-          
+
           try {
             const chunk: OllamaResponse = JSON.parse(line);
-            
+
             if (!started) {
               started = true;
               yield {
@@ -234,14 +234,14 @@ export class OllamaProvider extends BaseProvider {
                 model: chunk.model,
               };
             }
-            
+
             if (chunk.message?.content) {
               yield { type: 'delta', content: chunk.message.content };
             }
-            
+
             if (chunk.done) {
               yield { type: 'done', finishReason: 'stop' };
-              
+
               if (chunk.eval_count !== undefined) {
                 yield {
                   type: 'usage',
@@ -261,37 +261,37 @@ export class OllamaProvider extends BaseProvider {
       reader.releaseLock();
     }
   }
-  
+
   // ---------------------------------------------------------------------------
   // Model Management (Ollama-specific)
   // ---------------------------------------------------------------------------
-  
+
   /**
    * Pull a model from the Ollama library
    */
   async pullModel(modelName: string, onProgress?: (status: string) => void): Promise<void> {
     const url = `${this.getBaseUrl()}/api/pull`;
-    
+
     const response = await this.fetchFn(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: modelName }),
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to pull model: ${response.statusText}`);
     }
-    
+
     if (!response.body) return;
-    
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    
+
     try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         const lines = decoder.decode(value).split('\n');
         for (const line of lines) {
           if (!line.trim()) continue;
@@ -307,7 +307,7 @@ export class OllamaProvider extends BaseProvider {
       reader.releaseLock();
     }
   }
-  
+
   /**
    * Delete a local model
    */
@@ -317,14 +317,14 @@ export class OllamaProvider extends BaseProvider {
       body: JSON.stringify({ name: modelName }),
     });
   }
-  
+
   // ---------------------------------------------------------------------------
   // Conversion Helpers
   // ---------------------------------------------------------------------------
-  
+
   private toOllamaRequest(request: ChatRequest): OllamaRequest {
     const messages = this.convertMessages(request);
-    
+
     return {
       model: request.model,
       messages,
@@ -338,26 +338,26 @@ export class OllamaProvider extends BaseProvider {
       },
     };
   }
-  
+
   private convertMessages(request: ChatRequest): OllamaMessage[] {
     const messages: OllamaMessage[] = [];
-    
+
     if (request.system) {
       messages.push({ role: 'system', content: request.system });
     }
-    
+
     for (const msg of request.messages) {
       const converted: OllamaMessage = {
         role: msg.role,
         content: '',
       };
-      
+
       if (typeof msg.content === 'string') {
         converted.content = msg.content;
       } else {
         const textParts: string[] = [];
         const images: string[] = [];
-        
+
         for (const part of msg.content) {
           if (part.type === 'text') {
             textParts.push(part.text);
@@ -365,19 +365,19 @@ export class OllamaProvider extends BaseProvider {
             images.push(part.source.data);
           }
         }
-        
+
         converted.content = textParts.join('\n');
         if (images.length > 0) {
           converted.images = images;
         }
       }
-      
+
       messages.push(converted);
     }
-    
+
     return messages;
   }
-  
+
   private fromOllamaResponse(response: OllamaResponse, model: string): ChatResponse {
     return {
       id: `ollama-${Date.now()}`,
@@ -392,7 +392,7 @@ export class OllamaProvider extends BaseProvider {
       raw: response,
     };
   }
-  
+
   private formatModelName(name: string): string {
     // Convert "llama3:8b" to "Llama 3 (8B)"
     const [base, variant] = name.split(':');
@@ -403,20 +403,20 @@ export class OllamaProvider extends BaseProvider {
       .split(' ')
       .map(w => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
-    
+
     return variant ? `${formatted} (${variant.toUpperCase()})` : formatted;
   }
-  
+
   private estimateContextWindow(paramSize?: string): number {
     if (!paramSize) return 4096;
-    
+
     const size = parseFloat(paramSize);
     if (size >= 70) return 32768;
     if (size >= 30) return 16384;
     if (size >= 7) return 8192;
     return 4096;
   }
-  
+
   private supportsVision(name: string): boolean {
     const visionModels = ['llava', 'bakllava', 'moondream', 'cogvlm'];
     return visionModels.some(v => name.toLowerCase().includes(v));
@@ -429,4 +429,25 @@ export class OllamaProvider extends BaseProvider {
 
 export function ollama(options?: OllamaProviderOptions): OllamaProvider {
   return new OllamaProvider(options);
+}
+
+// -----------------------------------------------------------------------------
+// Reachability
+// -----------------------------------------------------------------------------
+
+const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
+
+/**
+ * Whether the page is served from a loopback origin, i.e. whether a default
+ * `http://localhost:11434` Ollama server could plausibly be reachable at all.
+ *
+ * Callers should gate startup auto-discovery on this. From a deployed https://
+ * page the probe never succeeds — the browser blocks it as mixed content or the
+ * server answers without an `Access-Control-Allow-Origin` header — and the only
+ * observable result is a CORS error in every visitor's console.
+ */
+export function isLoopbackOrigin(): boolean {
+  if (typeof location === 'undefined') return false;
+  const host = location.hostname;
+  return LOOPBACK_HOSTS.has(host) || host.endsWith('.localhost');
 }
