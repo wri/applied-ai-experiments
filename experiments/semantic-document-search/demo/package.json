@@ -22,7 +22,6 @@
     "@sveltejs/vite-plugin-svelte": "catalog:",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
-    "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   },

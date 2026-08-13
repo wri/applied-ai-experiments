@@ -28,7 +28,7 @@
 	} from '$lib/types';
 	import { loadAndParsePDF, type ParseProgress } from '$lib/pdf/parser';
 	import { generateThumbnails } from '$lib/pdf/renderer';
-	import { embeddingSetKey, getModel } from '$lib/embeddings/models';
+	import { embeddingSetKey } from '$lib/embeddings/models';
 	import { EXAMPLE_DOCS, type ExampleDoc } from '$lib/data/examples';
 	import {
 		createInitialDocumentState,
@@ -496,19 +496,25 @@
 
 <DemoLayout
 	title="Semantic Search"
-	subtitle="Search PDFs by meaning, not just keywords"
 	maxWidth="xl"
 	showSettings={false}
 	showApiKeys={false}
 >
-	{#snippet headerActions()}
-		{#if isReady}
-			<Button variant="ghost" size="sm" onclick={toggleCompare}>
-				{compareMode ? 'Exit compare' : 'Compare configs'}
-			</Button>
-		{/if}
-		{#if !isIdle}
-			<Button variant="ghost" size="sm" onclick={handleReset}>New Document</Button>
+	<!-- Labelled document controls belong in the banner row, not the header
+	     (DESIGN.md §4). They also come and go with state, which is exactly the
+	     kind of shifting width the header shouldn't absorb. -->
+	{#snippet banner()}
+		{#if isReady || !isIdle}
+			<div class="banner-actions">
+				{#if isReady}
+					<Button variant="ghost" size="sm" onclick={toggleCompare}>
+						{compareMode ? 'Exit compare' : 'Compare configs'}
+					</Button>
+				{/if}
+				{#if !isIdle}
+					<Button variant="ghost" size="sm" onclick={handleReset}>New document</Button>
+				{/if}
+			</div>
 		{/if}
 	{/snippet}
 
@@ -693,6 +699,13 @@
 </DemoLayout>
 
 <style>
+	.banner-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-left: auto;
+	}
+
 	.demo-content {
 		max-width: var(--max-width, 1200px);
 		margin: 0 auto;
