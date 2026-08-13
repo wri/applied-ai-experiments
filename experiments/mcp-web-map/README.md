@@ -1,6 +1,6 @@
 # MCP Web Map
 
-> Chat-driven control of a MapLibre GL JS map, with **two interchangeable tool engines** you can toggle at runtime — a hand-rolled client-side bridge and the W3C **WebMCP** standard (`navigator.modelContext`) — to compare the build experience, limitations, and UX of each. See [brief.md](./brief.md) for the full context and findings.
+> See [brief.md](./brief.md) for context, signals, and findings.
 
 ## Setup
 
@@ -16,19 +16,13 @@
 cd demo
 pnpm install
 pnpm dev
-# Open the printed URL and enter your API key in the header
 ```
 
-The chat uses [BYOK](../../packages/byo-keys) — keys live only in your browser's
-localStorage. Use the **Engine** toggle in the header to switch between the
-custom bridge and WebMCP; the engine that produced each reply is tagged in the
-transcript.
+The chat uses [BYOK](../../packages/byo-keys) - keys live only in your browser's localStorage. Use the Engine toggle in the header to switch between the custom bridge and WebMCP; the engine that produced each reply is tagged in the transcript.
 
 ## Two engines
 
-The same chat drives the same tools through either engine. The only thing that
-differs is how tools are registered and dispatched — the model-facing protocol
-(a fenced ` ```tool ` JSON block) is identical, which keeps the comparison fair.
+The same chat drives the same tools through either engine. The only thing that differs is how tools are registered and dispatched — the model-facing protocol (a fenced ` ```tool ` JSON block) is identical, which keeps the comparison fair.
 
 | | Custom bridge | WebMCP |
 |---|---|---|
@@ -38,34 +32,32 @@ differs is how tools are registered and dispatched — the model-facing protocol
 | Input validation | Manual (required-param check) | Automatic, against the registered `inputSchema` |
 | Runtime | None | [`@mcp-b/webmcp-polyfill`](https://www.npmjs.com/package/@mcp-b/webmcp-polyfill) |
 
-WebMCP is the standard a browser-native agent (Chrome 149+/Edge 147) would
-consume; here an in-page chat consumes it via the polyfill so the demo stays a
-self-contained static site. See [brief.md](./brief.md) for the rough edges this
-surfaced.
+WebMCP is the standard a browser-native agent (Chrome 149+/Edge 147) would consume; here an in-page chat consumes it via the polyfill so the demo stays a self-contained static site. See [brief.md](. brief.md) for the rough edges this surfaced.
 
 ## What's in here
 
 ```
-├── demo/src/
+demo/
+├── src/
 │   ├── routes/
-│   │   ├── +layout.svelte        # BYOK context + theme
-│   │   └── +page.svelte          # Map + chat UI, engine wiring
-│   ├── static/data/
-│   │   └── countries.geojson     # Bundled Natural Earth dataset (public domain)
+│   │   ├── +layout.svelte      # Theme wrapper, ToastContainer, SessionTelemetry
+│   │   └── +page.svelte        # Map + chat UI, engine wiring, runLLM bridge
 │   └── lib/
-│       ├── components/            # MapView, ChatPanel, EngineToggle, CommandPalette…
+│       ├── components/         # MapView, ChatPanel, EngineToggle, CommandPalette…
 │       ├── agent/
-│       │   └── loop.ts            # Engine-agnostic agentic loop (feeds tool results back)
+│       │   └── loop.ts         # Engine-agnostic agentic loop (feeds tool results back)
 │       ├── mcp/
-│       │   ├── engine.ts          # ToolEngine interface + bridge & webmcp engines
-│       │   ├── bridge.ts          # Custom-bridge dispatcher
-│       │   ├── webmcp.ts          # WebMCP registration/dispatch via navigator.modelContext
-│       │   ├── protocol.ts        # Shared tool-call parse/clean
-│       │   ├── types.ts           # Tool definition types
-│       │   └── tools/             # Tool implementations (navigation, layers, ui, data, geo)
-│       └── stores/                # Map, chat, engine, URL state
-├── brief.md
-└── info.yaml
+│       │   ├── engine.ts       # ToolEngine interface + bridge & webmcp engines
+│       │   ├── bridge.ts       # Custom-bridge dispatcher
+│       │   ├── webmcp.ts       # WebMCP registration/dispatch via navigator.modelContext
+│       │   ├── protocol.ts     # Shared tool-call parse/clean
+│       │   ├── types.ts        # Tool definition types
+│       │   └── tools/          # Tool implementations (navigation, layers, ui, data, geo)
+│       ├── stores/             # Map, chat, engine, URL state
+│       └── slug.ts             # Slug derived from the base path (namespaces telemetry)
+└── static/data/
+    ├── countries.geojson       # Bundled Natural Earth dataset (public domain)
+    └── README.md               # Dataset provenance and which tools consume it
 ```
 
 ### Available tools
@@ -99,24 +91,8 @@ Open the command palette (`Cmd/Ctrl + K`) for one-click prompts, or ask:
 - "Measure the distance between Cairo and Cape Town"
 - "Map the three largest cities in Kenya, then measure the distance between the two farthest apart and show a popup with the result"
 
-Run each under both engines to compare.
+## References
 
-## Decisions & Learnings Log
-
-- **Standard vs custom** turned out to be the interesting axis, not worker vs
-  main thread — the original web-worker framing was descoped.
-- **WebMCP inverts ownership:** the page is a tool *provider*, with a
-  browser-native agent as the intended consumer. Driving it from an in-page chat
-  works but is off the happy path.
-- **You get input-schema validation for free** with WebMCP; the custom bridge
-  validates by hand.
-- The strict `@mcp-b/webmcp-polyfill` exposes `registerTool` +
-  `getTools()`/`executeTool()` but not `callTool()`/`listTools()`, so the engine
-  carries a fallback chain. `registerTool` throws on duplicate names — guard
-  registration at `navigator.modelContext`'s lifetime, not a module's.
-- **Feeding tool results back** (the agentic loop) is what unlocks real
-  multi-step requests.
-- Tool definition quality and streaming responses both materially affect the UX,
-  as before.
-
-See [brief.md](./brief.md) for the full write-up.
+- [WebMCP (W3C Web Machine Learning CG draft)](https://github.com/webmachinelearning/webmcp)
+- [Chrome WebMCP docs](https://developer.chrome.com/docs/ai/webmcp)
+- [@mcp-b/webmcp-polyfill](https://www.npmjs.com/package/@mcp-b/webmcp-polyfill)

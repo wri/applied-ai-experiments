@@ -1,66 +1,97 @@
+---
+# ---- Required ----
+title: "Semantic Document Search"
+type: prototype
+status: done
+
+# ---- Recommended ----
+created_at: 2026-01-20
+updated_at: 2026-06-25
+
+# ---- Classification ----
+targets: infra
+themes:
+  - reliability
+  - patterns
+tags:
+  - semantic-search
+  - transformers.js
+
+# ---- Demo ----
+demo:
+  enabled: true
+  type: sveltekit
+  build_command: "pnpm build"
+  output_dir: "demo/dist"
+---
+
 # Semantic Document Search
 
-> Browser-based ML can now run embedding models locally. This experiment uses that capability to build a privacy-preserving document search tool where relevance is shown as a visual map across the full document, testing how doc overviews compare with traditional ranked results for navigating long PDFs, and whether client-side embeddings are practical on consumer hardware.
+> Client-side semantic search tool for PDF documents using browser-based embeddings. Load a PDF (or an example), search by meaning, and explore relevance as a page heatmap, ranked passages, or score charts. Switch between embedding models, tune chunking strategies, and compare configurations side by side.
 
 ## Before
 
 ### What problem or question does this address?
 
-WRI researchers and internal teams regularly work with long policy and science documents where relevant content may use different terminology than a search query. Traditional keyword search misses semantically relevant content, a query about "deforestation drivers" might not find paragraphs discussing "land-use conversion pressures." Browser-based ML has matured enough (via transformers.js) to run embedding models client-side, which means we can build privacy-preserving semantic search without server infrastructure. This experiment tests whether that approach is practical on consumer hardware and whether it could be useful for WRI workflows.
+Browser-based ML can run embedding models locally. This builds a privacy-preserving document search
+where relevance is a visual map across the whole document. We're kicking the tires on a few libraries and models to see whether client-side embeddings are practical on consumer hardware.
+
+WRI teams work with long policy and science documents where the relevant content may sit in dense or domain-specific language. Ctrl + F "deforestation drivers" won't keyword-match "land-use conversion pressures." transformers.js has matured enough to run embedding models client-side, so we're looking at semantic search without server infrastructure.
+
+Primary theme: **reliability**. The question is whether a simple client-side retrieval setup is plausibly capable of delvering a good retrieval experience for common use cases.
 
 ### What does this experiment actually do?
 
-1. **Upload** a PDF file or load from URL
-2. **Extract** text from PDF pages using pdfjs-dist
-3. **Embed** text chunks using Xenova/gte-small via transformers.js in a Web Worker
-4. **Search** by meaning using cosine similarity
-5. **Visualize** relevance across all pages as a heatmap overlay on page thumbnails
-6. **Drill down** by clicking a heatmap page to reveal the matched paragraphs within it
-
-No data leaves the browser. The embedding model (~30MB) downloads once and runs locally.
+Upload or fetch a PDF → extract text with pdfjs-dist → embed chunks with Xenova/gte-small via transformers.js in a Web Worker → search by cosine similarity → visualize relevance as a heatmap over page thumbnails → click a page to see the matched paragraphs.
 
 ### What signals are we looking for?
 
-**Success looks like:**
-- 80%+ of top-3 results are relevant to the query meaning (qualitative assessment)
-- Model loads in <30s, search responds in <500ms
-- Users can identify relevant pages using the heatmap
-
-**Failure looks like:**
-- Model loading or inference is too slow to be practical on typical hardware
-- Embedding quality is too low for domain-specific terminology
-- Users find the heatmap confusing or unhelpful compared to a simple ranked list
-
-**Qualitative criteria:**
-- **Workflow comparison:** Do users find this faster or more useful than Ctrl+F / manual scanning for locating relevant content?
-- **Discovery value:** Does the heatmap surface relevant pages users wouldn't have found through keyword search alone?
-
-**Hypotheses:**
-- **H1:** Client-side embedding models can generate useful semantic representations for document search with acceptable performance
-- **H2:** Visual heatmap overlays on page thumbnails provide an intuitive way to understand search result relevance across a document
+- Client-side embeddings are practical on consumer hardware: a small model loads and embeds a ~20-page report fast enough that search feels interactive, on WebGPU or plain WASM.
+- Semantic retrieval surfaces passages a keyword search misses.
+- Search also narrows the results enough to be useful.
 
 ### What are the boundaries?
 
-- **Scope:** Single-document semantic search with multiple visualization modes, a model picker, tunable chunking, and side-by-side config comparison
-- **Time box:** Open-ended; runs until we learn what we need
-- **Not doing:** Multi-document search, server-side processing, persistent storage of embeddings, OCR for scanned documents
-- **Model choice:** Now a picker over a curated set (MiniLM, GTE-small (default), BGE-small, mxbai-xsmall, Arctic-S) plus EmbeddingGemma-300M behind an explicit large-download opt-in. Models that need asymmetric query/document prompt prefixes (BGE, Arctic, Gemma) apply them automatically — omitting them tanks retrieval quality
-- **Visualization choice:** Page-level heatmap remains the default (preserves document structure, at-a-glance scanning), now joined by a ranked-passage list (classic results with query-term highlighting) and score charts (raw-cosine distribution + per-page bars). A collapsible quality panel surfaces honest, ground-truth-free signals (top raw cosine, gap to #2, timing, backend) with a plain-language verdict
-- **Chunking:** Pluggable strategies (paragraph (default), fixed-size with overlap, sentence-window, whole-page) with adjustable params, and a comparison mode that embeds the same document under 2+ (model, strategy) configs to judge which retrieves best
-- **Runtime:** transformers.js v4 with a WebGPU runtime (WASM fallback); chunks embed in batches in a Web Worker that owns the embeddings (keyed, LRU-cached per model+strategy+doc). Embedding starts as soon as text is extracted — thumbnails render in parallel and never block search
-- **Dependencies:** @huggingface/transformers v4, pdfjs-dist, @observablehq/plot
-- **Constraints:** Browser memory limits for large PDFs (100+ pages); first-use model download (~23–33MB for the light models, ~300MB for EmbeddingGemma); WebGPU recommended for the heavy model
+- **Browser-only** — no server, no API keys; everything runs on the visitor's hardware.
+- **Text PDFs only** — not planning on OCR for scanned documents.
+- **Retrieval surface, not RAG** — ranking and visualization only; no answer generation, no hybrid fusion or reranking.
+- **No labeled evaluation** — quality is read from ground-truth-free metrics and inspection, not precision/recall.
+
+---
+
+## Learnings
+
+- Future note for embedding model bakeoffs: embedding models often expect different prompt prefixes (query-side instruction prefix, or document prefixes) so the prefix belongs in the model registry as per-model data and applied by role at embed time.
+- BM25 lexical baseline alongside any semantic search surface helps to establish a reasonable comparison. Always be BM25ing.
+- Chunking strategy seems to change retrieval quality more than swapping between two similarly-sized embedding models.
+- Tooling moves very fast... transformers.js is a central piece of this experiment, and the library got a major update after the first draft was written.
 
 ---
 
 ## After
 
-_Fill this section out when the experiment concludes or is stopped._
+**Outcome:** Confirmed (capability): client-side embedding search is practical on ordinary hardware — six models from 23 to 300 MB run in a Web Worker over WebGPU with WASM fallback, and a config-keyed cache makes side-by-side comparison of models and chunking strategies cheap. Retrieval *quality* claims are impressionistic: would need to extend this experimentwith a labeled query set and do proper evals on quality to make any claims.
+
+### Signal check
+
+- **Practical on consumer hardware** — **Confirmed.** The 384-dim small models (23–33 MB) load in seconds and embed a ~20-page report quickly enough to feel interactive; fp32 on WebGPU with quantized WASM fallback covers devices without GPU access.
+- **Semantic surfaces what keyword misses** — **Confirmed, anecdotally.** The BM25 baseline in compare mode shows the two methods ranking different passages on the example documents, and the vocabulary-mismatch cases behave as hoped. But nothing was measured; did not yet develop a small labeled query set for test documents.
 
 ### What happened?
 
-### What did you learn?
+A six-model registry with per-model prompt prefixes stored as data and applied by role, four pluggable chunking strategies with tunable parameters, a BM25 lexical baseline, and a compare mode running 2-4 configurations against the same document. Embeddings run in a web worker, keyed on (document, model, chunking, options) with a small LRU.
+
+transformers.js shipped a major version (3 → 4) mid-experiment and the demo was migrated to the new version.
 
 ### What would you recommend?
 
+- Adopt the pattern for demos and light internal tools: client-side embeddings are real, free to
+  operate, and private by construction.
+- Before anything product-shaped: add a small labeled eval set.
+
 ### What decisions and tradeoffs came up along the way?
+
+- Per-model prompt prefixes live in the registry.
+- BM25 as a comparison variant.
+- Example documents are fetched cross-origin from files.wri.org rather than bundled - we might sometimes CORS a lil.
+- Many loose ends left as-is: Matryoshka dims are declared and sketched out but truncation was not attempted, top-K and the relevance threshold are hardcoded.
