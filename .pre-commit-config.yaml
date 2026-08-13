@@ -79,6 +79,10 @@ repos:
       - id: check-yaml
         args: [--unsafe]  # Allow custom YAML tags
       - id: check-json
+        # tsconfig files are JSONC — TypeScript reads `//` comments, this hook's
+        # strict json parser does not. Excluded rather than stripping comments
+        # that explain non-obvious compiler settings.
+        exclude: tsconfig.*\.json$
       - id: check-added-large-files
         # 1500, not 1000: map demos ship real geospatial fixtures, and
         # ai-web-map-exploration's can-tho-places.geojson is 1.3MB of Overture
