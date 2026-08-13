@@ -23,8 +23,13 @@ export function createRunHistory(experiment: string): RunHistory {
 
   async function save(run: NewRunRecord): Promise<RunRecord | null> {
     if (!available) return null;
+    // Callers pass reactive ($state) proxies and other structures IndexedDB's
+    // structured clone can't serialize. Run records are JSON-shaped by contract
+    // (InspectableRequest / RunResponse / config), so a JSON round-trip yields a
+    // plain, cloneable value — and frees callers from snapshotting at every site.
+    const plain = JSON.parse(JSON.stringify(run)) as NewRunRecord;
     const record: RunRecord = {
-      ...run,
+      ...plain,
       id: crypto.randomUUID(),
       experiment,
       createdAt: Date.now(),

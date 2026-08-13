@@ -57,14 +57,37 @@ export function formatUsd(usd: number | null): string {
   return `$${usd.toFixed(2)}`;
 }
 
-/** Sum usage across calls (e.g. a fan-out run). */
+/** Sum usage across calls (e.g. a fan-out run). Cache/thinking totals appear
+ *  only when at least one call reported them, so existing input/output displays
+ *  are unaffected. */
 export function sumUsage(usages: Array<TokenUsage | undefined>): TokenUsage {
   const total: TokenUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
+  let cacheRead = 0;
+  let cacheWrite = 0;
+  let thinking = 0;
+  let sawCacheRead = false;
+  let sawCacheWrite = false;
+  let sawThinking = false;
   for (const usage of usages) {
     if (!usage) continue;
     total.inputTokens += usage.inputTokens;
     total.outputTokens += usage.outputTokens;
     total.totalTokens += usage.totalTokens;
+    if (usage.cacheReadTokens !== undefined) {
+      cacheRead += usage.cacheReadTokens;
+      sawCacheRead = true;
+    }
+    if (usage.cacheWriteTokens !== undefined) {
+      cacheWrite += usage.cacheWriteTokens;
+      sawCacheWrite = true;
+    }
+    if (usage.thinkingTokens !== undefined) {
+      thinking += usage.thinkingTokens;
+      sawThinking = true;
+    }
   }
+  if (sawCacheRead) total.cacheReadTokens = cacheRead;
+  if (sawCacheWrite) total.cacheWriteTokens = cacheWrite;
+  if (sawThinking) total.thinkingTokens = thinking;
   return total;
 }

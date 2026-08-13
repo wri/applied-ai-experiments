@@ -2,6 +2,8 @@
   import { Panel, Button, EmptyState, Badge, formatRelativeTime, toast } from '@wri-datalab/ui';
   import type { RunHistory } from './run-history';
   import type { RunRecord } from '../types';
+  import { recordToReplaySession } from '../replay/record';
+  import { downloadJson } from '../export/download';
 
   interface Props {
     history: RunHistory;
@@ -31,6 +33,18 @@
   async function handleRemove(id: string) {
     await history.remove(id);
     await refresh();
+  }
+
+  function handleExportReplay(record: RunRecord) {
+    const { session, redactions } = recordToReplaySession(record, { title: record.label });
+    downloadJson(session, `${record.experiment}-replay.json`);
+    if (redactions > 0) {
+      toast.error(
+        `Exported with ${redactions} secret(s) redacted — review the file before committing.`
+      );
+    } else {
+      toast.success('Replay session exported — review, then commit to src/lib/replay/');
+    }
   }
 
   async function handleClear() {
@@ -67,6 +81,7 @@
               <Button variant="secondary" size="sm" onclick={() => onrestore(record)}>Restore</Button>
             {/if}
             <Button variant="ghost" size="sm" onclick={() => handleDuplicate(record.id)}>Duplicate</Button>
+            <Button variant="ghost" size="sm" onclick={() => handleExportReplay(record)}>Export replay</Button>
             <Button variant="ghost" size="sm" onclick={() => handleRemove(record.id)}>Delete</Button>
           </div>
         </li>

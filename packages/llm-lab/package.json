@@ -10,6 +10,11 @@
       "types": "./src/index.ts",
       "svelte": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./models": {
+      "types": "./src/models/index.ts",
+      "svelte": "./src/models/index.ts",
+      "default": "./src/models/index.ts"
     }
   },
   "files": [
