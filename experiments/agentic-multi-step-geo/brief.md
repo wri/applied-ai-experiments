@@ -72,12 +72,42 @@ Runs 60 containerized sessions of the same 31-question EUDR workflow over a 117-
 
 ### Signal check
 
+- **Strict success.** **Refuted.** No session answered all 31 questions correctly. The best single run, Opus 4.8 with the policy documents, got 26. Five questions (q03, q14, q15, q19, q23) came out wrong in all 60 sessions.
+- **Reliability.** **Confirmed.** Opus 4.8 with the documents gave the same grade on 28 of 31 questions across all 10 runs, and got 23 of those right every time. Sonnet 5 matched on 29 and got 21 right every time. Agreement isn't correctness. All 20 Sonnet and Opus runs with the documents report the same wrong matched-field area: 23,579 ha, where the answer key has 36,109 ha.
+- **Error propagation.** **Confirmed.** Accuracy drops at the stage where a rule first applies and stays down for every question built on it. Without the documents, Sonnet and Opus score 100% on stage 2, 43% on stage 3, and 0% on stage 4. With them, Opus scores 10% on stage 6 across all runs but 100% on the runs where every upstream answer it depends on passed.
+- **How much the spec matters.** **Confirmed.** The four documents take Sonnet 5 from 34.8% to 73.5% and Opus 4.8 from 34.8% to 75.2%. Cost barely moves: $4.53 per Opus session with them, $5.26 without. Haiku 4.5 stays near 12% either way, so the documents help only a model that can already do the spatial work.
 
 ### What happened?
 
+We built the harness, generated the answer key by running the production `wri/rural-land` EUDR SQL against the same pinned catalogs, and ran all 60 sessions. The headline held: written expert context doubles accuracy for the two stronger models.
 
+The saved answers show two different kinds of error, and they call for different fixes.
+
+**Without the documents, the agent makes defensible calls that aren't the expert's.** All 20 Sonnet and Opus runs decided MapBiomas class 21 (Mosaic of Uses) is no Annex I commodity. The policy counts it as cattle. That one call removes 24.4 of 67.9 ha of post-2020 cattle clearing and drops a flagged property off the non-compliant list. The same runs ranked the nearest slaughterhouse ahead of the farm's cooperative as the first contact for 13 to 17 of the 17 or 18 properties each run flagged. The answer key ranks the cooperative first for 16 of 18. Each of these changes what a trader would do. The documents fixed both, in every run.
+
+**With the documents, most remaining misses trace to one technical slip.** DuckDB's spatial functions read GeoParquet coordinates latitude-first unless you set `geometry_always_xy = true`. Without that setting, every field comes out 35% too small, with no error and a plausible number. The slip appears in all 20 Sonnet and Opus runs with the documents and 18 of 20 without. It also shortens distances, which pushes two properties across the 10 km proximity rule and changes their first contact. The grader scored those two swapped flags as a near miss.
+
+Two smaller surprises. Answers can pass on tolerance and still carry error downstream. Without the documents, runs matched 798 fields where the key has 793, which passes. Those extra fields then move later loss totals by up to 5%. And early drafts of the policy documents leaked answers: five of 31 questions were partly answerable from the documents before any query ran.
 
 ### What would you recommend?
 
+- **Share it.** The results make a concrete, defensible case for agentic geospatial workflows with written expert context, and the saved transcripts let anyone check the claims.
+- **Adopt the pattern:** write the expert rules of a workflow down as policy documents before handing it to an agent. It doubled accuracy here at no extra cost.
+- **Keep a graded eval in the loop for anything that ships.** Documents can't prevent slips nobody anticipated, like axis order. Only the answer key caught it.
+- **Give decision-changing fields no near-miss credit.** A swapped threshold flag or contact tier is a wrong answer.
+- **Don't run this unattended as a compliance tool yet.** The best run got 26 of 31, and the misses include hectare totals a report would quote.
+- **Build on it** with the next two workflows already designed, agricultural drought and self-hosted forest monitoring, reusing this harness and oracle approach.
+- **Skip Haiku 4.5** for multi-step spatial work of this kind.
 
 ### What decisions and tradeoffs came up along the way?
+
+- **Production SQL as the answer key, not hand-built answers.** The key regenerates with checksums and matches what real reports use. The tradeoff: it inherits the pipeline's judgment calls, such as treating Mosaic of Uses as pasture and excluding forest plantation because detection is unreliable.
+- **Stripped measured figures out of the policy documents.** Five questions were partly answerable from the documents alone. Every calibration number moved into the methods note, and a test now fails if any golden value appears in a mounted file.
+- **No area or projection convention in the documents, on purpose.** Stating one would have raised scores and hidden the axis-order slip, which is the most transferable finding.
+- **A 1% tolerance for geometry questions.** Reasonable area methods land within 1% of each other, so the tolerance lets the agent pick one. One exception grades strict (q23), because the slack credited answers naming a neighbouring field ID.
+- **Case-insensitive string grading.** Capitalization alone cost an ablation arm 23 to 28 points on runs that classified every crop identically.
+- **A measured tie tolerance for assigning fields to properties.** Area methods disagree by about 1e-11 on containment fractions, enough to hand a field to a different property. The tie band sits at 1e-9, between that noise and the closest real difference.
+- **A near-miss category at ten times the tolerance.** It separates formatting and rounding from real errors, but it also labeled two decision-changing flag swaps as near misses. Worth revisiting.
+- **A damaged input list.** Stage 2 seeds duplicates, a centroid-only row, an ID-less polygon, swapped axes, and an unresolvable point, so faithful input handling gets graded and not assumed.
+- **Isolated sessions.** Each run starts from an empty home directory in Docker, so no host configuration, hooks, or memory reach the agent.
+- **Keep the run artifacts in the repo.** Claude Code's 30-day cleanup deleted the interactive transcripts from July and August. The per-run `transcript.jsonl` files, answers, and grades are the durable record.
