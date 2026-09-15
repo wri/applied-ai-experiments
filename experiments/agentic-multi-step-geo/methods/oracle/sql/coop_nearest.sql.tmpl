@@ -1,0 +1,20 @@
+-- q26: the nearest surviving delivery facility per flagged cadaster. Reads the
+-- ranked candidate set coop_match produced; keeps the closest delivery-tier
+-- candidate per cadaster. Cadasters whose commodity routed to no tier have no
+-- delivery candidate and so no row here.
+CREATE OR REPLACE VIEW _q AS
+WITH flagged AS (
+    SELECT DISTINCT m.cod_imovel
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope AND m.has_post2020_loss
+)
+SELECT cand.cod_imovel, cand.entity_id, cand.tier,
+       round(cand.distance_km, 1) AS distance_km
+FROM read_parquet('${CANDIDATES_PARQUET}') cand
+JOIN flagged f USING (cod_imovel)
+WHERE cand.tier IN ('intake_point', 'slaughter_point', 'mill_point')
+QUALIFY row_number() OVER (PARTITION BY cand.cod_imovel
+                           ORDER BY cand.distance_km, cand.entity_id) = 1
+ORDER BY cand.cod_imovel;

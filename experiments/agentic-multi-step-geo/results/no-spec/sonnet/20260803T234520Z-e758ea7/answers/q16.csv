@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,Pasture is the MapBiomas land-cover proxy for cattle ranching (grazing use); it is not direct evidence of livestock presence or of beef vs. dairy use, but it is the standard class used to flag EUDR cattle exposure in Brazil.
+21,Mosaic of Uses,,false,Mixed cropland/pasture/other-use class at sub-pixel resolution; no single Annex I commodity can be attributed to it, so it is excluded from the commodity-level analysis.
+39,Soybean,soya,true,Direct one-to-one MapBiomas class for the Annex I soya commodity; no assumption required.
+41,Other Temporary Crops,,false,Catch-all for unitemized annual crops (e.g. maize, sorghum, beans, cotton); none of the crops folded into this class are EUDR Annex I commodities.

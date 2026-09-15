@@ -1,0 +1,50 @@
+-- ---------------------------------------------------------------------------
+-- cad_extract.sql.tmpl  →  sql/out/list/<id>/cad_extract.sql
+-- Pull the cadastral parcels (CAR) the list resolves to. list_resolve has
+-- already turned the raw list into a canonical id set and cached the CAR slice
+-- those ids live in, so this stage is a local selection; we keep the parcels'
+-- legal-status columns (ind_status/des_condic) for the EUDR legality panel.
+--
+-- Source : tristangruppwri/cadastral/Brazil_CAR_AREA_IMOVEL.parquet (8.45M rows)
+-- Placeholders: ${RESOLVED_PARQUET} ${CAR_STATE_PARQUET} ${CAD_PARQUET}
+--
+-- The list is no longer read here, and no longer read with SELECT DISTINCT.
+-- That distinct collapsed duplicate ids before anything could count them, which
+-- made the reconciliation identity in policies/INPUTS.md unmeasurable: a
+-- silently dropped row and a correctly deduplicated one produced the same
+-- extract. RESOLVED_PARQUET carries one row per input row with the rule it
+-- landed on, and this stage takes the parcels behind them.
+--
+-- NOTE: as of 2026-07, this CAR parquet ships WITHOUT a bbox covering column
+-- (unlike trazofields), so a spatial ST_Intersects(envelope) filter cannot skip
+-- row groups — it degrades to a full geometry scan. Republishing the file with
+-- bbox covering + Hilbert clustering is what turns the upstream extract from a
+-- multi-GB scan into reading a handful of row groups; the state pre-filter in
+-- list_resolve is the best available lever until then.
+-- ---------------------------------------------------------------------------
+INSTALL httpfs; LOAD httpfs;
+INSTALL spatial; LOAD spatial;
+
+-- CAR geometry is longitude-first. Nothing in this file is axis-sensitive
+-- today (envelopes and centroids are not), but the extract feeds every
+-- downstream stage, so it declares the same axis order they assume.
+SET geometry_always_xy = true;
+
+CREATE OR REPLACE TABLE list AS
+SELECT DISTINCT cod_imovel
+FROM read_parquet('${RESOLVED_PARQUET}')
+WHERE cod_imovel IS NOT NULL;
+
+-- CRS was relabelled to 4326 upstream in list_resolve; see the note there.
+CREATE OR REPLACE TABLE cad AS
+SELECT cod_imovel, municipio, cod_estado, num_area, mod_fiscal,
+       ind_status, ind_tipo, des_condic, dat_criaca, dat_atuali, geometry
+FROM read_parquet('${CAR_STATE_PARQUET}')
+WHERE cod_imovel IN (SELECT cod_imovel FROM list);
+
+COPY cad TO '${CAD_PARQUET}' (FORMAT PARQUET);
+
+-- Console check: every listed ID should resolve to a CAR parcel.
+SELECT (SELECT count(*) FROM list) AS list_ids,
+       (SELECT count(*) FROM cad)  AS found_in_car,
+       (SELECT count(*) FROM list) - (SELECT count(*) FROM cad) AS missing;

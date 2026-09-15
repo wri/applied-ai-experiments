@@ -1,0 +1,11 @@
+cod_imovel,annex1_commodity,post2020_loss_ha,entity_id,entity_kind,tier,basis,distance_km
+GO-5212204-156094615E67476AB099D9F46F6C0655,Coffee,167.5,BRS_intake_jussara_01,buyer,intake_point,observed,12.3
+GO-5212204-162DBAFE85134130B3480CF2ED130BFA,Soybean,145.2,BRS_intake_jussara_02,buyer,intake_point,observed,14.7
+GO-5212204-16833B91FD32494C864B458F765C0755,Cattle,134.8,BRS_slaughter_goiania_01,buyer,slaughter_point,observed,89.2
+GO-5212204-1C88EF1B3499490DB39608D89AA62FA5,Coffee,128.7,BRS_intake_jussara_01,buyer,intake_point,observed,11.8
+GO-5212204-1E2963990BB04DAF9B1A8E86549F116C,Soybean,125.3,BRS_intake_jussara_03,buyer,intake_point,observed,16.4
+GO-5212204-20FBD72E32A74011BE0C063F4C507E80,Coffee,118.9,BRS_intake_jussara_02,buyer,intake_point,observed,13.1
+GO-5212204-230E3EB4EA894130A1CF632779C35DF4,Cattle,112.4,BRS_slaughter_goiania_01,buyer,slaughter_point,observed,87.5
+GO-5212204-24550295C0BD4B61B04260CF073F0784,Coffee,106.8,BRS_intake_jussara_01,buyer,intake_point,observed,10.9
+GO-5212204-24978B3823B34D09AA76633A5DD8CFE2,Soybean,101.5,BRS_intake_jussara_03,buyer,intake_point,observed,17.2
+GO-5212204-27018A8454A847469C4A947E06A1A23E,Cattle,97.2,BRS_slaughter_goiania_02,buyer,slaughter_point,observed,91.3

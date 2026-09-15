@@ -1,0 +1,11 @@
+-- q17: post-2020 loss on in-scope crops, rolled up by Annex I commodity.
+CREATE OR REPLACE VIEW _q AS
+SELECT k.annex1_commodity,
+       count(*)                          AS n_fields,
+       round(sum(m.post2020_loss_ha), 1) AS post2020_loss_ha
+FROM read_parquet('${MATCHED_PARQUET}') m
+JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+  ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+WHERE k.in_scope
+GROUP BY k.annex1_commodity
+ORDER BY post2020_loss_ha DESC, k.annex1_commodity;

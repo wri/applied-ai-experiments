@@ -1,0 +1,4 @@
+cod_imovel,annex1_commodity,post2020_loss_ha,entity_id,entity_kind,tier,basis,distance_km
+GO-5212204-011050C9BC804D77A80A4F161A120C5A,soy,45678.90,silo_1234,cooperative,intake_point,observed,23.45
+GO-5212204-0E3C72FBAFCA4422AE312548AA7331C0,soy,34567.89,silo_5678,trader,intake_point,observed,34.56
+GO-5207600-E22FF9A4A75344D3994CB002B90B6686,sugarcane,19876.54,mill_9012,buyer,mill_point,observed,67.89

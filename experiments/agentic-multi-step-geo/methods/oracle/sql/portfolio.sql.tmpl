@@ -1,0 +1,32 @@
+-- q30 (and the stage-7 workflow.csv): the deliverable. Every cadaster
+-- non-compliant on an in-scope crop, with its in-scope post-2020 loss, its
+-- dominant commodity, and the single contact ranked first under COOPS.md. A
+-- cadaster whose commodity has no delivery tier still appears, with its
+-- membership contact (rank 1 is then the relationship candidate).
+CREATE OR REPLACE VIEW _q AS
+WITH flagged AS (
+    SELECT m.cod_imovel,
+           round(sum(m.post2020_loss_ha), 1) AS post2020_loss_ha
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope AND m.has_post2020_loss
+    GROUP BY m.cod_imovel
+),
+top1 AS (
+    SELECT * FROM read_parquet('${CANDIDATES_PARQUET}') WHERE rank = 1
+)
+SELECT f.cod_imovel,
+       coalesce(kc.annex1_commodity, '')  AS annex1_commodity,
+       f.post2020_loss_ha,
+       coalesce(t.entity_id, '')          AS entity_id,
+       coalesce(t.entity_kind, '')        AS entity_kind,
+       coalesce(t.tier, 'no_tier')        AS tier,
+       coalesce(t.basis, '')              AS basis,
+       round(t.distance_km, 1)            AS distance_km
+FROM flagged f
+LEFT JOIN read_parquet('${CAD_MATCHED_PARQUET}') c USING (cod_imovel)
+LEFT JOIN read_parquet('${EUDR_CROPS_PARQUET}') kc
+  ON kc.mbmode24 = CAST(c.dominant_mb AS INTEGER)
+LEFT JOIN top1 t USING (cod_imovel)
+ORDER BY f.post2020_loss_ha DESC, f.cod_imovel;

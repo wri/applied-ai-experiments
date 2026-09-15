@@ -1,0 +1,16 @@
+-- q27: the membership-tier candidate per flagged cadaster, with its evidence
+-- value (the município's cooperative-member count).
+CREATE OR REPLACE VIEW _q AS
+WITH flagged AS (
+    SELECT DISTINCT m.cod_imovel
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope AND m.has_post2020_loss
+)
+SELECT cand.cod_imovel, cand.entity_id,
+       round(cand.evidence_value, 1) AS evidence
+FROM read_parquet('${CANDIDATES_PARQUET}') cand
+JOIN flagged f USING (cod_imovel)
+WHERE cand.tier = 'membership_muni'
+ORDER BY cand.cod_imovel;

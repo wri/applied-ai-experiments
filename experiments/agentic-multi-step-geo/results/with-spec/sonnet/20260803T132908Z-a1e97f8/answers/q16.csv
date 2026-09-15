@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,
+21,Mosaic of Uses,cattle,true,assumed_pasture
+39,Soybean,soya,true,
+41,Other Temporary Crops,,false,

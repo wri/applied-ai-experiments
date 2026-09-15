@@ -1,0 +1,13 @@
+-- q19: in-scope matched-field area per Annex I commodity, and the share of that
+-- area carrying any post-2020 loss.
+CREATE OR REPLACE VIEW _q AS
+SELECT k.annex1_commodity,
+       round(sum(m.field_area_ha), 1)                                  AS total_ha,
+       round(sum(m.field_area_ha) FILTER (WHERE m.has_post2020_loss)
+             / nullif(sum(m.field_area_ha), 0), 4)                     AS loss_share
+FROM read_parquet('${MATCHED_PARQUET}') m
+JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+  ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+WHERE k.in_scope
+GROUP BY k.annex1_commodity
+ORDER BY k.annex1_commodity;

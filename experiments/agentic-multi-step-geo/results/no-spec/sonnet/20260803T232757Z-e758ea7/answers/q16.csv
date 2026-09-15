@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"Pasture is used as the land-use proxy for cattle grazing; the class alone does not confirm livestock is present on the field, only that the land is grazing-suitable cleared land."
+21,Mosaic of Uses,"",false,"Mixed cropland/pasture mosaic that MapBiomas cannot separate at 30 m resolution; excluded because no single Annex I commodity can be attributed to it, even though some of the area may be cattle pasture."
+39,Soybean,soya,true,""
+41,Other Temporary Crops,"",false,"Aggregated annual-crop class covering unspecified crops such as maize, sorghum, or cotton in this region; none of Brazil's other-temporary-crop mix is an EUDR Annex I commodity, so excluded despite being cropland."

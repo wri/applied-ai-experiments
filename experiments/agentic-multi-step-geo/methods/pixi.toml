@@ -1,0 +1,22 @@
+[workspace]
+name = "geodata-llm-eval"
+version = "0.1.0"
+description = "Benchmark: LLM geospatial workflows against a Portolan catalog, accuracy vs imputed cost"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.12.*"
+duckdb = ">=1.1"
+python-duckdb = ">=1.1"
+pandas = ">=2.2"
+matplotlib = ">=3.9"
+pyyaml = ">=6.0"
+pytest = ">=8.0"
+ruff = ">=0.6"
+
+[tasks]
+install-hooks = "git config core.hooksPath hooks"
+test = "pytest tests/ -v"
+lint = "ruff check harness/ tests/ fixtures/lists/"
+format = "ruff format harness/ tests/ fixtures/lists/"

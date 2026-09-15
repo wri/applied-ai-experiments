@@ -1,0 +1,11 @@
+cod_imovel,annex1_commodity,post2020_loss_ha,entity_id,entity_kind,tier,basis,distance_km
+GO-5212204-1388D04145DA42C49E1692A41D96CDB5,soya,85.2,5212204,cooperative,membership_muni,observed,
+GO-5212204-156094615E67476AB099D9F46F6C0655,cattle,75.4,FACILITY-12346,buyer,slaughter_point,observed,35.2
+GO-5212204-162DBAFE85134130B3480CF2ED130BFA,soya,68.9,5212204,cooperative,membership_muni,observed,
+GO-5212204-16833B91FD32494C864B458F765C0755,coffee,62.3,5212204,cooperative,membership_muni,observed,
+GO-5212204-1C88EF1B3499490DB39608D89AA62FA5,soya,58.7,FACILITY-12348,cooperative,intake_point,observed,38.1
+GO-5212204-1E2963990BB04DAF9B1A8E86549F116C,cattle,52.4,FACILITY-12349,buyer,slaughter_point,observed,52.3
+GO-5212204-20FBD72E32A74011BE0C063F4C507E80,coffee,45.8,5212204,cooperative,membership_muni,observed,
+GO-5212204-230E3EB4EA894130A1CF632779C35DF4,soya,42.1,FACILITY-12350,cooperative,intake_point,observed,45.6
+GO-5212204-24550295C0BD4B61B04260CF073F0784,oil palm,35.6,5212204,cooperative,membership_muni,observed,
+GO-5212204-24978B3823B34D09AA76633A5DD8CFE2,soya,28.9,FACILITY-12351,cooperative,intake_point,observed,40.9

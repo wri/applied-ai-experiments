@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,,false,Not EUDR-relevant commodity
+21,Soy,Soy,true,
+39,Other temporary crops,,false,Not commodity-specific
+20,Sugar cane,Sugar ethanol,true,
+41,Beans,,false,Not EUDR-relevant
+9,Forest Formation,,false,Not agricultural commodity
+40,Other perennial crops,,false,Unspecified perennial
+47,Barley,,false,Not EUDR-relevant
+46,Oats,,false,Not EUDR-relevant
+48,Rye,,false,Not EUDR-relevant
+62,Cotton,Cotton,true,

@@ -1,0 +1,11 @@
+cod_imovel,annex1_commodity,post2020_loss_ha,entity_id,entity_kind,tier,basis,distance_km
+GO-5212204-156094615E67476AB099D9F46F6C0655,cattle,267.4,GO-5212204-slaughter-001,buyer,slaughter_point,observed,42.3
+GO-5212204-50D789C6D210454F80F32B313D791784,cattle,189.3,GO-5212204-slaughter-002,buyer,slaughter_point,observed,38.7
+GO-5212204-5A626DA1611C4A4885618BD646CF0010,soya,145.2,GO-5212204-coop-silo-001,cooperative,intake_point,observed,52.1
+GO-5212204-44A20600D515455FBC21DE3D450D828B,cattle,123.8,GO-5212204-slaughter-003,buyer,slaughter_point,observed,45.8
+GO-5212204-52E2FECF2A7042F2B0DC6B27138AADE6,soya,98.7,5212204,cooperative,membership_muni,observed,
+GO-5212204-3AF33D4A071C45C88BD8B31829ACFD81,soya,87.5,5212204,cooperative,membership_muni,observed,
+GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F,cattle,76.4,GO-5212204-slaughter-004,buyer,slaughter_point,observed,51.2
+GO-5212204-498B6B5D358E4981AEF4DE19AF27B399,soya,65.3,5212204,cooperative,membership_muni,observed,
+GO-5212204-1E2963990BB04DAF9B1A8E86549F116C,soya,54.2,5212204,cooperative,membership_muni,observed,
+GO-5212204-230E3EB4EA894130A1CF632779C35DF4,cattle,45.1,GO-5212204-slaughter-005,buyer,slaughter_point,observed,49.3

@@ -1,0 +1,11 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,Cattle,1,""
+18,Temporary Crops,"",0,Annex I lists only perennial commodity crops
+19,Sugarcane,"",0,Not in EUDR Annex I scope for this region analysis
+21,Mosaic of Agriculture,"",0,"Mixed classes, cannot determine commodity"
+23,Coffee,Coffee,1,EUDR Annex I commodity
+25,Cocoa,Cocoa,1,EUDR Annex I commodity
+29,Palm Oil,Palm,1,EUDR Annex I commodity
+33,Rubber,Rubber,1,EUDR Annex I commodity
+39,Soy,Soy,1,Primary EUDR Annex I commodity
+62,Cotton,"",0,Not present in this data or not in EUDR Annex I

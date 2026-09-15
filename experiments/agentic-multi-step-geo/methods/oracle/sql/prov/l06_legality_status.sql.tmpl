@@ -1,0 +1,19 @@
+-- CAR registration status of the listed parcels — a legality-risk indicator for
+-- EUDR Art. 3(b) / Art. 9(1)(h). Note: a CAR entry is a self-declaration; most
+-- Brazilian entries are "awaiting analysis" and not yet validated by the agency,
+-- so an active status is necessary but not sufficient evidence of legality.
+SELECT
+    ind_status,
+    CASE ind_status
+        WHEN 'AT' THEN 'Active (ativo)'
+        WHEN 'PE' THEN 'Pending (pendente)'
+        WHEN 'CA' THEN 'Cancelled (cancelado)'
+        WHEN 'SU' THEN 'Suspended (suspenso)'
+        ELSE ind_status
+    END                                                 AS status_label,
+    count(*)                                            AS n_parcels,
+    round(sum(num_area), 1)                             AS total_car_ha,
+    round(100.0 * count(*) / sum(count(*)) OVER (), 1)  AS pct_parcels
+FROM read_parquet('${CAD_MATCHED_PARQUET}')
+GROUP BY ind_status
+ORDER BY n_parcels DESC;

@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,,false,Pasture is not an Annex I commodity
+21,Mosaic of agriculture and pasture,soy,true,Dominant commodity typically soy
+39,Annual crops,soy,true,Primary commodity in region
+20,Perennial crops,coffee,true,May include coffee or cacao
+41,Sugar cane,sugar_cane,true,Annex I commodity
+9,Savanna Formation,,false,Natural formation; not an Annex I commodity
+40,Tree plantation,,false,Not covered; lacks commodity specificity
+47,Perennial forest plantation,,false,Not covered; not soft commodity
+46,Rice,rice,false,Not included in EUDR scope per regulation
+48,Aquaculture,,false,Not an Annex I commodity
+62,Cotton,cotton,true,Annex I commodity

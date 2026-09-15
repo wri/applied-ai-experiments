@@ -1,0 +1,15 @@
+-- Per-cadaster ranked cooperative / buyer candidates — the report's Cooperatives
+-- panel. One row per (cod_imovel, candidate), best rank first. Each row is
+-- footnoted by its tier + basis + entity_kind so a reviewer sees *why* it was
+-- surfaced (see COOPS.md).
+SELECT cod_imovel,
+       rank,
+       entity_id,
+       entity_kind,
+       tier,
+       basis,
+       round(distance_km, 1)     AS distance_km,
+       round(evidence_value, 1)  AS evidence,
+       flags
+FROM read_parquet('${CANDIDATES_PARQUET}')
+ORDER BY cod_imovel, rank;

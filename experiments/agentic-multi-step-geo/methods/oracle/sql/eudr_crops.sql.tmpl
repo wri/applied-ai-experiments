@@ -1,0 +1,61 @@
+-- ---------------------------------------------------------------------------
+-- eudr_crops.sql.tmpl  →  sql/out/list/<id>/eudr_crops.sql
+-- The EUDR Annex I scope table and the crop→tier routing table (see
+-- EUDR_CROPS.md). Every query that filters on EUDR relevance, and the
+-- commodity routing in coop_match.sql, join these — so the policy lives in
+-- exactly one place and changing it is a data edit, not a SQL edit.
+--
+-- Placeholders: ${EUDR_CROPS_PARQUET} ${CROP_ROUTING_PARQUET}
+-- ---------------------------------------------------------------------------
+
+-- Scope: is this class covered by Regulation (EU) 2023/1115 Annex I?
+-- caveat is graded alongside in_scope: class 9 is excluded because Trazo cannot
+-- detect planted timber reliably, NOT because the regulation omits wood.
+CREATE OR REPLACE TABLE eudr_crops (
+    mbmode24          INTEGER,
+    mb_class          VARCHAR,
+    annex1_commodity  VARCHAR,
+    in_scope          BOOLEAN,
+    caveat            VARCHAR
+);
+
+INSERT INTO eudr_crops VALUES
+    (15, 'Pasture',               'cattle',   TRUE,  ''),
+    (39, 'Soybean',               'soya',     TRUE,  ''),
+    (35, 'Palm Oil',              'oil palm', TRUE,  'mixed_detection_quality'),
+    (46, 'Coffee',                'coffee',   TRUE,  'mixed_detection_quality'),
+    (21, 'Mosaic of Uses',        'cattle',   TRUE,  'assumed_pasture'),
+    ( 9, 'Forest Plantation',     'wood',     FALSE, 'unreliable_detection'),
+    (18, 'Agriculture',           NULL,       FALSE, ''),
+    (20, 'Sugarcane',             NULL,       FALSE, ''),
+    (40, 'Rice',                  NULL,       FALSE, ''),
+    (41, 'Other Temporary Crops', NULL,       FALSE, ''),
+    (47, 'Citrus',                NULL,       FALSE, ''),
+    (48, 'Other Perennial',       NULL,       FALSE, ''),
+    (62, 'Cotton',                NULL,       FALSE, '');
+
+-- Routing: where would this class be delivered? Separate from scope, because
+-- sugarcane is outside Annex I but still goes to a mill, and Agriculture (18)
+-- can BE cane so it keeps both a silo and a mill. One row per allowed
+-- (class, tier); a class absent here keeps every tier (unknown crop).
+CREATE OR REPLACE TABLE crop_routing (mbmode24 INTEGER, tier VARCHAR);
+
+INSERT INTO crop_routing VALUES
+    (15, 'slaughter_point'),
+    (21, 'slaughter_point'),
+    (20, 'mill_point'),
+    (39, 'intake_point'),
+    (41, 'intake_point'),
+    (18, 'intake_point'),
+    (18, 'mill_point');
+-- 35 (palm) and 46 (coffee) are deliberately absent with zero rows: in EUDR
+-- scope, but the facilities product carries no tier for them. Their delivery
+-- candidates drop out and l09 reports no_match — the gap is surfaced, never
+-- filled with an unrelated facility.
+
+COPY eudr_crops   TO '${EUDR_CROPS_PARQUET}'   (FORMAT PARQUET);
+COPY crop_routing TO '${CROP_ROUTING_PARQUET}' (FORMAT PARQUET);
+
+SELECT (SELECT count(*) FROM eudr_crops)                   AS n_classes,
+       (SELECT count(*) FROM eudr_crops WHERE in_scope)    AS n_in_scope,
+       (SELECT count(DISTINCT mbmode24) FROM crop_routing) AS n_routed;

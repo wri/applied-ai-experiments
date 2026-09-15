@@ -1,0 +1,96 @@
+-- ---------------------------------------------------------------------------
+-- fields_extract.sql.tmpl  →  sql/out/list/<id>/fields_extract.sql
+-- Clip the region's Trazo3 field boundaries to the bounding envelope of this
+-- list's cadastral parcels, and derive the same human-readable / unit-robust
+-- columns used in Pass 1, PLUS the EUDR post-2020 loss columns.
+--
+-- The envelope is a superset (the match step, next, keeps only fields actually
+-- inside the parcels). Reading the remote Trazo3 file scans its geometry column
+-- once; the result is cached locally.
+--
+-- Placeholders: ${TRAZO_URL} ${CAD_PARQUET} ${FIELDS_RAW_PARQUET} ${CUTOFF_YEAR}
+-- ---------------------------------------------------------------------------
+INSTALL httpfs; LOAD httpfs;
+INSTALL spatial; LOAD spatial;
+
+-- GeoParquet stores coordinates longitude-first. DuckDB's spheroid and
+-- reprojection functions default to reading them latitude-first, which silently
+-- computes areas and distances at the wrong latitude. Set the axis order
+-- explicitly. DuckDB warns that its default is due to flip, so the setting is
+-- also what keeps this query stable across versions.
+SET geometry_always_xy = true;
+
+CREATE OR REPLACE TABLE cad AS SELECT * FROM read_parquet('${CAD_PARQUET}');
+CREATE OR REPLACE TABLE env AS
+SELECT ST_Envelope(ST_Union_Agg(geometry)) AS g FROM cad;
+
+CREATE OR REPLACE TABLE fields AS
+SELECT
+    f.Id,
+
+    -- This Trazo3 release ships no field_area_ha column, so compute it from the
+    -- geometry: ST_Area_Spheroid gives m2 on the WGS84 spheroid for EPSG:4326
+    -- input, /10000 -> hectares. Correct only under the geometry_always_xy
+    -- setting above; without it a Goiás field comes out ~1.5x small, because
+    -- the function reads the longitude as a latitude and shrinks the degree of
+    -- longitude to match. Area questions grade with the geometry tolerance,
+    -- which absorbs the small method difference vs a baked column but not that.
+    round(ST_Area_Spheroid(f.geometry) / 10000.0, 4) AS field_area_ha,
+
+    -- Crop / land-use: Mapbiomas 2024 mode class, with a readable label.
+    f.mbmode24,
+    CASE CAST(f.mbmode24 AS INT)
+        WHEN 15 THEN 'Pasture'
+        WHEN 18 THEN 'Agriculture'
+        WHEN 41 THEN 'Other Temporary Crops'
+        WHEN 21 THEN 'Mosaic of Uses'
+        WHEN 39 THEN 'Soybean'
+        WHEN  9 THEN 'Forest Plantation'
+        ELSE 'Class ' || CAST(CAST(f.mbmode24 AS INT) AS VARCHAR)
+    END AS mb_class,
+
+    -- Total loss is the sum of the five era bands, which the trazofields
+    -- catalog documents as square metres. The baked hansen_covered_area /
+    -- hansen_loss_area columns are not used: the former is inflated ~3x the
+    -- field's own area for reasons the publisher does not document, and
+    -- deriving everything from the bands keeps one definition of "loss".
+    (coalesce(f.deforestarea0104, 0) + coalesce(f.deforestarea0509, 0)
+     + coalesce(f.deforestarea1014, 0) + coalesce(f.deforestarea1520, 0)
+     + coalesce(f.deforestarea2124, 0))                     AS band_loss_area,
+    CASE WHEN field_area_ha > 0
+         THEN LEAST((coalesce(f.deforestarea0104, 0) + coalesce(f.deforestarea0509, 0)
+                     + coalesce(f.deforestarea1014, 0) + coalesce(f.deforestarea1520, 0)
+                     + coalesce(f.deforestarea2124, 0)) / (field_area_ha * 10000), 1.0)
+         ELSE 0 END AS cleared_share,
+
+    f.mode_year,
+    f.firstyear,
+    f.deforestarea0104, f.deforestarea0509, f.deforestarea1014,
+    f.deforestarea1520, f.deforestarea2124,
+
+    -- Era in which the field lost the most area (for recency coloring).
+    CASE greatest(
+            coalesce(f.deforestarea0104, 0), coalesce(f.deforestarea0509, 0),
+            coalesce(f.deforestarea1014, 0), coalesce(f.deforestarea1520, 0),
+            coalesce(f.deforestarea2124, 0))
+        WHEN 0                                THEN 'None'
+        WHEN coalesce(f.deforestarea2124, 0) THEN '2021-2024'
+        WHEN coalesce(f.deforestarea1520, 0) THEN '2015-2020'
+        WHEN coalesce(f.deforestarea1014, 0) THEN '2010-2014'
+        WHEN coalesce(f.deforestarea0509, 0) THEN '2005-2009'
+        ELSE '2001-2004'
+    END AS defor_era,
+
+    -- EUDR: loss AFTER the 31 Dec 2020 cut-off = the 2021-2024 era bin, in ha.
+    round(coalesce(f.deforestarea2124, 0) / 10000.0, 4) AS post2020_loss_ha,
+    (coalesce(f.deforestarea2124, 0) > 0)               AS has_post2020_loss,
+
+    f.geometry
+FROM read_parquet('${TRAZO_URL}') f, env e
+WHERE ST_Intersects(f.geometry, e.g);
+
+COPY fields TO '${FIELDS_RAW_PARQUET}' (FORMAT PARQUET);
+
+SELECT count(*) AS n_fields_in_envelope,
+       count(*) FILTER (WHERE has_post2020_loss) AS with_post2020_loss
+FROM fields;

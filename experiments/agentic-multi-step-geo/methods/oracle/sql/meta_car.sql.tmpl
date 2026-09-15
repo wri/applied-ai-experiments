@@ -1,0 +1,5 @@
+-- q03: size and key cardinality of the national CAR file.
+CREATE OR REPLACE VIEW _q AS
+SELECT count(*)                   AS n_rows,
+       count(DISTINCT cod_imovel) AS n_distinct_ids
+FROM read_parquet('${CAR_URL}');

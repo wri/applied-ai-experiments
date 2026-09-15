@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,Cattle,true,"Pasture is a land-cover proxy for the cattle commodity; the Trazo model is optimized for annual crops and not tuned for pasture, so extent is approximate"
+21,Mosaic of Uses,"",false,Mixed/undetermined agricultural land use; cannot be attributed to a single Annex I commodity
+39,Soybean,Soya,true,""
+41,Other Temporary Crops,"",false,Unspecified temporary crops (e.g. maize/sorghum); none is an Annex I commodity

@@ -1,0 +1,51 @@
+{
+  "model": "opus",
+  "model_id": "claude-opus-4-8",
+  "run_id": "20260803T175412Z-a1e97f8",
+  "label": "",
+  "started_utc": "2026-08-03T17:54:12.843283+00:00",
+  "finished_utc": "2026-08-03T18:11:52.534865+00:00",
+  "duration_seconds": 955.4,
+  "exit_code": 0,
+  "attempts": 1,
+  "harness_commit": "a1e97f8753fc80ce1481b91daad3cd4cddebd15e",
+  "input_mode": "csv",
+  "golden_fingerprint": "59c1e0ce2499",
+  "spec_fingerprint": "eec8661c648e",
+  "spec_manifest": {
+    "policies/COOPS.md": "a7cd79f78005834e945dc190c09ea4e6fbd39d195bca307826b2743c22978a94",
+    "policies/EUDR_CROPS.md": "753c407ac4fe31fe8b7b207082bac604b19986e926b0adaf3bd80a01767923d8",
+    "policies/INPUTS.md": "1d400410ab14d9688410e74f612b3077d1c26724786c2bbb0698fa9370cd4516",
+    "policies/MATCHING.md": "47a62e5d62f8ac8ac457d8ff015a34351f9a0efeb2db01842bcb21cd30056cc8",
+    "task.md": "fc57fb434d2a6695f245ab11d90c35cad25893d03d46cd334705596ab5e07cff"
+  },
+  "ablation": {
+    "arm": "full",
+    "why": "",
+    "ops": [],
+    "receipt": {}
+  },
+  "catalog_at_start": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "catalog_at_end": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "turns": 123,
+  "input_tokens": 89,
+  "output_tokens": 68903,
+  "cache_creation_tokens": 132894,
+  "cache_read_tokens": 3521157,
+  "slow_tool_calls": 1,
+  "slow_tool_seconds": 33.0,
+  "slow_tool_seconds_by_tool": {
+    "Bash": 33.0
+  },
+  "timed_out_tool_calls": 0,
+  "imputed_cost_usd": 4.314186,
+  "answers_written": 31,
+  "status": "done",
+  "graded_against": "59c1e0ce2499"
+}

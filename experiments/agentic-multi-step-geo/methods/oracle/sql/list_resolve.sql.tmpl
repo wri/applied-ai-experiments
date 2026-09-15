@@ -1,0 +1,182 @@
+-- ---------------------------------------------------------------------------
+-- list_resolve.sql.tmpl  →  sql/out/list/<id>/list_resolve.sql
+-- Turn the raw input list into a canonical parcel set, applying the defect
+-- rules in policies/INPUTS.md and recording which rule each row landed on.
+--
+-- Placeholders: ${LIST_CSV} ${ID_COLUMN} ${CAR_URL} ${CONTAIN_THRESHOLD}
+--               ${CAR_STATE_PARQUET} ${RESOLVED_PARQUET}
+--
+-- This runs BEFORE cad_extract, and has to. cad_extract pulls the CAR rows
+-- whose cod_imovel is on the list, so a row that arrived with a geometry and no
+-- id cannot be resolved from the extract that filtering produces — the parcel it
+-- belongs to is exactly the one the filter throws away. Resolution comes first,
+-- and cad_extract then reads the resolved ids.
+--
+-- One remote scan, not two. The CAR read here keeps the state pre-filter
+-- cad_extract used to own, and narrows further: a row survives if its
+-- cod_imovel is on the list, or if it intersects one of the handful of
+-- geometries that need resolving. cad_extract reads the resulting
+-- CAR_STATE_PARQUET locally instead of going back to source.coop.
+--
+-- Scope note: the state pre-filter derives the UFs from the ids on the list, so
+-- an id-less geometry is resolved against the states the list's ids name rather
+-- than against all of Brazil. For this list every id is GO and every resolvable
+-- geometry is in Goiás, so the narrowing changes no output. A list whose
+-- geometries stray outside its own states would need the filter widened.
+-- ---------------------------------------------------------------------------
+INSTALL httpfs; LOAD httpfs;
+INSTALL spatial; LOAD spatial;
+
+-- Longitude-first. The axis-repair rule below is defined against this ordering,
+-- so it is a correctness dependency here rather than a stylistic declaration.
+SET geometry_always_xy = true;
+
+-- Rows exactly as they arrived. row_id fixes an order so every later step is
+-- reproducible, and so "the first of a set of duplicates" is a defined thing.
+CREATE OR REPLACE TABLE list_raw AS
+SELECT row_number() OVER ()                                   AS row_id,
+       nullif(trim(CAST(${ID_COLUMN} AS VARCHAR)), '')        AS raw_id,
+       nullif(trim(CAST(geometry AS VARCHAR)), '')            AS raw_wkt
+FROM read_csv_auto('${LIST_CSV}');
+
+-- Axis repair (INPUTS.md): a geometry outside Brazil that lands inside once
+-- latitude and longitude are exchanged had its axes swapped. Brazil's mainland
+-- and islands span roughly 74W-28W and 34S-6N; the box is padded to whole
+-- degrees because it is a coarse "is this even the right continent" test, not a
+-- boundary. A geometry outside the box under both orderings is left alone and
+-- falls through to unresolvable.
+CREATE OR REPLACE TABLE list_prepared AS
+WITH parsed AS (
+    SELECT row_id, raw_id,
+           CASE WHEN raw_wkt IS NULL THEN NULL
+                ELSE ST_SetCRS(ST_GeomFromText(raw_wkt), 'EPSG:4326') END AS geom
+    FROM list_raw
+),
+brazil AS (SELECT ST_SetCRS(ST_MakeEnvelope(-75, -34, -28, 6),
+                            'EPSG:4326') AS box)
+SELECT p.row_id, p.raw_id,
+       CASE WHEN p.geom IS NULL THEN NULL
+            WHEN ST_Intersects(p.geom, b.box) THEN p.geom
+            WHEN ST_Intersects(ST_FlipCoordinates(p.geom), b.box)
+                 THEN ST_FlipCoordinates(p.geom)
+            ELSE p.geom END                                   AS geom,
+       (p.geom IS NOT NULL
+        AND NOT ST_Intersects(p.geom, b.box)
+        AND ST_Intersects(ST_FlipCoordinates(p.geom), b.box))  AS axis_flipped
+FROM parsed p, brazil b;
+
+-- Deduplicate on (id, geometry), as the policy specifies, keeping the lowest
+-- row_id of each group. The rows dropped here are counted, not discarded: they
+-- carry through to the reconciliation as duplicates_removed.
+CREATE OR REPLACE TABLE list_deduped AS
+SELECT *, row_number() OVER (
+           PARTITION BY coalesce(raw_id, ''),
+                        coalesce(ST_AsText(geom), '')
+           ORDER BY row_id)                                   AS dup_rank
+FROM list_prepared;
+
+-- The geometries that still need a parcel: no id to resolve them by. Unioned
+-- into one shape so the CAR scan below can narrow with a single exact
+-- predicate rather than a bounding box that would sweep in half of Goiás
+-- (the unresolvable Atlantic point alone stretches a global bbox 16 degrees).
+CREATE OR REPLACE TABLE to_resolve AS
+SELECT row_id, geom, axis_flipped
+FROM list_deduped
+WHERE dup_rank = 1 AND raw_id IS NULL AND geom IS NOT NULL;
+
+CREATE OR REPLACE TABLE resolve_envelope AS
+SELECT ST_Union_Agg(geom) AS geom FROM to_resolve;
+
+CREATE OR REPLACE TABLE car_state AS
+SELECT cod_imovel, municipio, cod_estado, num_area, mod_fiscal,
+       ind_status, ind_tipo, des_condic, dat_criaca, dat_atuali,
+       -- CAR is EPSG:4674 (SIRGAS 2000), Trazo fields are EPSG:4326 (WGS84).
+       -- The two datums differ <1 m in Brazil, immaterial for the containment
+       -- ratios and envelope clips downstream, so relabel with ST_SetCRS (a
+       -- metadata-only override, no coordinate transform) rather than
+       -- reproject. This also lets DuckDB's CRS-strict spatial functions
+       -- accept CAR ∩ Trazo directly.
+       ST_SetCRS(geometry, 'EPSG:4326') AS geometry
+FROM read_parquet('${CAR_URL}')
+WHERE cod_estado IN (
+        SELECT DISTINCT split_part(raw_id, '-', 1)
+        FROM list_raw WHERE raw_id IS NOT NULL)
+  -- CAR declares EPSG:4674 on disk, so the relabel has to happen inside the
+  -- predicate as well as in the projection above; DuckDB's spatial functions
+  -- refuse a mixed-CRS comparison rather than silently picking one.
+  AND (cod_imovel IN (SELECT raw_id FROM list_raw WHERE raw_id IS NOT NULL)
+       OR ST_Intersects(ST_SetCRS(geometry, 'EPSG:4326'),
+                        (SELECT geom FROM resolve_envelope)));
+
+COPY car_state TO '${CAR_STATE_PARQUET}' (FORMAT PARQUET);
+
+-- Point resolution: the parcel containing it, and only if there is exactly one.
+-- "None or several" is unresolvable by policy, so the count is part of the
+-- test rather than something to break a tie on.
+CREATE OR REPLACE TABLE point_hits AS
+SELECT t.row_id,
+       count(*)                                              AS n_parcels,
+       min(c.cod_imovel)                                     AS cod_imovel
+FROM to_resolve t
+JOIN car_state c ON ST_Contains(c.geometry, t.geom)
+WHERE ST_GeometryType(t.geom) = 'POINT'
+GROUP BY t.row_id;
+
+-- Polygon resolution: MATCHING.md containment, measured against the input
+-- geometry rather than the field — the largest area(input ∩ parcel) /
+-- area(input) at or above the threshold, ties broken by the lowest cod_imovel.
+-- Reusing the matching rule keeps one containment definition in the benchmark.
+CREATE OR REPLACE TABLE polygon_hits AS
+WITH fracs AS (
+    SELECT t.row_id, c.cod_imovel,
+           ST_Area(ST_Intersection(c.geometry, t.geom))
+             / nullif(ST_Area(t.geom), 0)                     AS frac
+    FROM to_resolve t
+    JOIN car_state c ON ST_Intersects(c.geometry, t.geom)
+    WHERE ST_GeometryType(t.geom) <> 'POINT'
+),
+ranked AS (
+    SELECT row_id, cod_imovel, frac,
+           row_number() OVER (PARTITION BY row_id
+                              ORDER BY frac DESC, cod_imovel) AS pick_rank
+    FROM fracs
+    WHERE frac >= ${CONTAIN_THRESHOLD}
+)
+SELECT row_id, cod_imovel FROM ranked WHERE pick_rank = 1;
+
+-- One row per input row, in exactly one bucket. A duplicate keeps the id it
+-- would have resolved to, so a reviewer can see what was collapsed; the bucket,
+-- not the id, is what the reconciliation counts.
+CREATE OR REPLACE TABLE resolved AS
+SELECT d.row_id,
+       CASE
+         WHEN d.raw_id IS NOT NULL          THEN d.raw_id
+         WHEN p.cod_imovel IS NOT NULL      THEN p.cod_imovel
+         WHEN h.n_parcels = 1               THEN h.cod_imovel
+       END                                                    AS cod_imovel,
+       CASE
+         WHEN d.dup_rank > 1                THEN 'duplicates_removed'
+         WHEN d.raw_id IS NOT NULL          THEN 'resolved_clean'
+         WHEN d.geom IS NULL                THEN 'unresolvable'
+         WHEN d.axis_flipped
+              AND (p.cod_imovel IS NOT NULL OR h.n_parcels = 1)
+                                            THEN 'axis_repaired'
+         WHEN h.n_parcels = 1               THEN 'centroid_resolved'
+         WHEN p.cod_imovel IS NOT NULL      THEN 'geometry_resolved'
+         ELSE 'unresolvable'
+       END                                                    AS resolution
+FROM list_deduped d
+LEFT JOIN polygon_hits p ON p.row_id = d.row_id
+LEFT JOIN point_hits   h ON h.row_id = d.row_id;
+
+COPY resolved TO '${RESOLVED_PARQUET}' (FORMAT PARQUET);
+
+-- Console check: the buckets must account for every input row.
+SELECT count(*)                                                  AS input_rows,
+       count(*) FILTER (WHERE resolution = 'resolved_clean')      AS resolved_clean,
+       count(*) FILTER (WHERE resolution = 'centroid_resolved')   AS centroid_resolved,
+       count(*) FILTER (WHERE resolution = 'geometry_resolved')   AS geometry_resolved,
+       count(*) FILTER (WHERE resolution = 'axis_repaired')       AS axis_repaired,
+       count(*) FILTER (WHERE resolution = 'duplicates_removed')  AS duplicates_removed,
+       count(*) FILTER (WHERE resolution = 'unresolvable')        AS unresolvable
+FROM resolved;

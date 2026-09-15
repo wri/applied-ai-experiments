@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"Pasture is a land-cover proxy for cattle grazing, not direct confirmation of cattle production on the field"
+21,Mosaic of Uses,"",false,"Mixed agriculture-pasture mosaic; no single Annex I commodity is attributable, so excluded"
+39,Soybean,soya,true,""
+41,Other Temporary Crops,"",false,Unresolved annual-crop catch-all; may include soy but is not separable and also covers non-Annex I crops such as maize and sorghum

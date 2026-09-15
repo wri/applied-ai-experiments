@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,Cattle,true,"MapBiomas Pasture is used as a proxy for cattle grazing land; the class marks land use as pastureland, not confirmed livestock presence, so treated as the cattle-relevant land cover per EUDR Annex I."
+21,Mosaic of Uses,,false,"MapBiomas 'Mosaic of Uses' merges cropland and pasture pixels the classifier could not separate; no single Annex I commodity can be attributed, so excluded."
+39,Soybean,Soya,true,"Direct MapBiomas Soybean class, unambiguous mapping to EUDR Annex I soya."
+41,Other Temporary Crops,,false,"Catch-all MapBiomas class for temporary crops not otherwise classified (e.g. maize, beans); none of the Annex I commodities are separately identifiable within it, so excluded."

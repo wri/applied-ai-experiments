@@ -1,0 +1,6 @@
+annex1_commodity,tier,coverage
+soy,intake_point,covered
+soy,slaughter_point,none
+maize,intake_point,covered
+sugarcane,mill_point,covered
+cattle,slaughter_point,covered

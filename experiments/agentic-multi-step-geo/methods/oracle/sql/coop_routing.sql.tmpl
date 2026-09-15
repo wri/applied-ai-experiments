@@ -1,0 +1,27 @@
+-- q24: how each flagged cadaster's dominant crop routes to a delivery tier.
+-- Flagged = at least one in-scope field carrying post-2020 loss. A class routing
+-- to several tiers (18 -> silo and mill) joins them with '|'; no_tier means a
+-- known class with no infrastructure (coffee, palm); unknown means a class
+-- absent from the scope table.
+CREATE OR REPLACE VIEW _q AS
+WITH flagged AS (
+    SELECT DISTINCT m.cod_imovel
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope AND m.has_post2020_loss
+)
+SELECT c.cod_imovel,
+       CAST(c.dominant_mb AS INTEGER)                     AS dominant_mb,
+       coalesce(k.annex1_commodity, '')                   AS annex1_commodity,
+       coalesce(string_agg(r.tier, '|' ORDER BY r.tier),
+                CASE WHEN k.mbmode24 IS NULL THEN 'unknown'
+                     ELSE 'no_tier' END)                  AS routed_tier
+FROM flagged f
+JOIN read_parquet('${CAD_MATCHED_PARQUET}') c USING (cod_imovel)
+LEFT JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+  ON k.mbmode24 = CAST(c.dominant_mb AS INTEGER)
+LEFT JOIN read_parquet('${CROP_ROUTING_PARQUET}') r
+  ON r.mbmode24 = CAST(c.dominant_mb AS INTEGER)
+GROUP BY c.cod_imovel, c.dominant_mb, k.annex1_commodity, k.mbmode24
+ORDER BY c.cod_imovel;

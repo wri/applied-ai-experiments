@@ -1,0 +1,8 @@
+-- q13: cadasters carrying the most matched fields. cad_enriched (written to
+-- CAD_MATCHED_PARQUET) already holds n_fields per parcel. The cod_imovel
+-- tiebreaker gives a total ordering so the top-10 cut is deterministic.
+CREATE OR REPLACE VIEW _q AS
+SELECT cod_imovel, n_fields
+FROM read_parquet('${CAD_MATCHED_PARQUET}')
+ORDER BY n_fields DESC, cod_imovel
+LIMIT 10;

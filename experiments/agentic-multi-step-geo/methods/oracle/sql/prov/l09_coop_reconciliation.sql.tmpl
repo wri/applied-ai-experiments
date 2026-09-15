@@ -1,0 +1,20 @@
+-- Cooperative-match reconciliation: EVERY listed cadaster accounted for, so no
+-- match failure is silent (mirrors l07). A cadaster with no delivery candidate
+-- even after widening to the ceiling is reported as no_match=1, not dropped.
+--
+-- Placeholders: ${CADASTERS_PARQUET} ${CANDIDATES_PARQUET}
+SELECT c.cod_imovel,
+       count(cand.cod_imovel)                                        AS n_candidates,
+       count(*) FILTER (WHERE cand.tier = 'membership_muni')         AS n_relationship,
+       count(*) FILTER (WHERE cand.tier IN ('intake_point', 'slaughter_point', 'mill_point'))
+                                                                     AS n_delivery,
+       max(CASE WHEN cand.flags LIKE '%widened%' THEN 1 ELSE 0 END)  AS widened,
+       CASE WHEN count(*) FILTER (WHERE cand.tier IN ('intake_point', 'slaughter_point', 'mill_point')) = 0
+            THEN 1 ELSE 0 END                                        AS no_match,
+       max(CASE WHEN cand.flags LIKE '%nearest_by_far%' THEN 1 ELSE 0 END)
+                                                                     AS proximity_override
+FROM read_parquet('${CADASTERS_PARQUET}') c
+LEFT JOIN read_parquet('${CANDIDATES_PARQUET}') cand
+       ON cand.cod_imovel = c.cod_imovel
+GROUP BY c.cod_imovel
+ORDER BY n_candidates DESC;

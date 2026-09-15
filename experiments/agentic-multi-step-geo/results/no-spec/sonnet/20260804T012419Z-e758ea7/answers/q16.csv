@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,Cattle,true,"MapBiomas Pasture is a land-cover proxy for cattle grazing land, not a confirmed herd; class does not distinguish beef from dairy use or grazing intensity"
+39,Soybean,Soya,true,""
+21,Mosaic of Uses,,false,"Mixed cropland/pasture mosaic pixels cannot be attributed to a single Annex I commodity"
+41,Other Temporary Crops,,false,"Residual catch-all for temporary crops MapBiomas does not split out (e.g. maize, beans); none of the Annex I commodities are separately identifiable in this class"

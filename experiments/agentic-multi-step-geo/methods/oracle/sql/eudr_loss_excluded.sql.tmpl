@@ -1,0 +1,13 @@
+-- q18: post-2020 loss on the classes ruled OUT of scope, by class, so the
+-- exclusion is auditable rather than a silent drop. Classes absent from the
+-- scope table are treated as out of scope and reported under their own name.
+CREATE OR REPLACE VIEW _q AS
+SELECT coalesce(k.mb_class, m.mb_class)  AS mb_class,
+       count(*)                          AS n_fields,
+       round(sum(m.post2020_loss_ha), 1) AS post2020_loss_ha
+FROM read_parquet('${MATCHED_PARQUET}') m
+LEFT JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+  ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+WHERE coalesce(k.in_scope, FALSE) IS NOT TRUE
+GROUP BY 1
+ORDER BY post2020_loss_ha DESC, mb_class;

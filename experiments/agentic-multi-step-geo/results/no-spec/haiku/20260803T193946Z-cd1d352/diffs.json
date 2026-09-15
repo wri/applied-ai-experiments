@@ -1,0 +1,324 @@
+{
+  "q03": [
+    {
+      "answer": 8453552,
+      "column": "n_rows",
+      "golden": 8453554,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    },
+    {
+      "answer": 8437938,
+      "column": "n_distinct_ids",
+      "golden": 8437940,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    }
+  ],
+  "q05": [
+    {
+      "answer": 114,
+      "column": "list_ids",
+      "golden": 117,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.025641,
+      "row": 0
+    },
+    {
+      "answer": 114,
+      "column": "found_in_car",
+      "golden": 117,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.025641,
+      "row": 0
+    }
+  ],
+  "q06": [
+    {
+      "answer": 106,
+      "column": "n_parcels",
+      "golden": 109,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.027523,
+      "row": 0
+    }
+  ],
+  "q08": [
+    {
+      "answer": "Data unavailable - requires spatial intersection query on GeoParquet 2.0 geometries",
+      "column": "n_fields_in_envelope",
+      "golden": 3291,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    }
+  ],
+  "q09": [
+    {
+      "answer": "Data unavailable - requires spatial containment matching between CAR parcels and Trazo3 field boundaries",
+      "column": "matched_fields",
+      "golden": 793,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    }
+  ],
+  "q10": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 2,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q11": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q12": [
+    {
+      "answer": "Data unavailable - requires spatial intersection analysis",
+      "column": "n_excluded",
+      "golden": 79,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    }
+  ],
+  "q13": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 2,
+      "golden_rows": 10,
+      "kind": "shape"
+    }
+  ],
+  "q14": [
+    {
+      "answer": "Data unavailable - requires spatial area summation of matched fields",
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    }
+  ],
+  "q15": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 5,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q16": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 5,
+      "golden_rows": 4,
+      "kind": "shape"
+    }
+  ],
+  "q17": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q18": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q19": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q20": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 4,
+      "golden_rows": 10,
+      "kind": "shape"
+    }
+  ],
+  "q21": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 5,
+      "kind": "shape"
+    }
+  ],
+  "q22": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 24,
+      "kind": "shape"
+    }
+  ],
+  "q23": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 5,
+      "golden_rows": 10,
+      "kind": "shape"
+    }
+  ],
+  "q24": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 4,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q25": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q26": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 4,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q27": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q28": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 7,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q29": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 3,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q30": [
+    {
+      "answer_columns": 1,
+      "answer_rows": 1,
+      "golden_columns": 8,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q31": [
+    {
+      "answer": 115,
+      "column": "resolved_clean",
+      "golden": 114,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.008772,
+      "row": 0
+    },
+    {
+      "answer": 0,
+      "column": "centroid_resolved",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 0
+    },
+    {
+      "answer": 4,
+      "column": "geometry_resolved",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 3.0,
+      "row": 0
+    },
+    {
+      "answer": 0,
+      "column": "axis_repaired",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 0
+    },
+    {
+      "answer": 0,
+      "column": "duplicates_removed",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 0
+    },
+    {
+      "answer": 0,
+      "column": "unresolvable",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 0
+    }
+  ]
+}

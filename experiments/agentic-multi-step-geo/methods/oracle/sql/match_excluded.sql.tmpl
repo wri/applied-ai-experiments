@@ -1,0 +1,15 @@
+-- q12: fields that intersect a listed parcel but fail BOTH inclusion tests, so
+-- are excluded. Reads the in-memory `decision` table that match.sql leaves in
+-- the connection (one row per field, with the two rule flags and the fractions).
+-- A field "intersects a listed parcel" if it overlaps a parcel itself. The
+-- union fraction is deliberately not part of that test: it measures against
+-- parcels buffered outward by neighbor_gap_tolerance_m and dissolved, so a
+-- field that touches no parcel but lands inside the 25 m cushion would count
+-- as intersecting one. Those near-misses are real, but the question asks a
+-- plain question and deserves the plain reading.
+CREATE OR REPLACE VIEW _q AS
+SELECT count(*) AS n_excluded
+FROM decision
+WHERE coalesce(max_single_frac, 0) > 0
+  AND NOT by_primary
+  AND NOT by_aggregate;

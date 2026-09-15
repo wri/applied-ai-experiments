@@ -1,0 +1,11 @@
+-- Crop / land-use mix (Mapbiomas 2024 mode class) across matched fields.
+-- Column names (mb_class, pct_fields, avg_cleared_share) match the shared bar.
+SELECT
+    mb_class,
+    count(*)                                            AS n_fields,
+    round(sum(field_area_ha), 1)                        AS total_ha,
+    round(100.0 * count(*) / sum(count(*)) OVER (), 1)  AS pct_fields,
+    round(avg(cleared_share), 3)                        AS avg_cleared_share
+FROM read_parquet('${MATCHED_PARQUET}')
+GROUP BY mb_class
+ORDER BY n_fields DESC;

@@ -1,0 +1,43 @@
+{
+  "model": "haiku",
+  "model_id": "claude-haiku-4-5",
+  "run_id": "20260803T194718Z-cd1d352",
+  "label": "",
+  "started_utc": "2026-08-03T19:47:18.461409+00:00",
+  "finished_utc": "2026-08-03T19:52:23.325854+00:00",
+  "duration_seconds": 274.5,
+  "exit_code": 0,
+  "attempts": 2,
+  "harness_commit": "cd1d35202775acdf8e544fdd6ee4e8211d1b2c75",
+  "input_mode": "csv",
+  "golden_fingerprint": "59c1e0ce2499",
+  "spec_fingerprint": "e3b0c44298fc",
+  "spec_manifest": {},
+  "ablation": {
+    "arm": "full",
+    "why": "",
+    "ops": [],
+    "receipt": {}
+  },
+  "catalog_at_start": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "catalog_at_end": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "turns": 133,
+  "input_tokens": 425,
+  "output_tokens": 20593,
+  "cache_creation_tokens": 107927,
+  "cache_read_tokens": 3864466,
+  "slow_tool_calls": 0,
+  "slow_tool_seconds": 0,
+  "slow_tool_seconds_by_tool": {},
+  "timed_out_tool_calls": 0,
+  "imputed_cost_usd": 0.624745,
+  "answers_written": 31,
+  "status": "done",
+  "graded_against": "59c1e0ce2499"
+}

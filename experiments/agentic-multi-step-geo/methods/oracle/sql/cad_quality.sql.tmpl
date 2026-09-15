@@ -1,0 +1,14 @@
+-- q07: input-quality checks on the resolved parcels.
+--   n_duplicate_ids   listed ids that resolve to more than one CAR row
+--   n_parcels_under_1ha  distinct parcels below the 1 ha smallholder threshold
+--                        (FAO 2013, lower bound of the 1-10 ha description)
+CREATE OR REPLACE VIEW _q AS
+SELECT (SELECT count(*) FROM (
+          SELECT cod_imovel
+          FROM read_parquet('${CAD_PARQUET}')
+          GROUP BY cod_imovel
+          HAVING count(*) > 1))                            AS n_duplicate_ids,
+       (SELECT count(*) FROM (
+          SELECT DISTINCT cod_imovel, num_area
+          FROM read_parquet('${CAD_PARQUET}')
+          WHERE num_area < 1))                             AS n_parcels_under_1ha;

@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,Beef,true,
+21,Mosaic of Uses,,false,Mixed uses - cannot isolate commodity
+39,Soybean,Soy,true,
+20,Sugar cane,,false,Not EUDR Annex I commodity
+41,Other Temporary Crops,,false,Unspecified crop type
+9,Forest Plantation,Timber,true,
+40,Rice,,false,Not EUDR Annex I commodity
+46,Coffee,Coffee,true,
+47,Citrus,,false,Not EUDR Annex I commodity
+48,Other Perennial Crops,,false,Unspecified crop type
+62,Cotton,,false,Not EUDR Annex I commodity

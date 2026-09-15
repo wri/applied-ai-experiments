@@ -1,0 +1,1278 @@
+{
+  "q01": [
+    {
+      "answer": 4,
+      "column": "n_collections",
+      "golden": 3,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.333333,
+      "row": 0
+    }
+  ],
+  "q03": [
+    {
+      "answer": 8453552,
+      "column": "n_rows",
+      "golden": 8453554,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    },
+    {
+      "answer": 8437938,
+      "column": "n_distinct_ids",
+      "golden": 8437940,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    }
+  ],
+  "q05": [
+    {
+      "answer": 114,
+      "column": "list_ids",
+      "golden": 117,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.025641,
+      "row": 0
+    },
+    {
+      "answer": 114,
+      "column": "found_in_car",
+      "golden": 117,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.025641,
+      "row": 0
+    }
+  ],
+  "q06": [
+    {
+      "answer": 106,
+      "column": "n_parcels",
+      "golden": 109,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.027523,
+      "row": 0
+    }
+  ],
+  "q08": [
+    {
+      "answer": 42000,
+      "column": "n_fields_in_envelope",
+      "golden": 3291,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 11.762078,
+      "row": 0
+    }
+  ],
+  "q09": [
+    {
+      "answer": 5200,
+      "column": "matched_fields",
+      "golden": 793,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 5.557377,
+      "row": 0
+    }
+  ],
+  "q10": [
+    {
+      "answer": 3800,
+      "column": "by_single_parcel_rule",
+      "golden": 766,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.960836,
+      "row": 0
+    },
+    {
+      "answer": 1400,
+      "column": "by_aggregate_rule_only",
+      "golden": 27,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 50.851852,
+      "row": 0
+    }
+  ],
+  "q11": [
+    {
+      "answer": 0.667,
+      "column": "min_single_frac",
+      "golden": 0.31,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.151613,
+      "row": 0
+    },
+    {
+      "answer": 0.845,
+      "column": "avg_single_frac",
+      "golden": 0.973,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.131552,
+      "row": 0
+    },
+    {
+      "answer": 0.915,
+      "column": "avg_union_frac",
+      "golden": 0.996,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.081325,
+      "row": 0
+    }
+  ],
+  "q12": [
+    {
+      "answer": 8500,
+      "column": "n_excluded",
+      "golden": 79,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 106.594937,
+      "row": 0
+    }
+  ],
+  "q13": [
+    {
+      "answer": "GO-5212204-011050C9BC804D77A80A4F161A120C5A",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A626DA1611C4A4885618BD646CF0010",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 156,
+      "column": "n_fields",
+      "golden": 74,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.108108,
+      "row": 0
+    },
+    {
+      "answer": "GO-5212204-0E3C72FBAFCA4422AE312548AA7331C0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-15108D4D7C134B8D9E71E50A2ED2E605",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 142,
+      "column": "n_fields",
+      "golden": 42,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.380952,
+      "row": 1
+    },
+    {
+      "answer": "GO-5212204-0F4C0661AD054C0883A19B9670A7A0F0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5EA91F9370294F8F8F9447882810DD0B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 135,
+      "column": "n_fields",
+      "golden": 42,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.214286,
+      "row": 2
+    },
+    {
+      "answer": "GO-5212204-118F8241E57F4C21AF20F2486C2316F9",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-6A28AC5AF7BF4BEC8931E8E154D99AEE",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 128,
+      "column": "n_fields",
+      "golden": 34,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.764706,
+      "row": 3
+    },
+    {
+      "answer": "GO-5212204-1388D04145DA42C49E1692A41D96CDB5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-52E2FECF2A7042F2B0DC6B27138AADE6",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": 125,
+      "column": "n_fields",
+      "golden": 31,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.032258,
+      "row": 4
+    },
+    {
+      "answer": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-F17BEA20B17148C1ADB4BD53A04EC448",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 118,
+      "column": "n_fields",
+      "golden": 29,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.068966,
+      "row": 5
+    },
+    {
+      "answer": "GO-5212204-162DBAFE85134130B3480CF2ED130BFA",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-021D6EEAC0FE4976868FEBAAD4C9056C",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 115,
+      "column": "n_fields",
+      "golden": 29,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.965517,
+      "row": 6
+    },
+    {
+      "answer": "GO-5212204-16833B91FD32494C864B458F765C0755",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 112,
+      "column": "n_fields",
+      "golden": 28,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.0,
+      "row": 7
+    },
+    {
+      "answer": "GO-5212204-1C88EF1B3499490DB39608D89AA62FA5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-CE5E071E653F445E8EA2609440D42C75",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 108,
+      "column": "n_fields",
+      "golden": 26,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.153846,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-1E2963990BB04DAF9B1A8E86549F116C",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 105,
+      "column": "n_fields",
+      "golden": 22,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.772727,
+      "row": 9
+    }
+  ],
+  "q14": [
+    {
+      "answer": 65400.5,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.811217,
+      "row": 0
+    }
+  ],
+  "q15": [
+    {
+      "answer": 5200,
+      "column": "n_parcels",
+      "golden": 117,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 43.444444,
+      "row": 0
+    },
+    {
+      "answer": 65400.5,
+      "column": "n_fields",
+      "golden": 793,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 81.472257,
+      "row": 0
+    },
+    {
+      "answer": 2850.3,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.921063,
+      "row": 0
+    },
+    {
+      "answer": 280,
+      "column": "fields_with_post2020_loss",
+      "golden": 41,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 5.829268,
+      "row": 0
+    }
+  ],
+  "q16": [
+    {
+      "answer_columns": 5,
+      "answer_rows": 11,
+      "golden_columns": 5,
+      "golden_rows": 4,
+      "kind": "shape"
+    }
+  ],
+  "q17": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 4,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q18": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 6,
+      "golden_columns": 3,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q19": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 5,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q20": [
+    {
+      "answer": "GO-5212204-011050C9BC804D77A80A4F161A120C5A",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 245.8,
+      "column": "post2020_loss_ha",
+      "golden": 46.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 4.240938,
+      "row": 0
+    },
+    {
+      "answer": 28,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 13.0,
+      "row": 0
+    },
+    {
+      "answer": "GO-5212204-1C88EF1B3499490DB39608D89AA62FA5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 120.6,
+      "column": "post2020_loss_ha",
+      "golden": 29.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.088136,
+      "row": 1
+    },
+    {
+      "answer": "GO-5212204-0E3C72FBAFCA4422AE312548AA7331C0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 198.2,
+      "column": "post2020_loss_ha",
+      "golden": 13.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 13.902256,
+      "row": 2
+    },
+    {
+      "answer": 22,
+      "column": "n_fields_post2020_loss",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 3.4,
+      "row": 2
+    },
+    {
+      "answer": "GO-5212204-0F4C0661AD054C0883A19B9670A7A0F0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A626DA1611C4A4885618BD646CF0010",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 178.5,
+      "column": "post2020_loss_ha",
+      "golden": 10.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 15.527778,
+      "row": 3
+    },
+    {
+      "answer": 19,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 8.5,
+      "row": 3
+    },
+    {
+      "answer": "GO-5212204-118F8241E57F4C21AF20F2486C2316F9",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": "Jussara",
+      "column": "municipio",
+      "golden": "Santa Fe de Goias",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": 165.3,
+      "column": "post2020_loss_ha",
+      "golden": 3.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 52.322581,
+      "row": 4
+    },
+    {
+      "answer": 18,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 8.0,
+      "row": 4
+    },
+    {
+      "answer": "GO-5212204-1388D04145DA42C49E1692A41D96CDB5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 152.7,
+      "column": "post2020_loss_ha",
+      "golden": 3.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 49.9,
+      "row": 5
+    },
+    {
+      "answer": 17,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 7.5,
+      "row": 5
+    },
+    {
+      "answer": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 142.1,
+      "column": "post2020_loss_ha",
+      "golden": 2.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 48.0,
+      "row": 6
+    },
+    {
+      "answer": 15,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 6.5,
+      "row": 6
+    },
+    {
+      "answer": "GO-5212204-162DBAFE85134130B3480CF2ED130BFA",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-D8B970A69F30415F9FDEE84663A2210B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": "Jussara",
+      "column": "municipio",
+      "golden": "Santa Fe de Goias",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 138.4,
+      "column": "post2020_loss_ha",
+      "golden": 1.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 85.5,
+      "row": 7
+    },
+    {
+      "answer": 14,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 6.0,
+      "row": 7
+    },
+    {
+      "answer": "GO-5212204-16833B91FD32494C864B458F765C0755",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-B09F3674DFFF46D7AB8D2101F77AFC10",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 128.9,
+      "column": "post2020_loss_ha",
+      "golden": 1.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 106.416667,
+      "row": 8
+    },
+    {
+      "answer": 13,
+      "column": "n_fields_post2020_loss",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 12.0,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-1E2963990BB04DAF9B1A8E86549F116C",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-59B661AA7FEB45408462F5CD9717FC56",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 115.2,
+      "column": "post2020_loss_ha",
+      "golden": 0.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 191.0,
+      "row": 9
+    },
+    {
+      "answer": 11,
+      "column": "n_fields_post2020_loss",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 10.0,
+      "row": 9
+    }
+  ],
+  "q21": [
+    {
+      "answer": 40753397.2,
+      "column": "cleared_ha",
+      "golden": 761.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 53523.29367,
+      "row": 0
+    },
+    {
+      "answer": 27.6,
+      "column": "pct_of_loss",
+      "golden": 42.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.342857,
+      "row": 0
+    },
+    {
+      "answer": 27858684.6,
+      "column": "cleared_ha",
+      "golden": 418.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 66566.944086,
+      "row": 1
+    },
+    {
+      "answer": 18.86,
+      "column": "pct_of_loss",
+      "golden": 23.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.18355,
+      "row": 1
+    },
+    {
+      "answer": 23016659.8,
+      "column": "cleared_ha",
+      "golden": 326.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 70602.25092,
+      "row": 2
+    },
+    {
+      "answer": 15.59,
+      "column": "pct_of_loss",
+      "golden": 18.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.133889,
+      "row": 2
+    },
+    {
+      "answer": 32151403.3,
+      "column": "cleared_ha",
+      "golden": 190.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 169216.912105,
+      "row": 3
+    },
+    {
+      "answer": 21.77,
+      "column": "pct_of_loss",
+      "golden": 10.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.073333,
+      "row": 3
+    },
+    {
+      "answer": 23897629.2,
+      "column": "cleared_ha",
+      "golden": 114.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 207985.328982,
+      "row": 4
+    },
+    {
+      "answer": 16.18,
+      "column": "pct_of_loss",
+      "golden": 6.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.568254,
+      "row": 4
+    }
+  ],
+  "q22": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 7,
+      "golden_columns": 3,
+      "golden_rows": 24,
+      "kind": "shape"
+    }
+  ],
+  "q23": [
+    {
+      "answer": 438291,
+      "column": "field_id",
+      "golden": 4974415,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.911891,
+      "row": 0
+    },
+    {
+      "answer": "GO-5212204-0E3C72FBAFCA4422AE312548AA7331C0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 203.5,
+      "column": "field_area_ha",
+      "golden": 221.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.080018,
+      "row": 0
+    },
+    {
+      "answer": 58.5,
+      "column": "post2020_loss_ha",
+      "golden": 46.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.266234,
+      "row": 0
+    },
+    {
+      "answer": 425847,
+      "column": "field_id",
+      "golden": 4681779,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.909042,
+      "row": 1
+    },
+    {
+      "answer": "GO-5212204-011050C9BC804D77A80A4F161A120C5A",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 145.2,
+      "column": "field_area_ha",
+      "golden": 60.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.40796,
+      "row": 1
+    },
+    {
+      "answer": 42.8,
+      "column": "post2020_loss_ha",
+      "golden": 12.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.317829,
+      "row": 1
+    },
+    {
+      "answer": 451826,
+      "column": "field_id",
+      "golden": 4533274,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.900331,
+      "row": 2
+    },
+    {
+      "answer": "GO-5212204-0F4C0661AD054C0883A19B9670A7A0F0",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A626DA1611C4A4885618BD646CF0010",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 178.9,
+      "column": "field_area_ha",
+      "golden": 14.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 11.253425,
+      "row": 2
+    },
+    {
+      "answer": 52.3,
+      "column": "post2020_loss_ha",
+      "golden": 10.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.842593,
+      "row": 2
+    },
+    {
+      "answer": 475923,
+      "column": "field_id",
+      "golden": 4903857,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.902949,
+      "row": 3
+    },
+    {
+      "answer": "GO-5212204-1388D04145DA42C49E1692A41D96CDB5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 162.3,
+      "column": "field_area_ha",
+      "golden": 10.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 14.168224,
+      "row": 3
+    },
+    {
+      "answer": 45.2,
+      "column": "post2020_loss_ha",
+      "golden": 10.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.224299,
+      "row": 3
+    },
+    {
+      "answer": 488301,
+      "column": "field_id",
+      "golden": 4668028,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.895395,
+      "row": 4
+    },
+    {
+      "answer": "GO-5212204-162DBAFE85134130B3480CF2ED130BFA",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": 175.8,
+      "column": "field_area_ha",
+      "golden": 27.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 5.369565,
+      "row": 4
+    },
+    {
+      "answer": 39.8,
+      "column": "post2020_loss_ha",
+      "golden": 9.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 3.189474,
+      "row": 4
+    },
+    {
+      "answer": 503924,
+      "column": "field_id",
+      "golden": 4679025,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.892301,
+      "row": 5
+    },
+    {
+      "answer": "GO-5212204-1E2963990BB04DAF9B1A8E86549F116C",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 155.9,
+      "column": "field_area_ha",
+      "golden": 5.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 30.18,
+      "row": 5
+    },
+    {
+      "answer": 35.6,
+      "column": "post2020_loss_ha",
+      "golden": 3.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 10.483871,
+      "row": 5
+    },
+    {
+      "answer": 469504,
+      "column": "field_id",
+      "golden": 4659940,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.899247,
+      "row": 6
+    },
+    {
+      "answer": "GO-5212204-118F8241E57F4C21AF20F2486C2316F9",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": "soya",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 195.6,
+      "column": "field_area_ha",
+      "golden": 7.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 25.432432,
+      "row": 6
+    },
+    {
+      "answer": 48.9,
+      "column": "post2020_loss_ha",
+      "golden": 3.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 14.774194,
+      "row": 6
+    },
+    {
+      "answer": 482750,
+      "column": "field_id",
+      "golden": 4745030,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.898262,
+      "row": 7
+    },
+    {
+      "answer": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": "soya",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 189.4,
+      "column": "field_area_ha",
+      "golden": 7.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 23.282051,
+      "row": 7
+    },
+    {
+      "answer": 42.1,
+      "column": "post2020_loss_ha",
+      "golden": 2.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 14.035714,
+      "row": 7
+    },
+    {
+      "answer": 491847,
+      "column": "field_id",
+      "golden": 4766627,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.896814,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-16833B91FD32494C864B458F765C0755",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": "coffee",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 85.5,
+      "column": "field_area_ha",
+      "golden": 125.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.317093,
+      "row": 8
+    },
+    {
+      "answer": 38.2,
+      "column": "post2020_loss_ha",
+      "golden": 2.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 13.148148,
+      "row": 8
+    },
+    {
+      "answer": 498456,
+      "column": "field_id",
+      "golden": 4685105,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.893608,
+      "row": 9
+    },
+    {
+      "answer": "GO-5212204-1C88EF1B3499490DB39608D89AA62FA5",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": "soya",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 198.2,
+      "column": "field_area_ha",
+      "golden": 6.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 29.030303,
+      "row": 9
+    },
+    {
+      "answer": 37.5,
+      "column": "post2020_loss_ha",
+      "golden": 2.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 14.0,
+      "row": 9
+    }
+  ],
+  "q25": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 6,
+      "golden_columns": 3,
+      "golden_rows": 2,
+      "kind": "shape"
+    }
+  ],
+  "q26": [
+    {
+      "answer_columns": 4,
+      "answer_rows": 9,
+      "golden_columns": 4,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q27": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 10,
+      "golden_columns": 3,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q28": [
+    {
+      "answer_columns": 7,
+      "answer_rows": 10,
+      "golden_columns": 7,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q29": [
+    {
+      "answer": 5,
+      "column": "n_widened",
+      "golden": 0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 1,
+      "column": "n_no_match",
+      "golden": 0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": null,
+      "row": 0
+    }
+  ],
+  "q30": [
+    {
+      "answer_columns": 8,
+      "answer_rows": 10,
+      "golden_columns": 8,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q31": [
+    {
+      "answer": 115,
+      "column": "resolved_clean",
+      "golden": 114,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.008772,
+      "row": 0
+    },
+    {
+      "answer": 0,
+      "column": "duplicates_removed",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 0
+    }
+  ]
+}

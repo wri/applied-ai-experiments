@@ -1,0 +1,17 @@
+-- q16: the scope decision, restricted to the Mapbiomas classes actually present
+-- on the matched fields. in_scope and caveat are graded together: excluding
+-- class 9 as "not a covered commodity" is wrong even though the bucket is right,
+-- because it is excluded on detection grounds, not regulatory ones.
+CREATE OR REPLACE VIEW _q AS
+WITH present AS (
+    SELECT DISTINCT CAST(mbmode24 AS INTEGER) AS mbmode24, mb_class
+    FROM read_parquet('${MATCHED_PARQUET}')
+)
+SELECT p.mbmode24,
+       coalesce(k.mb_class, p.mb_class)   AS mb_class,
+       coalesce(k.annex1_commodity, '')   AS annex1_commodity,
+       coalesce(k.in_scope, FALSE)        AS in_scope,
+       coalesce(k.caveat, '')             AS caveat
+FROM present p
+LEFT JOIN read_parquet('${EUDR_CROPS_PARQUET}') k ON k.mbmode24 = p.mbmode24
+ORDER BY p.mbmode24;

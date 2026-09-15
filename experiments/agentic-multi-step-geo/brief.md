@@ -63,7 +63,14 @@ Runs 60 containerized sessions of the same 31-question EUDR workflow over a 117-
 
 ## Learnings
 
-
+- Expertise, not model capability, is the bottleneck for agentic geospatial analysis. Strong models already have the spatial skills, and four short documents of written expert rules took them from 35% to 75% correct on a 31-question workflow.
+- Write expert judgment down as plain policy documents the agent reads. In this benchmark it did more for accuracy than switching models, added no cost per run, and lets a domain expert change the rules without touching code.
+- Costly agent errors make no noise. Across 60 sessions they produced no crashes or warnings, only plausible, well-formatted numbers that were wrong.
+- Expert context and evaluation catch different errors, so an agentic workflow needs both. Documents corrected wrong judgment calls in every run. A coordinate-order slip that shrank every field by a third survived the documents, and only an independent answer key caught it.
+- Agreement between runs isn't evidence of correctness. An agent can return the identical wrong answer ten times out of ten, so always score against something built independently of the agent.
+- Judge agent errors by what they change downstream, not by how large they look. A near-miss distance can flip which organisation gets contacted, while a large-looking miss can be harmless formatting.
+- Build the answer key before running the agent. Turning an existing expert workflow into checkable assertions with a stated output contract is what makes an agentic benchmark trustworthy, and the key carries over to the next workflow.
+- Treat everything an agent reads as a possible answer leak. Numbers left in early instructions let an agent partly answer 5 of 31 questions without touching the data.
 
 ---
 

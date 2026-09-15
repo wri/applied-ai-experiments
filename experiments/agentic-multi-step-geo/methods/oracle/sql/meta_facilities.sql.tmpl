@@ -1,0 +1,6 @@
+-- q02: tier composition of the unified facilities layer.
+CREATE OR REPLACE VIEW _q AS
+SELECT tier, count(*) AS n
+FROM read_parquet('${COOP_GEOMS}')
+GROUP BY tier
+ORDER BY tier;

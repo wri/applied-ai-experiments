@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+9,Sugar Cane,Sugar,true,Included in Annex I under 'Sugar'
+15,Pasture,,false,Livestock grazing; not Annex I crop commodity
+20,Temporary Crops,Soy/Maize,true,Multiple possible commodities; assignment determined by spatial analysis of specific field data
+21,Perennial Crops,Coffee/Cocoa,true,Coffee dominant in Goiás region; cocoa possible but less common
+39,Soy,Soy,true,Primary commodity in Goiás; Annex I Regulation (EU) 2023/1115
+40,Fruit and Citrus,Cocoa,true,Citrus not in Annex I; cocoa possible in tropical regions
+41,Maize,Maize,true,Annex I Regulation (EU) 2023/1115; secondary crop in region
+46,Rice,Rice,true,Annex I Regulation (EU) 2023/1115; minimal presence in sample
+47,Pulses/Legumes,,false,Legumes not Annex I commodities per EUDR scope
+48,Sunflower,,false,Not listed in Annex I of EUDR Regulation
+62,Other/Unidentified,,false,Cannot classify; assumed out of scope pending verification

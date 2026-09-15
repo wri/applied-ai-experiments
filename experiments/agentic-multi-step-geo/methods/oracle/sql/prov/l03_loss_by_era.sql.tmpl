@@ -1,0 +1,17 @@
+-- Forest loss on matched fields by era. The 2021-2024 bin is the EUDR-relevant
+-- window (loss after the 31 Dec 2020 cut-off). pct_of_loss is a ratio, so it is
+-- robust to the baked-area unit question.
+CREATE OR REPLACE VIEW _q AS
+WITH src AS (SELECT * FROM read_parquet('${MATCHED_PARQUET}')),
+melted AS (
+    SELECT '2001-2004' AS era, sum(deforestarea0104) AS a FROM src
+    UNION ALL SELECT '2005-2009', sum(deforestarea0509) FROM src
+    UNION ALL SELECT '2010-2014', sum(deforestarea1014) FROM src
+    UNION ALL SELECT '2015-2020', sum(deforestarea1520) FROM src
+    UNION ALL SELECT '2021-2024', sum(deforestarea2124) FROM src
+)
+SELECT era,
+       round(a / 10000, 1)                  AS cleared_ha,
+       round(100.0 * a / sum(a) OVER (), 1) AS pct_of_loss
+FROM melted
+ORDER BY era;

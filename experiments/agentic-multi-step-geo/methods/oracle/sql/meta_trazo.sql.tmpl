@@ -1,0 +1,6 @@
+-- q04: row count and declared CRS of the Goiás field boundaries. The EPSG is a
+-- property of the GeoParquet geometry metadata (EPSG:4326 per the catalog),
+-- pinned in fixtures/pins.json.
+CREATE OR REPLACE VIEW _q AS
+SELECT (SELECT count(*) FROM read_parquet('${TRAZO_URL}')) AS n_rows,
+       ${TRAZO_EPSG}::INTEGER                              AS epsg;

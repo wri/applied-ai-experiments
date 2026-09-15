@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,pasture,Cattle,true,"Pasture is used as a proxy for cattle-grazing land; MapBiomas does not confirm actual livestock delivery from the parcel"
+39,soybean,Soya,true,
+21,mosaic_of_uses,,false,"Mixed agriculture/pasture mosaic class; the area-weighted mode cannot be attributed to a single Annex I commodity"
+41,other_temporary_crops,,false,"Aggregates unspecified annual crops (e.g. maize, sorghum) not covered by EUDR Annex I"

@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"MapBiomas records land cover only, not livestock presence; pasture is treated as a proxy for cattle-ranching land, the standard convention for EUDR cattle risk screening from land-cover data."
+21,Mosaic of Uses,,false,"Mixed agriculture/pasture mosaic; the class cannot be attributed to a single commodity, so it is excluded from Annex I commodity analysis."
+39,Soybean,soya,true,
+41,Other Temporary Crops,,false,"Catch-all class for temporary crops other than soybean, sugar cane and rice; none of the crops it aggregates are EUDR Annex I commodities, so it is excluded."

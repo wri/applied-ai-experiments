@@ -1,0 +1,15 @@
+-- Per-cadaster rollup: one row per CAR property on the list, ranked by the
+-- EUDR-relevant metric (post-2020 loss). Drives the interactive parcel table.
+SELECT
+    cod_imovel,
+    municipio,
+    round(num_area, 1)              AS car_area_ha,
+    n_fields,
+    matched_field_ha,
+    post2020_loss_ha,
+    n_fields_post2020_loss,
+    CASE WHEN deforestation_free THEN 'deforestation-free'
+         ELSE 'post-2020 loss' END  AS eudr_flag,
+    ind_status                       AS car_status
+FROM read_parquet('${CAD_MATCHED_PARQUET}')
+ORDER BY post2020_loss_ha DESC, matched_field_ha DESC;

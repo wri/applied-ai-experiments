@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,Pasture is used as the observable land-cover proxy for cattle grazing since EUDR's cattle commodity is defined by the animals raised on the land rather than by land cover itself
+39,Soybean,soy,true,
+21,Mosaic of Uses,,false,Aggregate class mixing multiple land uses on one pixel; no single Annex I commodity can be attributed to it
+41,Other Temporary Crops,,false,Aggregate class for temporary crops other than soy/rice/cotton (e.g. maize/sorghum); none of the constituent crops are EUDR Annex I commodities

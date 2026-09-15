@@ -1,0 +1,49 @@
+-- List-level EUDR headline (one row). Every column here is footnoted in the
+-- report to an exact page of an official EU source (see eudr/requirements.json).
+-- "deforestation-free" = no forest loss AFTER the 31 Dec 2020 cut-off.
+-- (spatial loaded for ST_GeometryType — the geolocation-polygon coverage metric)
+INSTALL spatial; LOAD spatial;
+-- Longitude-first, as everywhere else in the oracle. ST_GeometryType does not
+-- care, but the declaration keeps one axis convention across the pipeline.
+SET geometry_always_xy = true;
+CREATE OR REPLACE VIEW _q AS
+WITH m AS (SELECT * FROM read_parquet('${MATCHED_PARQUET}')),
+     c AS (SELECT * FROM read_parquet('${CAD_MATCHED_PARQUET}')),
+fm AS (
+  SELECT
+    count(*)                                                   AS n_fields,
+    round(sum(field_area_ha), 1)                               AS matched_field_ha,
+    round(sum(post2020_loss_ha), 1)                            AS post2020_loss_ha,
+    count(*) FILTER (WHERE has_post2020_loss)                  AS fields_with_post2020_loss,
+    round(100.0 * count(*) FILTER (WHERE has_post2020_loss)
+          / nullif(count(*), 0), 1)                            AS pct_fields_post2020_loss,
+    round(100.0 * sum(field_area_ha) FILTER (WHERE NOT has_post2020_loss)
+          / nullif(sum(field_area_ha), 0), 1)                  AS deforestation_free_area_pct,
+    round(100.0 * count(*) FILTER (
+            WHERE CAST(ST_GeometryType(geometry) AS VARCHAR) LIKE '%POLYGON%')
+          / nullif(count(*), 0), 1)                            AS geoloc_polygon_pct
+  FROM m),
+fc AS (
+  SELECT
+    count(*)                                                   AS n_parcels,
+    count(*) FILTER (WHERE NOT deforestation_free)             AS parcels_with_loss,
+    round(100.0 * count(*) FILTER (WHERE NOT deforestation_free)
+          / nullif(count(*), 0), 1)                            AS pct_parcels_with_loss,
+    round(100.0 * count(*) FILTER (WHERE ind_status = 'AT')
+          / nullif(count(*), 0), 1)                            AS pct_parcels_active_car,
+    -- EUDR Art. 9(1)(d): plots above 4 ha must be given as polygons, not
+    -- points. This is a legal geolocation requirement, not a size profile.
+    round(100.0 * count(*) FILTER (WHERE num_area > 4)
+          / nullif(count(*), 0), 1)                            AS pct_parcels_over_4ha,
+    -- Separately, how much of the portfolio is smallholder land: <1 ha, the
+    -- lower bound of FAO's 1-10 ha description (FAO 2013, Smallholders and
+    -- family farmers). Lowder et al. (2021) put 84% of smallholdings under 2 ha.
+    count(*) FILTER (WHERE num_area < 1)                       AS n_parcels_under_1ha
+  FROM c)
+SELECT fc.n_parcels, fm.n_fields, fm.matched_field_ha,
+       fm.deforestation_free_area_pct, fm.post2020_loss_ha,
+       fm.fields_with_post2020_loss, fm.pct_fields_post2020_loss,
+       fc.parcels_with_loss, fc.pct_parcels_with_loss,
+       fm.geoloc_polygon_pct, fc.pct_parcels_over_4ha, fc.n_parcels_under_1ha,
+       fc.pct_parcels_active_car
+FROM fm, fc;

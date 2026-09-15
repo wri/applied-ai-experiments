@@ -1,0 +1,2047 @@
+{
+  "q03": [
+    {
+      "answer": 8453552,
+      "column": "n_rows",
+      "golden": 8453554,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    },
+    {
+      "answer": 8437938,
+      "column": "n_distinct_ids",
+      "golden": 8437940,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    }
+  ],
+  "q10": [
+    {
+      "answer": 788,
+      "column": "by_single_parcel_rule",
+      "golden": 766,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.028721,
+      "row": 0
+    },
+    {
+      "answer": 10,
+      "column": "by_aggregate_rule_only",
+      "golden": 27,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.62963,
+      "row": 0
+    }
+  ],
+  "q12": [
+    {
+      "answer": 74,
+      "column": "n_excluded",
+      "golden": 79,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.063291,
+      "row": 0
+    }
+  ],
+  "q13": [
+    {
+      "answer": 43,
+      "column": "n_fields",
+      "golden": 42,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.02381,
+      "row": 1
+    },
+    {
+      "answer": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-021D6EEAC0FE4976868FEBAAD4C9056C",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 27,
+      "column": "n_fields",
+      "golden": 29,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.068966,
+      "row": 6
+    },
+    {
+      "answer": "GO-5212204-CE5E071E653F445E8EA2609440D42C75",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 26,
+      "column": "n_fields",
+      "golden": 28,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.071429,
+      "row": 7
+    },
+    {
+      "answer": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-CE5E071E653F445E8EA2609440D42C75",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 22,
+      "column": "n_fields",
+      "golden": 26,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.153846,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-156094615E67476AB099D9F46F6C0655",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    }
+  ],
+  "q14": [
+    {
+      "answer": 24255.294428,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.328268,
+      "row": 0
+    }
+  ],
+  "q15": [
+    {
+      "answer": 24255.2944,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.328268,
+      "row": 0
+    },
+    {
+      "answer": 120.573,
+      "column": "post2020_loss_ha",
+      "golden": 114.9,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.049373,
+      "row": 0
+    }
+  ],
+  "q16": [
+    {
+      "answer": "Pasture is a land-cover proxy for cattle grazing rather than direct evidence of cattle production; treated as the EUDR cattle commodity",
+      "column": "caveat",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": "",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": "false",
+      "column": "in_scope",
+      "golden": "True",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": "Mixed/undifferentiated agricultural uses that cannot be attributed to a single Annex I commodity",
+      "column": "caveat",
+      "golden": "assumed_pasture",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": "Heterogeneous catch-all of annual crops (corn/beans/sorghum) none of which is individually an Annex I commodity",
+      "column": "caveat",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    }
+  ],
+  "q17": [
+    {
+      "answer": 704,
+      "column": "n_fields",
+      "golden": 753,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.065073,
+      "row": 0
+    },
+    {
+      "answer": 43.4516,
+      "column": "post2020_loss_ha",
+      "golden": 67.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.360065,
+      "row": 0
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 29,
+      "column": "n_fields",
+      "golden": 28,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.035714,
+      "row": 1
+    },
+    {
+      "answer": 52.5866,
+      "column": "post2020_loss_ha",
+      "golden": 46.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.121249,
+      "row": 1
+    }
+  ],
+  "q18": [
+    {
+      "answer_columns": 3,
+      "answer_rows": 2,
+      "golden_columns": 3,
+      "golden_rows": 1,
+      "kind": "shape"
+    }
+  ],
+  "q19": [
+    {
+      "answer": 20660.667,
+      "column": "total_ha",
+      "golden": 32745.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.369057,
+      "row": 0
+    },
+    {
+      "answer": 0.099124,
+      "column": "loss_share",
+      "golden": 0.0969,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.022951,
+      "row": 0
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 1604.7585,
+      "column": "total_ha",
+      "golden": 2340.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.314323,
+      "row": 1
+    },
+    {
+      "answer": 0.263024,
+      "column": "loss_share",
+      "golden": 0.227,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.158696,
+      "row": 1
+    }
+  ],
+  "q20": [
+    {
+      "answer": 52.5866,
+      "column": "post2020_loss_ha",
+      "golden": 46.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.121249,
+      "row": 0
+    },
+    {
+      "answer": 3,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.5,
+      "row": 0
+    },
+    {
+      "answer": 27.0195,
+      "column": "post2020_loss_ha",
+      "golden": 29.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.084085,
+      "row": 1
+    },
+    {
+      "answer": 11,
+      "column": "n_fields_post2020_loss",
+      "golden": 12,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.083333,
+      "row": 1
+    },
+    {
+      "answer": 2.5703,
+      "column": "post2020_loss_ha",
+      "golden": 13.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.806744,
+      "row": 2
+    },
+    {
+      "answer": 4,
+      "column": "n_fields_post2020_loss",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.2,
+      "row": 2
+    },
+    {
+      "answer": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A626DA1611C4A4885618BD646CF0010",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 3.0037,
+      "column": "post2020_loss_ha",
+      "golden": 10.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.72188,
+      "row": 3
+    },
+    {
+      "answer": "GO-5212204-8AE07816A270436D856E6EC821DE0A7B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 0.4859,
+      "column": "post2020_loss_ha",
+      "golden": 3.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.838033,
+      "row": 5
+    },
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 2.4818,
+      "column": "post2020_loss_ha",
+      "golden": 2.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.144207,
+      "row": 6
+    },
+    {
+      "answer": 1,
+      "column": "n_fields_post2020_loss",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.5,
+      "row": 6
+    }
+  ],
+  "q21": [
+    {
+      "answer": 774.9574,
+      "column": "cleared_ha",
+      "golden": 761.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.017806,
+      "row": 0
+    },
+    {
+      "answer": 42.2109,
+      "column": "pct_of_loss",
+      "golden": 42.0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.005021,
+      "row": 0
+    },
+    {
+      "answer": 422.0148,
+      "column": "cleared_ha",
+      "golden": 418.5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.008399,
+      "row": 1
+    },
+    {
+      "answer": 22.9866,
+      "column": "pct_of_loss",
+      "golden": 23.1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.004909,
+      "row": 1
+    },
+    {
+      "answer": 326.3603,
+      "column": "cleared_ha",
+      "golden": 326.0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.001105,
+      "row": 2
+    },
+    {
+      "answer": 17.7764,
+      "column": "pct_of_loss",
+      "golden": 18.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.012422,
+      "row": 2
+    },
+    {
+      "answer": 192.0114,
+      "column": "cleared_ha",
+      "golden": 190.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.010586,
+      "row": 3
+    },
+    {
+      "answer": 120.573,
+      "column": "cleared_ha",
+      "golden": 114.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.049373,
+      "row": 4
+    },
+    {
+      "answer": 6.5675,
+      "column": "pct_of_loss",
+      "golden": 6.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.04246,
+      "row": 4
+    }
+  ],
+  "q22": [
+    {
+      "answer": 19,
+      "column": "n_fields",
+      "golden": 18,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.055556,
+      "row": 1
+    },
+    {
+      "answer": 293.5178,
+      "column": "cleared_ha",
+      "golden": 280.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.048278,
+      "row": 1
+    },
+    {
+      "answer": 16,
+      "column": "n_fields",
+      "golden": 15,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.066667,
+      "row": 10
+    },
+    {
+      "answer": 122.5505,
+      "column": "cleared_ha",
+      "golden": 122.2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.002868,
+      "row": 10
+    },
+    {
+      "answer": 5,
+      "column": "n_fields",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.25,
+      "row": 19
+    },
+    {
+      "answer": 27.4197,
+      "column": "cleared_ha",
+      "golden": 24.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.137747,
+      "row": 19
+    },
+    {
+      "answer": 3,
+      "column": "n_fields",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.5,
+      "row": 22
+    },
+    {
+      "answer": 11.706,
+      "column": "cleared_ha",
+      "golden": 3.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.001538,
+      "row": 22
+    }
+  ],
+  "q23": [
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 144.8995,
+      "column": "field_area_ha",
+      "golden": 221.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.344939,
+      "row": 0
+    },
+    {
+      "answer": 39.3528,
+      "column": "field_area_ha",
+      "golden": 60.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.347383,
+      "row": 1
+    },
+    {
+      "answer": 4668028,
+      "column": "field_id",
+      "golden": 4533274,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.029726,
+      "row": 2
+    },
+    {
+      "answer": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A626DA1611C4A4885618BD646CF0010",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 17.9848,
+      "column": "field_area_ha",
+      "golden": 14.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.231836,
+      "row": 2
+    },
+    {
+      "answer": 9.5357,
+      "column": "post2020_loss_ha",
+      "golden": 10.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.117065,
+      "row": 2
+    },
+    {
+      "answer": 4894338,
+      "column": "field_id",
+      "golden": 4903857,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.001941,
+      "row": 3
+    },
+    {
+      "answer": 178.8935,
+      "column": "field_area_ha",
+      "golden": 10.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 15.719019,
+      "row": 3
+    },
+    {
+      "answer": 1.5237,
+      "column": "post2020_loss_ha",
+      "golden": 10.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.857598,
+      "row": 3
+    },
+    {
+      "answer": 4679025,
+      "column": "field_id",
+      "golden": 4668028,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.002356,
+      "row": 4
+    },
+    {
+      "answer": 3.2767,
+      "column": "field_area_ha",
+      "golden": 27.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.881279,
+      "row": 4
+    },
+    {
+      "answer": 3.1187,
+      "column": "post2020_loss_ha",
+      "golden": 9.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.671716,
+      "row": 4
+    },
+    {
+      "answer": 4659940,
+      "column": "field_id",
+      "golden": 4679025,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.004079,
+      "row": 5
+    },
+    {
+      "answer": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 4.8132,
+      "column": "field_area_ha",
+      "golden": 5.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.03736,
+      "row": 5
+    },
+    {
+      "answer": 4766627,
+      "column": "field_id",
+      "golden": 4659940,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.022895,
+      "row": 6
+    },
+    {
+      "answer": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 81.7862,
+      "column": "field_area_ha",
+      "golden": 7.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 10.052189,
+      "row": 6
+    },
+    {
+      "answer": 2.7168,
+      "column": "post2020_loss_ha",
+      "golden": 3.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.123613,
+      "row": 6
+    },
+    {
+      "answer": 4685105,
+      "column": "field_id",
+      "golden": 4745030,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.012629,
+      "row": 7
+    },
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 4.2975,
+      "column": "field_area_ha",
+      "golden": 7.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.449038,
+      "row": 7
+    },
+    {
+      "answer": 2.4818,
+      "column": "post2020_loss_ha",
+      "golden": 2.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.113643,
+      "row": 7
+    },
+    {
+      "answer": 4681776,
+      "column": "field_id",
+      "golden": 4766627,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.017801,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-B09F3674DFFF46D7AB8D2101F77AFC10",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-3EC9EBA0E8B64C978796D37DE35E549F",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 18.5914,
+      "column": "field_area_ha",
+      "golden": 125.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.851506,
+      "row": 8
+    },
+    {
+      "answer": 1.1992,
+      "column": "post2020_loss_ha",
+      "golden": 2.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.555852,
+      "row": 8
+    },
+    {
+      "answer": 4984281,
+      "column": "field_id",
+      "golden": 4685105,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.063857,
+      "row": 9
+    },
+    {
+      "answer": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-2B296F3D835C44D7BF1AD385C1D519A9",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 74.1869,
+      "column": "field_area_ha",
+      "golden": 6.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 10.240439,
+      "row": 9
+    },
+    {
+      "answer": 5.6426,
+      "column": "post2020_loss_ha",
+      "golden": 2.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.25704,
+      "row": 9
+    }
+  ],
+  "q24": [
+    {
+      "answer": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 15,
+      "column": "dominant_mb",
+      "golden": 21,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.285714,
+      "row": 9
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    },
+    {
+      "answer": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": 21,
+      "column": "dominant_mb",
+      "golden": 15,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.4,
+      "row": 17
+    },
+    {
+      "answer": "",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": "none",
+      "column": "routed_tier",
+      "golden": "slaughter_point",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    }
+  ],
+  "q25": [
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    }
+  ],
+  "q26": [
+    {
+      "answer_columns": 4,
+      "answer_rows": 17,
+      "golden_columns": 4,
+      "golden_rows": 18,
+      "kind": "shape"
+    }
+  ],
+  "q27": [
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    }
+  ],
+  "q28": [
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 0
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 0
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 1
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 1
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 2
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 2
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 3
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 3
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 4
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 4
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 5
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 5
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 6
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 6
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 7
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 7
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 8
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 8
+    },
+    {
+      "answer": 0,
+      "column": "proximity_override",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 8
+    },
+    {
+      "answer": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 9
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 9
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 10
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 10
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 11
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 11
+    },
+    {
+      "answer": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 12
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 12
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 13
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 13
+    },
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 14
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 14
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 15
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 15
+    },
+    {
+      "answer": 2,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.6,
+      "row": 16
+    },
+    {
+      "answer": 1,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.75,
+      "row": 16
+    },
+    {
+      "answer": 0,
+      "column": "proximity_override",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 16
+    },
+    {
+      "answer": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "column": "cod_imovel",
+      "golden": "GO-5219258-E7F86639E6404DC4AD9B8DBFAFFB112B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": 1,
+      "column": "n_candidates",
+      "golden": 5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.8,
+      "row": 17
+    },
+    {
+      "answer": 0,
+      "column": "n_delivery",
+      "golden": 4,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 17
+    },
+    {
+      "answer": 1,
+      "column": "no_match",
+      "golden": 0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": null,
+      "row": 17
+    }
+  ],
+  "q29": [
+    {
+      "answer": 1,
+      "column": "n_nearest_by_far",
+      "golden": 2,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.5,
+      "row": 0
+    }
+  ],
+  "q30": [
+    {
+      "answer": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": "cattle",
+      "column": "annex1_commodity",
+      "golden": "soya",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 2.5703,
+      "column": "post2020_loss_ha",
+      "golden": 46.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.945196,
+      "row": 0
+    },
+    {
+      "answer": 27.0195,
+      "column": "post2020_loss_ha",
+      "golden": 29.5,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.084085,
+      "row": 1
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 1
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 12.3898,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": "GO-5212204-8F9A53F42FEE4187BBBC3E66F68CEEBE",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-67B7F23029D24ACFAC7656714A14C2DB",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": "soy",
+      "column": "annex1_commodity",
+      "golden": "cattle",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 52.5866,
+      "column": "post2020_loss_ha",
+      "golden": 13.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 2.95388,
+      "row": 2
+    },
+    {
+      "answer": "48.0491.0063-1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": "intake_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 13.6971,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 2
+    },
+    {
+      "answer": 0.0346,
+      "column": "post2020_loss_ha",
+      "golden": 10.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.996796,
+      "row": 3
+    },
+    {
+      "answer": "SIE_23361577000124_152616_1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 12.0856,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 3
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5219258,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998949,
+      "row": 4
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": 12.0099,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 4
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 5
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": 13.2778,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 5
+    },
+    {
+      "answer": "GO-5212204-57B761BC972B4CF1ACB6FB3191344583",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-BC0DD19983DE40DDA0F0E5BF93136C61",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 2.4818,
+      "column": "post2020_loss_ha",
+      "golden": 2.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.144207,
+      "row": 6
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 6
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 13.0595,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": "SIE_23361577000124_152616_1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 17.9214,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 9
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 14.5629,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 9
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 10
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 10
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 10
+    },
+    {
+      "answer": 22.3316,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 10
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 11
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 11
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 11
+    },
+    {
+      "answer": 16.0232,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 11
+    },
+    {
+      "answer": "SIE_13715427000118_84399_1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": 20.9127,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 12
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 13
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 13
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 13
+    },
+    {
+      "answer": 12.009,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 13
+    },
+    {
+      "answer": "GO-5212204-89767A2A870E408092A410DDBAFF342D",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5EA91F9370294F8F8F9447882810DD0B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    },
+    {
+      "answer": 22.865,
+      "column": "distance_km",
+      "golden": 9.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 1.381771,
+      "row": 14
+    },
+    {
+      "answer": "GO-5212204-5EA91F9370294F8F8F9447882810DD0B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-89767A2A870E408092A410DDBAFF342D",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 15
+    },
+    {
+      "answer": "SIE_10373806000189_1291/09_1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 15
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 15
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 15
+    },
+    {
+      "answer": 10.3184,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 15
+    },
+    {
+      "answer": "SIE_23361577000124_152616_1",
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 16
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 16
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 16
+    },
+    {
+      "answer": 8.247,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 16
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 5212204,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.998948,
+      "row": 17
+    },
+    {
+      "answer": "buyer",
+      "column": "entity_kind",
+      "golden": "cooperative",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": "slaughter_point",
+      "column": "tier",
+      "golden": "membership_muni",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": 15.4932,
+      "column": "distance_km",
+      "golden": "",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    }
+  ]
+}

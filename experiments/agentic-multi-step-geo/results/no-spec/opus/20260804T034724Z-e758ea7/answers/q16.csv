@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,Pasture is a land-cover proxy for cattle grazing rather than direct evidence of cattle production; treated as the EUDR cattle commodity
+21,Mosaic of Uses,,false,Mixed/undifferentiated agricultural uses that cannot be attributed to a single Annex I commodity
+39,Soybean,soy,true,
+41,Other Temporary Crops,,false,Heterogeneous catch-all of annual crops (corn/beans/sorghum) none of which is individually an Annex I commodity

@@ -1,0 +1,8 @@
+-- q01: catalog shape. The collection count and recommended id come from the
+-- trazofields STAC metadata (catalog.json + llms.txt), which are not queryable
+-- in SQL; they are pinned in fixtures/pins.json and verified against the live
+-- catalog. trazofields exposes 3 Collections (trazo1/2/3-fields) plus 1
+-- sub-catalog (eap-release), and recommends trazo3-fields.
+CREATE OR REPLACE VIEW _q AS
+SELECT ${TRAZO_N_COLLECTIONS}::INTEGER AS n_collections,
+       '${TRAZO_RECOMMENDED}'          AS recommended_id;

@@ -1,0 +1,13 @@
+-- Distribution of the dominant loss year across matched fields with loss.
+-- Loss area is the sum of the era bands (see fields_extract); the baked
+-- hansen_loss_area column is not used.
+-- Column names (loss_year, cleared_ha) match the shared SVG column-chart.
+CREATE OR REPLACE VIEW _q AS
+SELECT
+    CAST(mode_year AS INT)                    AS loss_year,
+    count(*)                                  AS n_fields,
+    round(sum(band_loss_area) / 10000, 1)     AS cleared_ha
+FROM read_parquet('${MATCHED_PARQUET}')
+WHERE cleared_share > 0 AND mode_year IS NOT NULL
+GROUP BY 1
+ORDER BY 1;

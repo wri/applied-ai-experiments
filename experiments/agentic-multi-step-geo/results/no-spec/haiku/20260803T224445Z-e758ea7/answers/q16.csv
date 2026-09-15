@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+9,Forest Plantation,Wood,true,""
+15,Pasture,Beef,true,""
+20,Sugar cane,Sugar cane,false,Not in EUDR Annex I
+21,Mosaic of Uses,"",false,"Mixed land use, not directly EUDR commodity"
+39,Soybean,Soybean,true,""
+40,Rice,"",false,Not in EUDR Annex I
+41,Other Temporary Crops,"",false,May include EUDR commodities but not specified
+46,Coffee,Coffee,true,""
+47,Citrus,"",false,Not in EUDR Annex I
+48,Banana,"",false,Not in EUDR Annex I
+62,Cotton,"",false,Not in EUDR Annex I

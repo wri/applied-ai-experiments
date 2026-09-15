@@ -1,0 +1,14 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+9,Forest Plantation,wood,false,unreliable_detection
+15,Pasture,cattle,true,
+18,Agriculture,,false,
+20,Sugarcane,,false,
+21,Mosaic of Uses,cattle,true,assumed_pasture
+35,Palm Oil,oil palm,true,mixed_detection_quality
+39,Soybean,soya,true,
+40,Rice,,false,
+41,Other Temporary Crops,,false,
+46,Coffee,coffee,true,mixed_detection_quality
+47,Citrus,,false,
+48,Other Perennial,,false,
+62,Cotton,,false,

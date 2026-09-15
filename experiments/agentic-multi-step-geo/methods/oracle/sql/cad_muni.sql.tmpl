@@ -1,0 +1,7 @@
+-- q06: resolved parcels per município. One row per distinct parcel (dedupe on
+-- cod_imovel so a duplicated CAR row does not inflate a município's count).
+CREATE OR REPLACE VIEW _q AS
+SELECT municipio, count(*) AS n_parcels
+FROM (SELECT DISTINCT cod_imovel, municipio FROM read_parquet('${CAD_PARQUET}'))
+GROUP BY municipio
+ORDER BY n_parcels DESC, municipio;

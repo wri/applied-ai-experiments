@@ -1,0 +1,18 @@
+-- q05: how many parcels the list resolves to, and how many are missing from CAR.
+-- Counts distinct ids after list_resolve has applied the INPUTS.md rules, so a
+-- duplicate counts once and a row that arrived as a bare geometry counts under
+-- the parcel it resolved to. Reading the raw CSV here instead would count rows,
+-- which is not what the question asks and would let a mishandled defect pass.
+-- CAD_PARQUET holds the parcels cad_extract pulled for those ids.
+CREATE OR REPLACE VIEW _q AS
+WITH list AS (
+    SELECT DISTINCT cod_imovel
+    FROM read_parquet('${RESOLVED_PARQUET}')
+    WHERE cod_imovel IS NOT NULL
+),
+found AS (
+    SELECT DISTINCT cod_imovel FROM read_parquet('${CAD_PARQUET}')
+)
+SELECT (SELECT count(*) FROM list)                                 AS list_ids,
+       (SELECT count(*) FROM found)                                AS found_in_car,
+       (SELECT count(*) FROM list) - (SELECT count(*) FROM found)  AS missing;

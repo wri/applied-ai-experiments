@@ -1,0 +1,13 @@
+-- q23: the ten worst individual in-scope plots by post-2020 loss.
+CREATE OR REPLACE VIEW _q AS
+SELECT m.Id                          AS field_id,
+       m.cod_imovel,
+       k.annex1_commodity,
+       round(m.field_area_ha, 1)     AS field_area_ha,
+       round(m.post2020_loss_ha, 1)  AS post2020_loss_ha
+FROM read_parquet('${MATCHED_PARQUET}') m
+JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+  ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+WHERE k.in_scope AND m.has_post2020_loss
+ORDER BY m.post2020_loss_ha DESC, m.Id
+LIMIT 10;

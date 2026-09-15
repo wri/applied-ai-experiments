@@ -1,0 +1,19 @@
+-- q25: for each in-scope Annex I commodity present on the matched fields, does
+-- the infrastructure product carry a delivery tier? Coffee and palm have rows in
+-- the scope table but none in the routing table, so they report coverage 'none'
+-- — the honest-gap answer.
+CREATE OR REPLACE VIEW _q AS
+WITH present AS (
+    SELECT DISTINCT k.annex1_commodity, k.mbmode24
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope
+)
+SELECT p.annex1_commodity,
+       coalesce(string_agg(DISTINCT r.tier, '|'), 'no_tier')  AS tier,
+       CASE WHEN count(r.tier) > 0 THEN 'covered' ELSE 'none' END AS coverage
+FROM present p
+LEFT JOIN read_parquet('${CROP_ROUTING_PARQUET}') r ON r.mbmode24 = p.mbmode24
+GROUP BY p.annex1_commodity
+ORDER BY p.annex1_commodity;

@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,True,"MapBiomas pasture is used as a proxy for cattle-grazing land; the class records land-cover only, not verified livestock presence or off-take, so some pasture may be non-productive, fallow, or used for other grazing animals."
+39,Soybean,soya,True,
+21,Mosaic of Uses,,False,Mixed/alternating agriculture-and-pasture signal that MapBiomas could not resolve to a single use across the time series; no single Annex I commodity can be attributed without further field-level evidence.
+41,Other Temporary Crops,,False,"Aggregated MapBiomas catch-all for annual crops other than soybean and rice (e.g. maize, cotton, sorghum, beans); none of the pooled crops are individually identifiable, and none of them is an EUDR Annex I commodity."

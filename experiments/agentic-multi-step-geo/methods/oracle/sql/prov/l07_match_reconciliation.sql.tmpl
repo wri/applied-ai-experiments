@@ -1,0 +1,21 @@
+-- Matching audit (see MATCHING.md). Shows how many fields were included by the
+-- single-parcel rule vs only by the whole-list aggregate rule, and the fraction
+-- bounds — so the field↔cadaster decision is transparent and reproducible.
+--
+-- by_both_rules always equals by_single_parcel_rule: the aggregate test
+-- intersects the field against the dissolved union of the buffered parcels,
+-- which contains every individual parcel, so union_frac >= max_single_frac for
+-- every field and passing the single-parcel test implies passing the aggregate
+-- one. It stays here as an audit invariant; q10 reports the two-way split.
+CREATE OR REPLACE VIEW _q AS
+WITH m AS (SELECT * FROM read_parquet('${MATCHED_PARQUET}'))
+SELECT
+    count(*)                                                 AS matched_fields,
+    count(*) FILTER (WHERE by_primary)                       AS by_single_parcel_rule,
+    count(*) FILTER (WHERE by_aggregate AND NOT by_primary)  AS by_aggregate_rule_only,
+    count(*) FILTER (WHERE by_primary AND by_aggregate)      AS by_both_rules,
+    round(min(max_single_frac), 3)                           AS min_single_frac,
+    round(avg(max_single_frac), 3)                           AS avg_single_frac,
+    round(avg(union_frac), 3)                                AS avg_union_frac,
+    round(sum(field_area_ha), 1)                             AS matched_field_ha
+FROM m;

@@ -1,0 +1,21 @@
+-- q31: how every row of the input list was accounted for (see policies/INPUTS.md).
+--
+-- Modelled on prov/l07_match_reconciliation: one wide view emitting each bucket
+-- once, with the question slicing the columns it reports. resolved_parcels is
+-- not one of them. It stays here as an audit invariant, the way l07 keeps
+-- by_both_rules: the buckets must sum to input_rows, and the distinct parcels
+-- the list resolves to must still be the 117 the portfolio questions expect, so
+-- a defect that quietly moved the portfolio is visible in the same view that
+-- claims the identity holds.
+CREATE OR REPLACE VIEW _q AS
+WITH r AS (SELECT * FROM read_parquet('${RESOLVED_PARQUET}'))
+SELECT
+    count(*)                                                   AS input_rows,
+    count(*) FILTER (WHERE resolution = 'resolved_clean')      AS resolved_clean,
+    count(*) FILTER (WHERE resolution = 'centroid_resolved')   AS centroid_resolved,
+    count(*) FILTER (WHERE resolution = 'geometry_resolved')   AS geometry_resolved,
+    count(*) FILTER (WHERE resolution = 'axis_repaired')       AS axis_repaired,
+    count(*) FILTER (WHERE resolution = 'duplicates_removed')  AS duplicates_removed,
+    count(*) FILTER (WHERE resolution = 'unresolvable')        AS unresolvable,
+    count(DISTINCT cod_imovel)                                 AS resolved_parcels
+FROM r;

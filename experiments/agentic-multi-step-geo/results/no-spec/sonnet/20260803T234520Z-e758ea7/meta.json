@@ -1,0 +1,43 @@
+{
+  "model": "sonnet",
+  "model_id": "claude-sonnet-5",
+  "run_id": "20260803T234520Z-e758ea7",
+  "label": "",
+  "started_utc": "2026-08-03T23:45:20.159570+00:00",
+  "finished_utc": "2026-08-04T00:01:05.004821+00:00",
+  "duration_seconds": 855.2,
+  "exit_code": 0,
+  "attempts": 1,
+  "harness_commit": "e758ea75a483e61c97010db6cc909e8051968984",
+  "input_mode": "csv",
+  "golden_fingerprint": "59c1e0ce2499",
+  "spec_fingerprint": "e3b0c44298fc",
+  "spec_manifest": {},
+  "ablation": {
+    "arm": "full",
+    "why": "",
+    "ops": [],
+    "receipt": {}
+  },
+  "catalog_at_start": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "catalog_at_end": {
+    "ok": false,
+    "error": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  "turns": 199,
+  "input_tokens": 212,
+  "output_tokens": 66825,
+  "cache_creation_tokens": 153830,
+  "cache_read_tokens": 12287710,
+  "slow_tool_calls": 0,
+  "slow_tool_seconds": 0,
+  "slow_tool_seconds_by_tool": {},
+  "timed_out_tool_calls": 0,
+  "imputed_cost_usd": 5.266186,
+  "answers_written": 31,
+  "status": "done",
+  "graded_against": "59c1e0ce2499"
+}

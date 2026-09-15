@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"MapBiomas pasture is treated as land dedicated to cattle grazing; EUDR's cattle commodity covers bovine livestock and products, so pasture land use is attributed to cattle even though the class does not itself record livestock presence."
+21,Mosaic of Uses,,false,"Mixed/undifferentiated land-use mosaic (cropland, pasture and remnant vegetation combined at the mapping unit); cannot be attributed to a single Annex I commodity without finer-resolution data, so excluded from scope."
+39,Soybean,soya,true,"Direct one-to-one match with the EUDR soya (soybean) commodity."
+41,Other Temporary Crops,,false,"Catch-all MapBiomas class for annual crops other than soy/rice/sugarcane/cotton (chiefly maize/corn and sorghum in this region); none of the crops it bundles are EUDR Annex I commodities, so excluded from scope."

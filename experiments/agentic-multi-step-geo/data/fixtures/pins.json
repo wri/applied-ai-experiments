@@ -1,0 +1,40 @@
+{
+  "rural_land_commit": "42f683726564718375031672fcfb56e97d0c577f",
+  "rural_land_ref": "eudr-eval-oracle",
+  "duckdb_version": "1.5.5",
+  "note": "rural_land_commit is the branch tip; repin to the squash-merge SHA on wri/rural-land main once the Phase A PR lands.",
+  "catalogs": {
+    "trazo": {
+      "catalog": "https://data.source.coop/wri-data-lab/trazofields/catalog.json",
+      "llms": "https://data.source.coop/wri-data-lab/trazofields/llms.txt",
+      "goias_parquet": "https://data.source.coop/wri-data-lab/trazofields/trazo3-fields/trazo3_brazil_goias_2024.parquet",
+      "mato_grosso_parquet": "https://data.source.coop/wri-data-lab/trazofields/trazo3-fields/trazo3_brazil_mato_grosso_2024.parquet",
+      "n_collections": 3,
+      "recommended_collection": "trazo3-fields",
+      "geometry_epsg": 4326
+    },
+    "cadastral": {
+      "catalog": "https://data.source.coop/tristangruppwri/cadastral/catalog.json",
+      "car_parquet": "https://data.source.coop/tristangruppwri/cadastral/Brazil_CAR_AREA_IMOVEL.parquet",
+      "snapshot": "2026-07-16"
+    },
+    "facilities": {
+      "catalog": "https://data.source.coop/tristangruppwri/soft-commodity-infrastructure/catalog.json",
+      "facilities_parquet": "https://data.source.coop/tristangruppwri/soft-commodity-infrastructure/facilities/BR_facilities.parquet",
+      "release": "2026-07-23"
+    }
+  },
+  "matching": {
+    "contain_threshold": 0.667,
+    "neighbor_gap_tolerance_m": 25,
+    "primary_tie_tolerance": 1e-9
+  },
+  "coops": {
+    "max_candidates": 5,
+    "min_candidates": 2,
+    "intake_km": 100,
+    "intake_km_ceiling": 300,
+    "proximity_override_km": 10,
+    "min_capacity_t": 1000
+  }
+}

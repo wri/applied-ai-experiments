@@ -1,0 +1,6 @@
+-- q08: how many field boundaries fall in the bounding envelope of the listed
+-- parcels. fields_extract already clipped Trazo3 to that envelope, so this is
+-- the row count of its output.
+CREATE OR REPLACE VIEW _q AS
+SELECT count(*) AS n_fields_in_envelope
+FROM read_parquet('${FIELDS_RAW_PARQUET}');

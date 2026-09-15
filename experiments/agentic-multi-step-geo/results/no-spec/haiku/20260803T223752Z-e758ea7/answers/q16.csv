@@ -1,0 +1,12 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Coffee,Coffee,true,
+21,Pasture,Cattle,true,
+39,Guava,,false,Not an Annex I commodity
+20,Soybean,Soybean,true,
+41,Chestnut,,false,Not an Annex I commodity
+9,Other Temporary Crops,,false,Mixed crops; specific commodity unclear
+40,Pecan,,false,Not an Annex I commodity
+47,Unknown47,,false,Classification not standard; likely error or misidentified
+46,Unknown46,,false,Classification not standard; likely error or misidentified
+48,Unknown48,,false,Classification not standard; likely error or misidentified
+62,Unknown62,,false,Classification not standard; likely error or misidentified

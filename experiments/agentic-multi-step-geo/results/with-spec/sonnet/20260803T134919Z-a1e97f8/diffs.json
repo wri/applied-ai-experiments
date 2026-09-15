@@ -1,0 +1,468 @@
+{
+  "q03": [
+    {
+      "answer": 8453552,
+      "column": "n_rows",
+      "golden": 8453554,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    },
+    {
+      "answer": 8437938,
+      "column": "n_distinct_ids",
+      "golden": 8437940,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.0,
+      "row": 0
+    }
+  ],
+  "q14": [
+    {
+      "answer": 23578.960519876204,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.346999,
+      "row": 0
+    }
+  ],
+  "q15": [
+    {
+      "answer": 23578.960519876204,
+      "column": "matched_field_ha",
+      "golden": 36108.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.346999,
+      "row": 0
+    }
+  ],
+  "q19": [
+    {
+      "answer": 21380.5953973226,
+      "column": "total_ha",
+      "golden": 32745.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.347072,
+      "row": 0
+    },
+    {
+      "answer": 1530.5715969120236,
+      "column": "total_ha",
+      "golden": 2340.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.346021,
+      "row": 1
+    }
+  ],
+  "q23": [
+    {
+      "answer": 144.89947698306486,
+      "column": "field_area_ha",
+      "golden": 221.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.344939,
+      "row": 0
+    },
+    {
+      "answer": 39.35280363264744,
+      "column": "field_area_ha",
+      "golden": 60.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.347383,
+      "row": 1
+    },
+    {
+      "answer": 9.490805901580993,
+      "column": "field_area_ha",
+      "golden": 14.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.349945,
+      "row": 2
+    },
+    {
+      "answer": 7.0005280406500034,
+      "column": "field_area_ha",
+      "golden": 10.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.345745,
+      "row": 3
+    },
+    {
+      "answer": 17.984846651371058,
+      "column": "field_area_ha",
+      "golden": 27.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.348375,
+      "row": 4
+    },
+    {
+      "answer": 3.2766814212252635,
+      "column": "field_area_ha",
+      "golden": 5.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.344664,
+      "row": 5
+    },
+    {
+      "answer": 4.813245116941838,
+      "column": "field_area_ha",
+      "golden": 7.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.349561,
+      "row": 6
+    },
+    {
+      "answer": 5.068516185732968,
+      "column": "field_area_ha",
+      "golden": 7.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.35019,
+      "row": 7
+    },
+    {
+      "answer": 81.78620904916984,
+      "column": "field_area_ha",
+      "golden": 125.2,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.346756,
+      "row": 8
+    },
+    {
+      "answer": 4.297525288885882,
+      "column": "field_area_ha",
+      "golden": 6.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.34886,
+      "row": 9
+    }
+  ],
+  "q26": [
+    {
+      "answer": "SIE_13715427000118_84399_1",
+      "column": "entity_id",
+      "golden": 4029,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 0
+    },
+    {
+      "answer": 20.91270781560758,
+      "column": "distance_km",
+      "golden": 26.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.219675,
+      "row": 0
+    },
+    {
+      "answer": 8.24696662662179,
+      "column": "distance_km",
+      "golden": 12.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.345479,
+      "row": 1
+    },
+    {
+      "answer": 12.389763305243418,
+      "column": "distance_km",
+      "golden": 15.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.215838,
+      "row": 2
+    },
+    {
+      "answer": 13.277778438881581,
+      "column": "distance_km",
+      "golden": 20.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.352303,
+      "row": 3
+    },
+    {
+      "answer": 12.008959277031737,
+      "column": "distance_km",
+      "golden": 18.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.343773,
+      "row": 4
+    },
+    {
+      "answer": 14.562937340159573,
+      "column": "distance_km",
+      "golden": 23.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.366829,
+      "row": 5
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": "SIE_23397792000185_149816_1",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 6
+    },
+    {
+      "answer": 15.49321180007789,
+      "column": "distance_km",
+      "golden": 23.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.349025,
+      "row": 6
+    },
+    {
+      "answer": "SIE_23361577000124_152616_1",
+      "column": "entity_id",
+      "golden": 5484,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 7
+    },
+    {
+      "answer": 12.085630236874698,
+      "column": "distance_km",
+      "golden": 14.5,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.166508,
+      "row": 7
+    },
+    {
+      "answer": "SIE_10373806000189_1291/09_1",
+      "column": "entity_id",
+      "golden": 5484,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 8
+    },
+    {
+      "answer": 10.3183823996014,
+      "column": "distance_km",
+      "golden": 9.6,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.074831,
+      "row": 8
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 4029,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.361132,
+      "row": 9
+    },
+    {
+      "answer": 19.773564332781753,
+      "column": "distance_km",
+      "golden": 22.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.113293,
+      "row": 9
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 4029,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.361132,
+      "row": 10
+    },
+    {
+      "answer": 22.86500909170172,
+      "column": "distance_km",
+      "golden": 27.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.171558,
+      "row": 10
+    },
+    {
+      "answer": 5484,
+      "column": "entity_id",
+      "golden": 4029,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.361132,
+      "row": 11
+    },
+    {
+      "answer": 22.331574207035594,
+      "column": "distance_km",
+      "golden": 26.8,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.166732,
+      "row": 11
+    },
+    {
+      "answer": 13.697067718494134,
+      "column": "distance_km",
+      "golden": 14.7,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 0.068227,
+      "row": 12
+    },
+    {
+      "answer": "SIE_23361577000124_152616_1",
+      "column": "entity_id",
+      "golden": 5484,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 13
+    },
+    {
+      "answer": 17.921418844541837,
+      "column": "distance_km",
+      "golden": 19.9,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.099426,
+      "row": 13
+    },
+    {
+      "answer": 14.09295868986256,
+      "column": "distance_km",
+      "golden": 19.4,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.273559,
+      "row": 14
+    },
+    {
+      "answer": 16.023223129675888,
+      "column": "distance_km",
+      "golden": 21.7,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.261603,
+      "row": 15
+    },
+    {
+      "answer": 12.009894667566476,
+      "column": "distance_km",
+      "golden": 15.3,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.21504,
+      "row": 17
+    }
+  ],
+  "q28": [
+    {
+      "answer": 1,
+      "column": "proximity_override",
+      "golden": 0,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": null,
+      "row": 1
+    },
+    {
+      "answer": 0,
+      "column": "proximity_override",
+      "golden": 1,
+      "kind": "cell",
+      "near_miss": true,
+      "rel_error": 1.0,
+      "row": 8
+    }
+  ],
+  "q30": [
+    {
+      "answer": "GO-5212204-294B806F6169468E98BB3456EC5158A4",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5EA91F9370294F8F8F9447882810DD0B",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    },
+    {
+      "answer": 0.04921194294579322,
+      "column": "post2020_loss_ha",
+      "golden": 0.1,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.507881,
+      "row": 14
+    },
+    {
+      "answer": "SIE_10373806000189_1291/09_1",
+      "column": "entity_id",
+      "golden": 5484,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 14
+    },
+    {
+      "answer": 8.24696662662179,
+      "column": "distance_km",
+      "golden": 9.6,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": 0.140941,
+      "row": 14
+    },
+    {
+      "answer": "GO-5212204-5A18ED37BE2448B2BF618ECD096BF499",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-294B806F6169468E98BB3456EC5158A4",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 16
+    },
+    {
+      "answer": "GO-5212204-5EA91F9370294F8F8F9447882810DD0B",
+      "column": "cod_imovel",
+      "golden": "GO-5212204-5A18ED37BE2448B2BF618ECD096BF499",
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    },
+    {
+      "answer": 0.08152582965488415,
+      "column": "post2020_loss_ha",
+      "golden": 0.0,
+      "kind": "cell",
+      "near_miss": false,
+      "rel_error": null,
+      "row": 17
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+-- ---------------------------------------------------------------------------
+-- coop_match.sql.tmpl  ->  sql/out/list/<id>/coop_match.sql
+-- Match each listed cadaster to a RANKED SET of cooperative / buyer candidates
+-- (see COOPS.md). Relationship tiers match by município; delivery tiers match by
+-- distance in EPSG:5880 with widening + a proximity override. Never a single
+-- forced assignment.
+--
+-- Geometry is read via ST_GeomFromWKB — the cadaster input and the cooperative
+-- product both store geometry as explicit WKB (duckdb's native GEOMETRY does not
+-- round-trip through Parquet).
+--
+-- Placeholders: ${CADASTERS_PARQUET} ${COOP_GEOMS} ${CANDIDATES_PARQUET}
+--               ${INTAKE_KM} ${INTAKE_KM_CEILING} ${MIN_CANDIDATES}
+--               ${MAX_CANDIDATES} ${PROXIMITY_OVERRIDE_KM} ${MIN_CAPACITY_T}
+--               ${EUDR_CROPS_PARQUET} ${CROP_ROUTING_PARQUET}
+-- ---------------------------------------------------------------------------
+INSTALL spatial; LOAD spatial;
+
+-- Centroids and facility geometry are longitude-first. DuckDB's ST_Transform
+-- defaults to the EPSG:4326 authority axis order, which is latitude-first, so
+-- without this every distance below is computed from swapped coordinates: a
+-- degree of longitude in Goiás measures 121 km instead of 107, and the
+-- ranking of nearest facilities changes with it.
+SET geometry_always_xy = true;
+
+-- The cadaster input supplies centroid lon/lat (cx/cy) directly — no geometry
+-- round-trip (cad_enriched keeps its native geometry for the tiler; coop_match
+-- only needs the centroid + crop + município code).
+CREATE OR REPLACE TABLE cad AS
+SELECT cod_imovel,
+       split_part(cod_imovel, '-', 2)              AS cod_ibge,
+       municipio,
+       dominant_mb,
+       ST_SetCRS(ST_Point(cx, cy), 'EPSG:4326')    AS centroid
+FROM read_parquet('${CADASTERS_PARQUET}');
+
+-- The published facilities product stores native GEOMETRY labeled OGC:CRS84
+-- (equivalent to EPSG:4326), not WKB — read it directly and relabel to EPSG:4326
+-- so the ST_Transform/ST_Within calls below see one consistent CRS. (rural-land's
+-- local build stored WKB; the Source Cooperative publish converted to native
+-- geometry.)
+CREATE OR REPLACE TABLE geoms AS
+SELECT entity_id, entity_kind, tier, weight, basis,
+       ST_SetCRS(geometry, 'EPSG:4326')            AS geom
+FROM read_parquet('${COOP_GEOMS}');
+
+-- Relationship tier: membership by município (entity_id = cod_ibge).
+CREATE OR REPLACE TABLE candidates AS
+SELECT c.cod_imovel, c.cod_ibge,
+       g.entity_id, g.entity_kind, g.tier, g.basis,
+       g.weight            AS evidence_value,
+       NULL::DOUBLE        AS distance_km,
+       ''                  AS flags
+FROM cad c
+JOIN geoms g ON g.tier = 'membership_muni' AND g.entity_id = c.cod_ibge;
+
+-- Delivery tiers: nearest silos / slaughterhouses / mills in EPSG:5880,
+-- município-agnostic. min_capacity_t gates silos only — it is a tonnage of static
+-- storage, and neither slaughter capacity bands nor mill m3/day are in tonnes.
+CREATE OR REPLACE TABLE deliv_all AS
+SELECT c.cod_imovel, c.cod_ibge, g.entity_id, g.entity_kind, g.tier, g.basis,
+       g.weight AS evidence_value,
+       ST_Distance(ST_Transform(c.centroid, 'EPSG:4326', 'EPSG:5880'),
+                   ST_Transform(g.geom,      'EPSG:4326', 'EPSG:5880')) / 1000.0
+         AS distance_km
+FROM cad c
+JOIN geoms g ON g.tier IN ('intake_point', 'slaughter_point', 'mill_point')
+WHERE g.tier <> 'intake_point' OR g.weight >= ${MIN_CAPACITY_T};
+
+-- Rank delivery points by distance per cadaster (silo, slaughterhouse, mill).
+CREATE OR REPLACE TABLE deliv_ranked AS
+SELECT *, row_number() OVER (PARTITION BY cod_imovel ORDER BY distance_km) AS rn
+FROM deliv_all;
+
+-- Widen to a COUNT, not a fixed radius: the per-cadaster radius is the distance
+-- of the min_candidates-th nearest facility, clamped to [intake_km, ceiling].
+-- Fewer than min_candidates total -> radius = ceiling (include everything ≤ ceiling).
+CREATE OR REPLACE TABLE deliv_radius AS
+SELECT cod_imovel,
+       LEAST(${INTAKE_KM_CEILING},
+             GREATEST(${INTAKE_KM},
+                      COALESCE(MAX(distance_km) FILTER (WHERE rn = ${MIN_CANDIDATES}),
+                               ${INTAKE_KM_CEILING}))) AS radius_km
+FROM deliv_ranked
+GROUP BY cod_imovel;
+
+INSERT INTO candidates
+SELECT d.cod_imovel, d.cod_ibge, d.entity_id, d.entity_kind, d.tier, d.basis,
+       d.evidence_value, d.distance_km,
+       trim(concat_ws(' ',
+         CASE WHEN r.radius_km > ${INTAKE_KM} THEN 'widened' END,
+         -- Mills are excluded from the proximity override: their point is a town
+         -- centroid, so "under 10 km" is an artefact of the geocode, not evidence.
+         CASE WHEN d.tier <> 'mill_point'
+               AND d.distance_km < ${PROXIMITY_OVERRIDE_KM} THEN 'nearest_by_far' END,
+         -- ANP gives no street address; a mill sits at its town centre, so its
+         -- distance is town-to-cadaster, not gate-to-cadaster.
+         CASE WHEN d.tier = 'mill_point' THEN 'town_centroid' END))
+         AS flags
+FROM deliv_ranked d
+JOIN deliv_radius r USING (cod_imovel)
+WHERE d.distance_km <= r.radius_km;
+
+-- Modelled tier: cadaster centroid inside a capacity-weighted gravity catchment.
+INSERT INTO candidates
+SELECT c.cod_imovel, c.cod_ibge, g.entity_id, g.entity_kind, g.tier, g.basis,
+       g.weight AS evidence_value, NULL::DOUBLE AS distance_km, '' AS flags
+FROM cad c
+JOIN geoms g ON g.tier = 'gravity_catchment' AND ST_Within(c.centroid, g.geom);
+
+-- Commodity routing: keep only the delivery tiers the cadaster's crop allows,
+-- per the crop_routing table (see EUDR_CROPS.md). The rules used to be inline
+-- mbmode24 codes here; they now live in one editable table that the EUDR scope
+-- queries share, so policy changes are a data edit rather than a SQL edit.
+--
+--   Pasture(15), Mosaic(21)          -> slaughter_point
+--   Sugar cane(20)                   -> mill_point
+--   Soybean(39), Other Temporary(41) -> intake_point
+--   Agriculture(18) is MapBiomas' generic parent class and can BE cane, so it
+--                                       keeps intake_point AND mill_point
+--   Palm(35), Coffee(46)             -> no delivery tier exists in the product
+--   any class absent from the table  -> keep everything (unknown crop)
+--
+-- gravity_catchment follows intake_point: it models a silo draw-area, so it
+-- survives wherever intake_point does. membership is never routed away.
+CREATE OR REPLACE TABLE routing AS
+SELECT * FROM read_parquet('${CROP_ROUTING_PARQUET}');
+
+CREATE OR REPLACE TABLE scope AS
+SELECT * FROM read_parquet('${EUDR_CROPS_PARQUET}');
+
+CREATE OR REPLACE TABLE allowed_tiers AS
+SELECT c.cod_imovel, t.tier
+FROM cad c
+CROSS JOIN (SELECT unnest(['intake_point', 'slaughter_point',
+                           'mill_point', 'gravity_catchment']) AS tier) t
+WHERE
+    -- class we have no policy for at all: keep every tier
+    NOT EXISTS (SELECT 1 FROM scope s WHERE s.mbmode24 = c.dominant_mb)
+    -- class we do have a policy for: keep the tiers it routes to
+ OR EXISTS (SELECT 1 FROM routing r
+            WHERE r.mbmode24 = c.dominant_mb AND r.tier = t.tier)
+    -- the modelled catchment rides along with the silo
+ OR (t.tier = 'gravity_catchment'
+     AND EXISTS (SELECT 1 FROM routing r
+                 WHERE r.mbmode24 = c.dominant_mb AND r.tier = 'intake_point'));
+
+DELETE FROM candidates
+ WHERE tier IN ('intake_point', 'slaughter_point', 'mill_point', 'gravity_catchment')
+   AND NOT EXISTS (SELECT 1 FROM allowed_tiers a
+                   WHERE a.cod_imovel = candidates.cod_imovel
+                     AND a.tier = candidates.tier);
+
+-- Rank per cadaster: tier order (relationship < delivery < modelled), with any
+-- nearest_by_far promoted to the top; cap at max_candidates.
+--
+-- The cap once did not fire. `candidates` carried its own `rank` column, a
+-- placeholder set to 0 in each INSERT, and QUALIFY resolves a bare name
+-- against the base table before the SELECT alias -- so the predicate read
+-- `0 <= 5` for every row and every candidate survived. The placeholder column
+-- is gone, and the rank is computed in a subquery here so the name QUALIFY
+-- would have bound to no longer exists. entity_id closes the ordering: without
+-- it, two candidates alike in tier, distance, and evidence rank arbitrarily,
+-- which puts the cap boundary back at the mercy of scan order.
+CREATE OR REPLACE TABLE candidates_final AS
+SELECT * FROM (
+    SELECT cod_imovel, cod_ibge, entity_id, entity_kind, tier, basis,
+           evidence_value, distance_km, flags,
+           row_number() OVER (
+             PARTITION BY cod_imovel
+             ORDER BY CASE WHEN flags LIKE '%nearest_by_far%' THEN 0
+                           WHEN tier = 'membership_muni'   THEN 1
+                           WHEN tier IN ('intake_point', 'slaughter_point') THEN 2
+                           WHEN tier = 'mill_point'        THEN 3
+                           WHEN tier = 'gravity_catchment' THEN 4 ELSE 5 END,
+                      distance_km NULLS LAST, evidence_value DESC,
+                      entity_id) AS rank
+    FROM candidates
+)
+WHERE rank <= ${MAX_CANDIDATES};
+
+COPY candidates_final TO '${CANDIDATES_PARQUET}' (FORMAT PARQUET);
+SELECT tier, count(*) AS n FROM candidates_final GROUP BY tier ORDER BY tier;

@@ -1,0 +1,4 @@
+-- q09: fields admitted by the matching policy (MATCHING.md).
+CREATE OR REPLACE VIEW _q AS
+SELECT count(*) AS matched_fields
+FROM read_parquet('${MATCHED_PARQUET}');

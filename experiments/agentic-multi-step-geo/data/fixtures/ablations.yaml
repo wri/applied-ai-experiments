@@ -1,0 +1,82 @@
+# Ablation arms: named specs to run the benchmark against.
+#
+# An arm is applied to the workspace copy after it is assembled, so nothing
+# under policies/ or prompts/ is ever modified. Every path and heading named
+# here is checked against the real files before the first session starts, so a
+# typo aborts the sweep in a second rather than producing an arm that ablated
+# nothing, scored like the baseline, and read as "the spec does not matter".
+#
+# This file is never mounted into a session. Keeping it out of policies/ is
+# the point: a session that could read it would be handed a list of exactly
+# what was withheld from it. tests/test_run.py pins that.
+#
+# `why` is required. It is reprinted under the report table.
+
+baseline: full
+
+arms:
+
+  full:
+    why: >
+      The complete spec. Every other arm reads as a delta against this one,
+      so a sweep must include it rather than reusing an older run.
+    ops: []
+
+  no-coops:
+    why: >
+      Withholds buyer and cooperative matching entirely. Stages 5 and 6
+      consume it and stages 1 to 4 do not, so movement in the early stages is
+      cascade or noise rather than an effect of the missing document.
+    ops:
+      - drop: policies/COOPS.md
+
+  no-inputs:
+    why: >
+      Withholds the input-list handling rules: the encodings, the defect
+      table, and the reconciliation identity. The Goias list carries one
+      instance of every defect the document names, so a session without it has
+      to infer the handling from the data. Correct handling resolves to the
+      same 117 parcels as a clean list, so a mishandled defect shows up twice:
+      directly in q31, and as a cascade through every parcel-level answer.
+    ops:
+      - drop: policies/INPUTS.md
+
+  no-matching:
+    why: >
+      Withholds the field-to-cadaster matching rules: both inclusion tests,
+      the thresholds, and the tie rules. Stage 3 onward reads everything it
+      produces, so this is the widest blast radius of any single document.
+    ops:
+      - drop: policies/MATCHING.md
+
+  no-crops:
+    why: >
+      Withholds the EUDR scope table and the crop-to-tier routing. Decides
+      which fields count as in scope at all, so damage should start at
+      stage 4 and carry through the coop questions.
+    ops:
+      - drop: policies/EUDR_CROPS.md
+
+  no-widening:
+    why: >
+      Keeps COOPS.md but removes only the radius-widening rule. Narrower than
+      no-coops: it isolates one procedure inside a document the session can
+      otherwise still read, which separates "cannot find the policy" from
+      "has the policy and applies it wrongly".
+    ops:
+      - cut:
+          file: policies/COOPS.md
+          heading: "Widening — target a count, not a radius"
+
+  no-tie-rules:
+    why: >
+      Removes the exact-tie rules from both matching policies. These decided
+      eight questions when they were unwritten, so this arm is the direct
+      measurement of what writing them down bought.
+    ops:
+      - cut:
+          file: policies/MATCHING.md
+          heading: "Choosing the primary cadaster, including exact ties"
+      - cut:
+          file: policies/COOPS.md
+          heading: "Ties in the ranking"

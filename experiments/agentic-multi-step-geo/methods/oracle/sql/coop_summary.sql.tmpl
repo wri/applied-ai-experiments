@@ -1,0 +1,26 @@
+-- q29: list-level match-failure accounting across the flagged cadasters — how
+-- many required widening, ended with no delivery match, or triggered the
+-- proximity override.
+CREATE OR REPLACE VIEW _q AS
+WITH flagged AS (
+    SELECT DISTINCT m.cod_imovel
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope AND m.has_post2020_loss
+),
+per AS (
+    SELECT f.cod_imovel,
+           max(CASE WHEN cand.flags LIKE '%widened%' THEN 1 ELSE 0 END)        AS widened,
+           max(CASE WHEN cand.flags LIKE '%nearest_by_far%' THEN 1 ELSE 0 END) AS nearest_by_far,
+           CASE WHEN count(*) FILTER (WHERE cand.tier IN
+                 ('intake_point', 'slaughter_point', 'mill_point')) = 0
+                THEN 1 ELSE 0 END                                              AS no_match
+    FROM flagged f
+    LEFT JOIN read_parquet('${CANDIDATES_PARQUET}') cand USING (cod_imovel)
+    GROUP BY f.cod_imovel
+)
+SELECT sum(widened)        AS n_widened,
+       sum(no_match)       AS n_no_match,
+       sum(nearest_by_far) AS n_nearest_by_far
+FROM per;

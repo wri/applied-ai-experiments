@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"MapBiomas pasture is a proxy for cattle grazing land, not verified cattle production; Trazo boundaries are optimised for crops"
+21,Mosaic of Uses,"",false,Mixed agriculture/pasture mosaic; no single Annex I commodity attributable
+39,Soybean,soya,true,""
+41,Other Temporary Crops,"",false,"Unresolved temporary-crop catch-all; may include non-EUDR crops, not attributable to one commodity"

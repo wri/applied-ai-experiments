@@ -1,0 +1,183 @@
+-- ---------------------------------------------------------------------------
+-- match.sql.tmpl  →  sql/out/list/<id>/match.sql
+-- Match fields to the list's cadastral parcels per the documented ruleset
+-- (see MATCHING.md). A field is INCLUDED if EITHER:
+--   (1) >= contain_threshold of its area is inside a SINGLE listed parcel, or
+--   (2) >= contain_threshold of its area is inside the buffered UNION of ALL
+--       listed parcels (handles fields split across touching / neighbour parcels
+--       and CAR sliver gaps).
+-- Areas are compared as ratios in EPSG:4326, so the CRS cancels out.
+--
+-- Placeholders: ${CAD_PARQUET} ${FIELDS_RAW_PARQUET} ${MATCHED_PARQUET}
+--               ${CAD_MATCHED_PARQUET} ${CONTAIN_THRESHOLD} ${GAP_DEG}
+-- ---------------------------------------------------------------------------
+INSTALL spatial; LOAD spatial;
+
+-- Every geometry here is longitude-first. The containment fractions below are
+-- planar ratios, which survive an axis swap, so this setting changes nothing
+-- today; it is here so that adding a spheroid or reprojection call to this
+-- file later cannot silently reintroduce the axis bug.
+SET geometry_always_xy = true;
+
+CREATE OR REPLACE TABLE cad    AS SELECT * FROM read_parquet('${CAD_PARQUET}');
+CREATE OR REPLACE TABLE fields AS SELECT * FROM read_parquet('${FIELDS_RAW_PARQUET}');
+
+-- (1) Single-parcel containment fraction, per (field, parcel) that intersect.
+CREATE OR REPLACE TABLE ov AS
+SELECT f.Id AS field_id,
+       c.cod_imovel,
+       ST_Area(ST_Intersection(f.geometry, c.geometry)) AS inter_area,
+       ST_Area(f.geometry)                              AS field_area
+FROM fields f
+JOIN cad c ON ST_Intersects(f.geometry, c.geometry);
+
+-- The primary cadaster is the parcel covering most of the field, with a tie
+-- going to the lowest cod_imovel. MATCHING.md states the rule; this is where
+-- it is implemented.
+--
+-- Ties are common rather than exotic. CAR parcels overlap, and a field lying
+-- inside the overlap of two of them intersects both in the same polygon, so
+-- the two areas agree bit for bit: 54 of the 793 matched fields tie this way.
+--
+-- This was arg_max(cod_imovel, inter_area), which resolves a tie by scan order.
+-- That made the primary cadaster of those 54 fields an accident of the plan
+-- rather than a consequence of the policy, and the accident was load-bearing.
+-- One tied field carries 2.48 ha of post-2020 loss and is the only flagged
+-- field of its parcel, so the pick decides whether that parcel appears in the
+-- flagged set at all -- which q13, q20, q23, q24, q26, q27, q28, and q30 read.
+-- A session that wrote its own deterministic tie-break lost eight questions to
+-- a choice the policy left open, while the session that scored full marks had
+-- written the same arg_max idiom and inherited the same arbitrary answer.
+--
+-- Two parcels count as tied when their containment fractions differ by no more
+-- than primary_tie_tolerance, not only when they are bit-equal. Ordering on the
+-- raw fraction would decide 2 of these 872 fields by a difference no method can
+-- resolve: measured against the same geometry, the fraction moves by a median
+-- 1e-12 to 1e-11 between planar degrees, EPSG:5880 and the spheroid, and those
+-- two fields' top two parcels differ by 1.2e-11 and 1.7e-10. Switching the
+-- oracle to spheroid areas flips both. The nearest genuine separation is
+-- 1.6e-8, sixteen times the tolerance, so nothing that is really a winner
+-- becomes a tie. See MATCHING.md for the derivation.
+--
+-- best is the true maximum and stays the reported fraction, so the
+-- contain_threshold test is unaffected by the tolerance.
+CREATE OR REPLACE TABLE single AS
+WITH scored AS (
+    SELECT field_id, cod_imovel,
+           inter_area / nullif(field_area, 0) AS frac
+    FROM ov
+),
+topped AS (
+    SELECT *, max(frac) OVER (PARTITION BY field_id) AS best
+    FROM scored
+)
+SELECT field_id,
+       best        AS max_single_frac,
+       cod_imovel  AS primary_cod_imovel
+FROM topped
+QUALIFY row_number() OVER (
+          PARTITION BY field_id
+          ORDER BY (best - frac) <= ${PRIMARY_TIE_TOLERANCE} DESC,
+                   cod_imovel) = 1;
+
+-- (2) Whole-list containment against the buffered, dissolved union of parcels.
+CREATE OR REPLACE TABLE listgeom AS
+SELECT ST_Union_Agg(ST_Buffer(geometry, ${GAP_DEG})) AS g FROM cad;
+
+CREATE OR REPLACE TABLE agg AS
+SELECT f.Id AS field_id,
+       ST_Area(ST_Intersection(f.geometry, l.g)) / nullif(ST_Area(f.geometry), 0)
+         AS union_frac
+FROM fields f, listgeom l
+WHERE ST_Intersects(f.geometry, l.g);
+
+-- Decision: pass either test; carry the audit trail (which test, the fractions).
+-- The fractions are carried unrounded. Rounding them here reads as a display
+-- choice, but every downstream question filters on these columns, so a 4-decimal
+-- round is really a minimum-overlap rule of 0.005% — one MATCHING.md does not
+-- state and nobody chose. It silently dropped 16 fields that overlap a parcel by
+-- a sliver from the excluded-field count. The two views that show these numbers
+-- round at presentation instead.
+CREATE OR REPLACE TABLE decision AS
+SELECT f.Id                                    AS field_id,
+       coalesce(s.max_single_frac, 0)          AS max_single_frac,
+       coalesce(a.union_frac, 0)               AS union_frac,
+       s.primary_cod_imovel,
+       (coalesce(s.max_single_frac, 0) >= ${CONTAIN_THRESHOLD}) AS by_primary,
+       (coalesce(a.union_frac, 0)      >= ${CONTAIN_THRESHOLD}) AS by_aggregate
+FROM fields f
+LEFT JOIN single s ON s.field_id = f.Id
+LEFT JOIN agg    a ON a.field_id = f.Id;
+
+-- Matched fields: attributes + geometry + why-included flags.
+CREATE OR REPLACE TABLE matched_fields AS
+SELECT d.field_id            AS Id,
+       d.primary_cod_imovel  AS cod_imovel,
+       d.max_single_frac,
+       d.union_frac,
+       d.by_primary,
+       d.by_aggregate,
+       f.* EXCLUDE (Id, geometry),
+       f.geometry
+FROM decision d
+JOIN fields f ON f.Id = d.field_id
+WHERE (d.by_primary OR d.by_aggregate)
+  AND d.primary_cod_imovel IS NOT NULL;
+
+COPY matched_fields TO '${MATCHED_PARQUET}' (FORMAT PARQUET);
+
+-- Dominant crop class per parcel: the class covering the most hectares, ties
+-- broken by the lowest class code. EUDR_CROPS.md states the rule.
+--
+-- Hectares rather than field count, because field boundaries are drawn at
+-- whatever size the survey produced: a parcel with four small pasture plots
+-- and one large soya plot grows mostly soya, and counting fields calls it
+-- pasture. The choice routes the parcel in coop_match, so it decides whether
+-- a farmer hears from a silo or a slaughterhouse.
+--
+-- This was mode(mbmode24) inline in cad_enriched. DuckDB's mode() breaks ties
+-- arbitrarily, so any parcel with a tied plurality could change dominant_mb --
+-- and with it the commodity routing in coop_match, q24, q26, q28, and q30 --
+-- on a regeneration with identical inputs. A golden fixture that moves on its
+-- own is not a fixture, so the aggregation is made total here.
+CREATE OR REPLACE TABLE dominant_class AS
+SELECT cod_imovel, mbmode24 AS dominant_mb
+FROM (
+    SELECT cod_imovel, mbmode24, sum(field_area_ha) AS class_ha
+    FROM matched_fields
+    WHERE mbmode24 IS NOT NULL
+    GROUP BY cod_imovel, mbmode24
+)
+QUALIFY row_number() OVER (PARTITION BY cod_imovel
+                           ORDER BY class_ha DESC, mbmode24) = 1;
+
+-- Enriched parcels: CAR attributes + per-parcel rollup + geometry (for the map).
+CREATE OR REPLACE TABLE cad_enriched AS
+SELECT c.cod_imovel, c.municipio, c.num_area,
+       c.ind_status, c.ind_tipo, c.des_condic,
+       count(m.Id)                                              AS n_fields,
+       round(coalesce(sum(m.field_area_ha), 0), 1)             AS matched_field_ha,
+       round(coalesce(sum(m.post2020_loss_ha), 0), 2)          AS post2020_loss_ha,
+       coalesce(sum(CASE WHEN m.has_post2020_loss THEN 1 ELSE 0 END), 0)
+                                                                AS n_fields_post2020_loss,
+       (coalesce(sum(m.post2020_loss_ha), 0) = 0)              AS deforestation_free,
+       -- centroid + dominant crop for the cooperative match (coop_match.sql):
+       -- cx/cy avoid a geometry round-trip; dominant_mb routes grain vs cattle.
+       ST_X(ST_Centroid(c.geometry))                           AS cx,
+       ST_Y(ST_Centroid(c.geometry))                           AS cy,
+       any_value(d.dominant_mb)                                AS dominant_mb,
+       c.geometry
+FROM cad c
+LEFT JOIN matched_fields m ON m.cod_imovel = c.cod_imovel
+-- One row per parcel, so the join adds no rows and any_value sees one value.
+LEFT JOIN dominant_class d ON d.cod_imovel = c.cod_imovel
+GROUP BY c.cod_imovel, c.municipio, c.num_area,
+         c.ind_status, c.ind_tipo, c.des_condic, c.geometry;
+
+COPY cad_enriched TO '${CAD_MATCHED_PARQUET}' (FORMAT PARQUET);
+
+SELECT (SELECT count(*) FROM matched_fields)                       AS matched_fields,
+       (SELECT count(*) FROM matched_fields WHERE by_primary)      AS by_primary,
+       (SELECT count(*) FROM matched_fields
+          WHERE by_aggregate AND NOT by_primary)                   AS by_aggregate_only,
+       (SELECT count(*) FROM cad)                                  AS parcels;

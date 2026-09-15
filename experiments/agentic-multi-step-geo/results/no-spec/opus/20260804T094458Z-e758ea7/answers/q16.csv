@@ -1,0 +1,5 @@
+mb,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,"Pasture is the land-cover proxy for cattle; MapBiomas maps grazing land, not the animals"
+21,Mosaic of Uses,,false,"Mixed, undifferentiated agricultural uses; not attributable to a single Annex I commodity"
+39,Soybean,soya,true,""
+41,Other Temporary Crops,,false,Unspecified temporary crops; not attributable to a specific Annex I commodity

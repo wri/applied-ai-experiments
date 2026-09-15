@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,MapBiomas Pasture is used as a proxy for cattle-grazing land under EUDR; it marks land use rather than a traced animal so plot-level cattle presence is assumed from land cover.
+39,Soybean,soy,true,Direct one-to-one match to the EUDR soya bean commodity.
+21,Mosaic of Uses,,false,Mixed-use class combining cropland, pasture and other uses at sub-pixel scale; cannot be attributed to a single Annex I commodity so it is excluded from the compliance analysis.
+41,Other Temporary Crops,,false,Catch-all class for unspecified temporary crops (e.g. maize, beans, cotton); none of the EUDR Annex I commodities can be identified from this code so it is excluded.

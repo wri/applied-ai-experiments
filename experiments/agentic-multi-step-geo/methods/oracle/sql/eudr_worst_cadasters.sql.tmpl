@@ -1,0 +1,25 @@
+-- q20: the ten cadasters with the most post-2020 loss on IN-SCOPE crops.
+-- Aggregates matched fields filtered to in-scope classes, by cadaster, and
+-- joins cad_enriched for the município name. Total ordering via cod_imovel so
+-- the top-10 cut is deterministic.
+CREATE OR REPLACE VIEW _q AS
+WITH scoped AS (
+    SELECT m.cod_imovel,
+           sum(m.post2020_loss_ha)                     AS post2020_loss_ha,
+           count(*) FILTER (WHERE m.has_post2020_loss)  AS n_fields_post2020_loss
+    FROM read_parquet('${MATCHED_PARQUET}') m
+    JOIN read_parquet('${EUDR_CROPS_PARQUET}') k
+      ON k.mbmode24 = CAST(m.mbmode24 AS INTEGER)
+    WHERE k.in_scope
+    GROUP BY m.cod_imovel
+)
+SELECT s.cod_imovel,
+       c.municipio,
+       round(s.post2020_loss_ha, 1) AS post2020_loss_ha,
+       s.n_fields_post2020_loss
+FROM scoped s
+JOIN (SELECT DISTINCT cod_imovel, municipio
+      FROM read_parquet('${CAD_MATCHED_PARQUET}')) c USING (cod_imovel)
+WHERE s.post2020_loss_ha > 0
+ORDER BY s.post2020_loss_ha DESC, s.cod_imovel
+LIMIT 10;

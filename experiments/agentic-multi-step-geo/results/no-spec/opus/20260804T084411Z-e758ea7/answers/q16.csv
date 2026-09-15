@@ -1,0 +1,5 @@
+mbmode24,mb_class,annex1_commodity,in_scope,caveat
+15,Pasture,cattle,true,Pasture is a land-cover proxy for cattle (Annex I); no direct herd evidence and Trazo is not tuned for pasture
+21,Mosaic of Uses,"",false,Mixed agriculture/pasture mosaic; not attributable to a single Annex I commodity
+39,Soybean,soya,true,""
+41,Other Temporary Crops,"",false,Catch-all temporary-crop class; not a specific Annex I commodity (soy mapped separately as 39)
