@@ -63,3 +63,6 @@ known-first-party = ["wri"]
 [tool.pytest.ini_options]
 testpaths = ["tests", "packages/*/tests", "experiments/*/tests"]
 python_files = ["test_*.py", "*_test.py"]
+
+# to load .env in marimo
+[tool.marimo]
