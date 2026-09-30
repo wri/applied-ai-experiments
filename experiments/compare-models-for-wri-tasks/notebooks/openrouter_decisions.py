@@ -197,52 +197,78 @@ def _(client, json, mo, model_input, questions_form, state_input, time):
         status_output = mo.md("🔄 **Submitting Decisions request...**")
 
         from langfuse import Langfuse
-        from langfuse.decorators import observe
+        from langfuse.decorators import langfuse_context, observe
 
         langfuse = Langfuse()
 
         @observe(name="openrouter.decisions", as_type="generation")
         def _submit():
-            if hasattr(langfuse, "update_current_trace"):
-                langfuse.update_current_trace(
-                    name="openrouter-decisions",
-                    session_id="openrouter-decisions-notebook",
-                    metadata={"model": model_input.value, "questions": list(questions.keys())},
-                )
-            if hasattr(langfuse, "update_current_observation"):
-                langfuse.update_current_observation(
-                    model=model_input.value,
-                    input={"questions": questions, "state": state_input.value},
-                    metadata={"api": "openrouter.decisions", "alpha": True},
-                )
-            return client.alpha.decisions.create(
+            # On langfuse v2, update_current_trace / update_current_observation
+            # are provided by langfuse_context (from langfuse.decorators), not
+            # by the Langfuse client instance.
+            langfuse_context.update_current_trace(
+                name="openrouter-decisions",
+                session_id="openrouter-decisions-notebook",
+                metadata={"model": model_input.value, "questions": list(questions.keys())},
+            )
+            langfuse_context.update_current_observation(
+                model=model_input.value,
+                input={"questions": questions, "state": state_input.value},
+                metadata={"api": "openrouter.decisions", "alpha": True},
+            )
+
+            _t0 = time.perf_counter()
+            response = client.alpha.decisions.create(
                 model=model_input.value,
                 questions=questions,
                 state=state_input.value,
             )
+            _latency = time.perf_counter() - _t0
 
-        t0 = time.perf_counter()
-        try:
-            decisions_response = _submit()
-            latency = time.perf_counter() - t0
-
-            # Record output + usage on the generation span.
-            _data = json.loads(decisions_response.model_dump_json())
+            # Record output + usage on the generation span. This must run inside
+            # this @observe-decorated function while the observation is active.
+            _data = json.loads(response.model_dump_json())
             _usage = _data.get("usage", {})
-            if hasattr(langfuse, "update_current_observation"):
-                langfuse.update_current_observation(
-                    output=_data.get("answers"),
-                    usage_details={
-                        "input": _usage.get("input_tokens"),
-                        "output": _usage.get("output_tokens"),
-                        "total": _usage.get("total_tokens"),
-                    },
-                    metadata={
-                        "provider": _data.get("provider"),
-                        "cost": _usage.get("cost"),
-                        "latency_s": latency,
-                    },
-                )
+            _input_tokens = _usage.get("input_tokens")
+            _output_tokens = _usage.get("output_tokens")
+            _total_tokens = _usage.get("total_tokens")
+
+            observation_kwargs = {
+                "output": _data.get("answers"),
+                "metadata": {
+                    "provider": _data.get("provider"),
+                    "cost": _usage.get("cost"),
+                    "latency_s": _latency,
+                },
+            }
+
+            # Langfuse v2 generation updates validate usage details strictly.
+            # Include usage only when token counts are present and map aliases
+            # expected by different SDK code paths.
+            if (
+                _input_tokens is not None
+                and _output_tokens is not None
+                and _total_tokens is not None
+            ):
+                _in = int(_input_tokens)
+                _out = int(_output_tokens)
+                _total = int(_total_tokens)
+                observation_kwargs["usage_details"] = {
+                    "input": _in,
+                    "output": _out,
+                    "total": _total,
+                    "prompt_tokens": _in,
+                    "completion_tokens": _out,
+                    "input_tokens": _in,
+                    "output_tokens": _out,
+                    "total_tokens": _total,
+                }
+
+            langfuse_context.update_current_observation(**observation_kwargs)
+            return response, _latency
+
+        try:
+            decisions_response, latency = _submit()
             langfuse.flush()
             status_output = mo.md(
                 f"✅ **Completed in {latency:.2f} seconds** (traced to Langfuse)"
