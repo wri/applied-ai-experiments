@@ -43,8 +43,9 @@ def _(mo):
 
     Each answer carries a `type` plus its value (`noul` probability, `choice`
     label, or `score` position), with `confidence` and `probabilities` for
-    `choice`/`score`. The Decisions router is served by the TypeSafe `Jev`
-    model (`typesafe/jev-1.13`); other model slugs are not supported.
+    `choice`/`score`. This notebook uses a curated set of Decisions-capable
+    model slugs from `util.DECISIONS_MODELS` (TypeSafe JEV, Respan, and
+    Upstage variants).
 
     Docs: https://openrouter.ai/docs/client-sdks/python/sdks/decisions/README
     """
@@ -333,9 +334,9 @@ def _(mo):
 
     - The Decisions API is an **alpha** feature; the response shape may change.
     - Requires `OPENROUTER_API_KEY` with access to the alpha endpoints.
-    - `model` must be a Decisions/System One model — `typesafe/jev-1.13`
-      (pinned) or `~typesafe/jev-latest` (tracks the current release). General
-      chat models are not served by this endpoint.
+    - `model` must be a Decisions/System One model from
+      `util.DECISIONS_MODELS` (Typesafe/Respan/Upstage variants). General chat
+      models are not served by this endpoint.
     - Answers are typed, not free text: `noul` returns P(yes), `choice` returns
       the selected label, and `score` returns the probability-weighted position
       on your ordered criteria. `choice`/`score` also include `confidence` and

@@ -297,6 +297,7 @@ MODEL_REGISTRY: Dict[str, LMModel] = {
 # - `typesafe/jev-1.13` — pinned release
 # - `~typesafe/jev-latest` — tracks the current JEV release
 # - `respan/span-01` — Respan Span-01 decisions model
+# - `upstage/solar-decide` — Upstage Solar-Decide model
 
 DECISIONS_MODELS: Dict[str, str] = {
     "Typesafe JEV 1.13 (pinned)": "typesafe/jev-1.13",
