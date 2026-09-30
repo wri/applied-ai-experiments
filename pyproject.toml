@@ -23,7 +23,7 @@ dev = [
 
 # For notebook experiments (and building their demos)
 notebooks = [
-    "marimo>=0.23.4",
+    "marimo>=0.25.0",
     "jupyter>=1.0.0",
     "nbconvert>=7.0.0",
 ]
