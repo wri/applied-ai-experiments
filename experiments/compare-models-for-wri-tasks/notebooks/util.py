@@ -277,11 +277,11 @@ MODEL_REGISTRY: Dict[str, LMModel] = {
         model="openrouter/mistralai/mistral-large-2512",
         tags=("large", "proprietary", "reasoning"),
     ),
-    # OpenRouter - Tiny Open Source (Apache 2.0) - Free Tier
+    # OpenRouter - Medium Open Source (Apache 2.0) - Free Tier
     "qwen3.8-27b:free": LMModel(
         name="Qwen3.8 27B Free",
         model="openrouter/qwen/qwen3.8-27b:free",
-        tags=("tiny", "apache-2.0", "free", "fast"),
+        tags=("medium", "apache-2.0", "free"),
     ),
 }
 
