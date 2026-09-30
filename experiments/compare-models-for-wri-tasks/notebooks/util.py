@@ -260,9 +260,9 @@ MODEL_REGISTRY: Dict[str, LMModel] = {
         name="GPT-5.2", model="openai/gpt-5.2", tags=("large", "proprietary")
     ),
     # OpenRouter - Medium Open Source (Apache 2.0)
-    "qwen3-32b": LMModel(
-        name="Qwen3 32B",
-        model="openrouter/qwen/qwen3-32b",
+    "qwen3.7-flash": LMModel(
+        name="Qwen3.7 Flash",
+        model="openrouter/qwen/qwen3.7-flash",
         tags=("medium", "apache-2.0"),
     ),
     # OpenRouter - Large Proprietary
@@ -277,12 +277,33 @@ MODEL_REGISTRY: Dict[str, LMModel] = {
         model="openrouter/mistralai/mistral-large-2512",
         tags=("large", "proprietary", "reasoning"),
     ),
-    # OpenRouter - Tiny Open Source (Apache 2.0) - Free Tier
-    "qwen3-4b-free": LMModel(
-        name="Qwen3 4B Free",
-        model="openrouter/qwen/qwen3-4b:free",
-        tags=("tiny", "apache-2.0", "free", "fast"),
+    # OpenRouter - Medium Open Source (Apache 2.0) - Free Tier
+    "qwen3.8-27b:free": LMModel(
+        name="Qwen3.8 27B Free",
+        model="openrouter/qwen/qwen3.8-27b:free",
+        tags=("medium", "apache-2.0", "free"),
     ),
+}
+
+
+# ============================================================================
+# DECISIONS API MODELS
+# ============================================================================
+#
+# Models served by the OpenRouter Decisions (alpha) endpoint. These use raw
+# OpenRouter slugs (not litellm-prefixed) since they are passed directly to
+# `client.alpha.decisions.create(model=...)`.
+#
+# - `typesafe/jev-1.13` — pinned release
+# - `~typesafe/jev-latest` — tracks the current JEV release
+# - `respan/span-01` — Respan Span-01 decisions model
+# - `upstage/solar-decide` — Upstage Solar-Decide model
+
+DECISIONS_MODELS: Dict[str, str] = {
+    "Typesafe JEV 1.13 (pinned)": "typesafe/jev-1.13",
+    "Typesafe JEV (latest)": "~typesafe/jev-latest",
+    "Respan Span-01": "respan/span-01",
+    "Upstage Solar-Decide": "upstage/solar-decide",
 }
 
 

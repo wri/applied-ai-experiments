@@ -23,7 +23,7 @@ dev = [
 
 # For notebook experiments (and building their demos)
 notebooks = [
-    "marimo>=0.23.4",
+    "marimo>=0.25.0",
     "jupyter>=1.0.0",
     "nbconvert>=7.0.0",
 ]
@@ -63,3 +63,6 @@ known-first-party = ["wri"]
 [tool.pytest.ini_options]
 testpaths = ["tests", "packages/*/tests", "experiments/*/tests"]
 python_files = ["test_*.py", "*_test.py"]
+
+# to load .env in marimo
+[tool.marimo]
