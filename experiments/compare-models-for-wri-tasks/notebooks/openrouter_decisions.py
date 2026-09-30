@@ -57,6 +57,8 @@ def _(mo, os):
     # Check required environment variables
     required_vars = {
         "OPENROUTER_API_KEY": "OpenRouter API key (required for the Decisions API)",
+        "LANGFUSE_PUBLIC_KEY": "Langfuse public key (for tracing)",
+        "LANGFUSE_SECRET_KEY": "Langfuse secret key (for tracing)",
     }
 
     env_status = []
@@ -149,49 +151,115 @@ def _(json, mo):
         },
     }
 
-    questions_editor = mo.ui.code_editor(
+    # Wrap the editor in a form: the value is None until the user clicks the
+    # form's submit button, and it persists afterwards. This avoids the
+    # run_button race where the value resets to False as soon as the
+    # referencing cell finishes, causing mo.stop to trip on re-runs.
+    questions_form = mo.ui.code_editor(
         value=json.dumps(default_questions, indent=2),
         language="json",
         label="Questions definition (JSON)",
         min_height=320,
+    ).form(
+        bordered=True,
+        submit_button_label="Submit Decisions request",
+        submit_button_tooltip="Send the questions + state to the Decisions API",
     )
 
-    run_button = mo.ui.run_button(label="Submit Decisions request")
-
-    mo.vstack([questions_editor, run_button])
-    return questions_editor, run_button
+    questions_form
+    return (questions_form,)
 
 
 @app.cell
-async def _(client, json, mo, model_input, questions_editor, run_button, state_input, time):
-    mo.stop(not run_button.value, mo.md("👆 Edit the questions and click **Submit**."))
+def _(client, json, mo, model_input, questions_form, state_input, time):
+    # The form's value is None until submitted; afterwards it holds the
+    # submitted editor content and persists (no reset race like run_button).
+    mo.stop(
+        questions_form.value is None,
+        mo.md("👆 Edit the questions and click **Submit Decisions request**."),
+    )
 
     # Marimo cells may only have a single trailing `return`, so instead of
     # bailing out early we guard the happy path and always export the variable.
     decisions_response = None
+    status_output = None
 
     try:
-        questions = json.loads(questions_editor.value)
+        questions = json.loads(questions_form.value)
     except json.JSONDecodeError as e:
-        mo.md(f"❌ **Invalid JSON in questions definition**: {e}")
+        status_output = mo.md(
+            f"❌ **Invalid JSON in questions definition**: {e}"
+        )
         questions = None
 
     if questions is not None:
-        mo.md("🔄 **Submitting Decisions request...**")
+        status_output = mo.md("🔄 **Submitting Decisions request...**")
 
-        t0 = time.perf_counter()
-        try:
-            decisions_response = client.alpha.decisions.create(
+        from langfuse import Langfuse
+        from langfuse.decorators import observe
+
+        langfuse = Langfuse()
+
+        @observe(name="openrouter.decisions", as_type="generation")
+        def _submit():
+            if hasattr(langfuse, "update_current_trace"):
+                langfuse.update_current_trace(
+                    name="openrouter-decisions",
+                    session_id="openrouter-decisions-notebook",
+                    metadata={"model": model_input.value, "questions": list(questions.keys())},
+                )
+            if hasattr(langfuse, "update_current_observation"):
+                langfuse.update_current_observation(
+                    model=model_input.value,
+                    input={"questions": questions, "state": state_input.value},
+                    metadata={"api": "openrouter.decisions", "alpha": True},
+                )
+            return client.alpha.decisions.create(
                 model=model_input.value,
                 questions=questions,
                 state=state_input.value,
             )
-            latency = time.perf_counter() - t0
-            mo.md(f"✅ **Completed in {latency:.2f} seconds**")
-        except Exception as e:
-            mo.md(f"❌ **Request failed** ({type(e).__name__}): {e}")
 
-    return (decisions_response,)
+        t0 = time.perf_counter()
+        try:
+            decisions_response = _submit()
+            latency = time.perf_counter() - t0
+
+            # Record output + usage on the generation span.
+            _data = json.loads(decisions_response.model_dump_json())
+            _usage = _data.get("usage", {})
+            if hasattr(langfuse, "update_current_observation"):
+                langfuse.update_current_observation(
+                    output=_data.get("answers"),
+                    usage_details={
+                        "input": _usage.get("input_tokens"),
+                        "output": _usage.get("output_tokens"),
+                        "total": _usage.get("total_tokens"),
+                    },
+                    metadata={
+                        "provider": _data.get("provider"),
+                        "cost": _usage.get("cost"),
+                        "latency_s": latency,
+                    },
+                )
+            langfuse.flush()
+            status_output = mo.md(
+                f"✅ **Completed in {latency:.2f} seconds** (traced to Langfuse)"
+            )
+        except Exception as e:
+            langfuse.flush()
+            status_output = mo.md(
+                f"❌ **Request failed** ({type(e).__name__}): {e}"
+            )
+
+    return decisions_response, status_output
+
+
+@app.cell
+def _(mo, status_output):
+    mo.stop(status_output is None)
+    status_output
+    return
 
 
 @app.cell
