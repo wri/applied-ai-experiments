@@ -1,0 +1,1241 @@
+cohort,model,model_id,arm,run_id,question,spec_section,grade,is_correct,excluded_grader_artifact
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q01,"No expert rule needed: catalogue, schema, extent",near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q07,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T103645Z-85ee197-411aeb27,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T105238Z-85ee197-9012e6a7,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q01,"No expert rule needed: catalogue, schema, extent",near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q02,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q04,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q07,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q13,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q16,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q17,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q19,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q20,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q21,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q22,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q23,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q24,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q25,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q26,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q27,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q28,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q30,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110457Z-85ee197-69b574a4,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q02,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q04,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q07,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q09,Field matching: SPEC.md section 5,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T110944Z-85ee197-9945c357,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q07,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q08,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T111406Z-85ee197-e20ef493,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q08,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T113518Z-85ee197-2ce26dc2,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q08,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q17,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q19,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q20,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q21,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q22,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q23,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q24,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q26,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q30,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T114638Z-85ee197-ce2c7daa,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q02,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q04,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q13,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q16,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q17,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q19,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q20,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q22,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q23,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q24,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q25,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q26,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q27,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q28,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q30,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121612Z-85ee197-d0e2ff71,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q02,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q04,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q07,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q08,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q12,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q13,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q17,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q19,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q20,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q22,Field matching: SPEC.md section 5,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q23,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q24,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q25,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q26,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q27,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q28,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q30,Facility routing: SPEC.md section 7,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T121918Z-85ee197-a6c7af2d,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q01,"No expert rule needed: catalogue, schema, extent",wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q06,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q07,Parcel resolution: SPEC.md section 4,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q08,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q09,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q10,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q11,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q14,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q18,Scope table and era bands: SPEC.md section 6,unparseable,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Haiku, spec",haiku,claude-haiku-4-5,full,20260919T122803Z-85ee197-b0d69bc1,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q05,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q06,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q07,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q08,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q09,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q10,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q11,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q12,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q13,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q14,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q15,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q16,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q17,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q18,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q19,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q20,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q21,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q22,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q23,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q24,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q25,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q26,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q27,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q28,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q29,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q30,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T062502Z-2ec5e8c-c0462ac5,q31,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q10,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q14,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q15,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T063431Z-2ec5e8c-82fa5842,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q10,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q14,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q15,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T070131Z-2ec5e8c-76b5b258,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q10,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q13,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q14,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q15,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T072458Z-2ec5e8c-74e6c1b4,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q09,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q10,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q11,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q12,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q13,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q14,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q15,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q16,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q17,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q18,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q19,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q20,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q21,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q22,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q23,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q24,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q25,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q26,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q27,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q28,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q29,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q30,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T074411Z-2ec5e8c-6fb83e92,q31,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q09,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q10,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q11,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q12,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q13,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q14,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q15,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q16,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q17,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q18,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q19,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q20,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q21,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q22,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q23,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q24,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q25,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q26,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q27,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q28,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q29,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q30,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T075707Z-2ec5e8c-bfd5f862,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q05,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q06,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q07,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q08,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q09,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q10,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q11,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q12,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q13,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q14,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q15,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q16,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q17,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q18,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q19,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q20,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q21,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q22,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q23,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q24,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q25,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q26,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q27,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q28,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q29,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q30,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081053Z-2ec5e8c-0a35bf7d,q31,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q05,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q06,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q07,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q08,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q09,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q10,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q11,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q12,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q13,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q14,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q15,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q16,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q17,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q18,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q19,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q20,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q21,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q22,Field matching: SPEC.md section 5,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q23,Scope table and era bands: SPEC.md section 6,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q24,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q25,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q26,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q27,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q28,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q29,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q30,Facility routing: SPEC.md section 7,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T081844Z-2ec5e8c-773fe7fe,q31,Parcel resolution: SPEC.md section 4,missing,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q10,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q14,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q15,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q29,Facility routing: SPEC.md section 7,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T082256Z-2ec5e8c-623f05d8,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q10,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q12,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q13,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q14,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q15,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q16,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q18,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q20,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q22,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q23,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q26,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q30,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, no spec",opus,claude-opus-4-8,questions-only,20260919T084026Z-2ec5e8c-4da909fb,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q13,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q15,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T192020Z-42b0452-9b86809e,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T200349Z-42b0452-c3a9ae5e,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T202934Z-ec37401-8fc08816,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q15,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q21,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T204958Z-ec37401-4dc320d5,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q13,Field matching: SPEC.md section 5,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T211116Z-ec37401-9778f12c,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T212957Z-ec37401-c0822ded,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q03,"No expert rule needed: catalogue, schema, extent",near_miss,0,1
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q15,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T214822Z-ff0a0ce-fc53d914,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q15,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T220744Z-ff0a0ce-2adf43db,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q15,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T222642Z-ff0a0ce-2e3d6503,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q09,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q10,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q11,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q12,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q13,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q14,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q22,Field matching: SPEC.md section 5,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q24,Facility routing: SPEC.md section 7,wrong,0,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Opus, spec",opus,claude-opus-4-8,full,20260918T224939Z-ff0a0ce-defdf872,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q25,Facility routing: SPEC.md section 7,wrong,0,1
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T232239Z-2ec5e8c-d79c4a79,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260918T234402Z-2ec5e8c-bd06dd64,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q27,Facility routing: SPEC.md section 7,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T000056Z-2ec5e8c-f764a59b,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T002106Z-2ec5e8c-4e58965d,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q25,Facility routing: SPEC.md section 7,wrong,0,1
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T003710Z-2ec5e8c-b6960a5f,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T005658Z-2ec5e8c-7405f22d,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q28,Facility routing: SPEC.md section 7,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T012348Z-2ec5e8c-91046a81,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q19,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T014250Z-2ec5e8c-934e4a96,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q05,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q15,Field matching: SPEC.md section 5,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q17,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q18,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q25,Facility routing: SPEC.md section 7,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q28,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T020111Z-2ec5e8c-5e882515,q31,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q01,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q02,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q03,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q04,"No expert rule needed: catalogue, schema, extent",correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q05,Parcel resolution: SPEC.md section 4,near_miss,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q06,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q07,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q08,Parcel resolution: SPEC.md section 4,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q09,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q10,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q11,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q12,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q13,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q14,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q15,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q16,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q17,Scope table and era bands: SPEC.md section 6,wrong,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q18,Scope table and era bands: SPEC.md section 6,near_miss,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q19,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q20,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q21,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q22,Field matching: SPEC.md section 5,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q23,Scope table and era bands: SPEC.md section 6,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q24,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q25,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q26,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q27,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q28,Facility routing: SPEC.md section 7,near_miss,0,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q29,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q30,Facility routing: SPEC.md section 7,correct,1,0
+"Sonnet, spec",sonnet,claude-sonnet-5,full,20260919T021543Z-2ec5e8c-64141e7c,q31,Parcel resolution: SPEC.md section 4,correct,1,0

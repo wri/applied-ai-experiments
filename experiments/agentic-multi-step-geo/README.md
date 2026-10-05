@@ -3,17 +3,72 @@
 > See [brief.md](./brief.md) for context, signals, learnings, and findings.
 
 Can a coding agent run a six-stage EU Deforestation Regulation (EUDR) sourcing review over live
-cloud-native geodata, and does written expert context help? Three Claude models ran the same
-31-question workflow ten times each, with and without four policy documents: 60 sessions over a
-117-property portfolio in Goiás, Brazil.
+cloud-native geodata, and how much does written expert context change the result? Three Claude
+models ran the same 31-question workflow ten times each over a 117-property portfolio in Goiás,
+Brazil. A separate one-shot run turned the same workflow into a published report.
 
-| Model | With the policy documents | Without |
-|---|---|---|
-| Haiku 4.5 | 11.9% | 11.3% |
-| Sonnet 5 | 73.5% | 34.8% |
-| Opus 4.8 | 75.2% | 34.8% |
+## Results
 
-Mean share of 31 questions graded correct, ten runs per cell.
+Forty runs, September 2026. Accuracy is the share of 31 questions graded correct against a SQL
+answer key. Every run in the table carries the same key fingerprint, so the scores compare.
+
+| Cohort | Model | Spec | Mean accuracy | Range | Mean cost |
+|---|---|---|---|---|---|
+| Sonnet, spec | `claude-sonnet-5` | full | 92.6% | 87.1 to 96.8% | $5.89 |
+| Opus, spec | `claude-opus-4-8` | full | 90.6% | 87.1 to 96.8% | $4.49 |
+| Opus, no spec | `claude-opus-4-8` | questions only | 28.4% | 12.9 to 41.9% | $3.55 |
+| Haiku, spec | `claude-haiku-4-5` | full | 9.0% | 0 to 19.4% | $0.69 |
+
+The expert specification is what moves the two strong models. Opus goes from 28.4% without it to
+90.6% with it. Haiku fails either way, so the spec only helps a model that can already do the
+spatial work. No run in any cohort answered all 31 questions correctly.
+
+Accuracy by the rule each question depends on shows where the spec earns its keep:
+
+| Rule the question needs | Questions | Haiku, spec | Opus, no spec | Opus, spec | Sonnet, spec |
+|---|---|---|---|---|---|
+| None: catalogue, schema, extent | 4 | 53% | 100% | 100% | 100% |
+| Parcel resolution | 5 | 8% | 68% | 100% | 98% |
+| Field matching | 8 | 0% | 12% | 91% | 95% |
+| Scope table and era bands | 7 | 4% | 0% | 80% | 86% |
+| Facility routing | 7 | 3% | 6% | 91% | 91% |
+
+Questions that need no expert rule come out perfect without the spec. Everything resting on a
+written rule collapses without it. The failures trace to missing expert context rather than weak
+geospatial reasoning.
+
+Five of the ten no-spec Opus runs stopped early rather than invent the missing rules. One said so
+plainly:
+
+> Inventing thresholds and MapBiomas to commodity mappings would give you 27 graded CSVs that look
+> complete and are wrong. That's worse than an honest gap.
+
+Every number in these tables recomputes from `results/benchmark-2026-09/`, which holds one row per run, one
+row per run and question, and one row per graded cell that differed from the key. Its own README
+documents the cohort definitions, the hand-assigned section map, and a grader artifact that
+excludes 8 of 1,240 question instances.
+
+## The one-shot demo
+
+A second run tested the other end of the range: one agent, one spec, one pass, a real deliverable.
+A Codex CLI session read a single `SPEC.md` and the same three catalogs, then wrote a Quarto report
+with an interactive table and a field-level map.
+
+- Report: <https://tristangrupp.github.io/cng-nyc-evals-demo/>
+- Code, spec, and session transcript: <https://github.com/tristangrupp/cng-nyc-evals-demo>
+
+The demo never saw the benchmark's answer key. It agrees with it anyway:
+
+```
+$ python scripts/check_demo_against_key.py <demo>/property_results.csv
+flagged properties: key 18, demo 18, identical set: True
+post-2020 loss on flagged land: key 114.7 ha, demo 114.8 ha
+per-property loss differing by more than 0.05 ha: 0
+properties given a different top contact: 0
+```
+
+Same 18 properties, same contact for each, same hectares. That's the benchmark's last question,
+q30, answered independently and in a form someone could act on.
 
 ## How we verify the answers
 
@@ -50,12 +105,12 @@ twice.
 **The agent can't see the answers.** Golden files never enter a session. A test,
 `methods/tests/test_no_leaks.py`, fails if any golden value appears in the task prompt, the
 question file, or the policy documents. It expects the harness repository's layout, with
-`fixtures/`, `policies/` and `prompts/` at the root. Early drafts of the documents did leak
-figures that made 5 of 31 questions partly answerable, and we removed them.
+`fixtures/`, `policies/` and `prompts/` at the root.
 
-**Every run starts clean and keeps a full record.** Each session is one Docker run in a fresh workspace with
-an empty home directory, so no host configuration reaches the agent. Every session keeps its full
-transcript, its answers, its per-question grades, and a per-cell diff against the key.
+**Every run starts clean and keeps a full record.** Each session is one Docker run in a fresh
+workspace with an empty home directory, so no host configuration reaches the agent. Every session
+keeps its full transcript, its answers, its per-question grades, and a per-cell diff against the
+key. Each run also records the fingerprint of the key, the spec, and the pinned data it read.
 
 **Agreement and correctness get their own scores.** `consistency.json` scores how much a model's
 ten runs agree with each other, and how much they agree with the key. Ten runs can agree on every
@@ -100,27 +155,33 @@ gunzip -c results/with-spec/opus/20260803T155110Z-a1e97f8/transcript.jsonl.gz | 
 │   ├── oracle/                 # the SQL that renders the answer key
 │   ├── tests/test_no_leaks.py  # fails if a golden value appears in anything a session reads
 │   └── Dockerfile, pixi.toml, pixi.lock
-└── results/
-    ├── with-spec/              # policy documents mounted
-    └── no-spec/                # policy documents withheld
-        ├── summary.csv         # one row per run: accuracy, cost, turns, wall clock
-        ├── report.md           # per-model and per-stage tables
-        ├── pareto.png          # cost against accuracy
-        └── <model>/<run>/      # transcript.jsonl.gz, answers/, grades.json, diffs.json, meta.json
+├── results/
+│   ├── benchmark-2026-09/      # the 40-run result set behind the tables above
+│   ├── with-spec/              # earlier 60-session sweep, policy documents mounted
+│   └── no-spec/                # the same sweep with the documents withheld
+└── scripts/
+    └── check_demo_against_key.py   # compares the one-shot demo with the key
 ```
+
+`with-spec/` and `no-spec/` hold an earlier August sweep against an older spec and grader. Those
+runs scored 73.5% (Sonnet) and 75.2% (Opus) with the documents, against 34.8% without. Read them
+as the per-run archive, and read `benchmark-2026-09/` for current numbers.
 
 ## Source repositories
 
-- Harness and benchmark: [nlebovits/geodata-llm-eval](https://github.com/nlebovits/geodata-llm-eval),
-  and the fork the runs used, [tristangrupp/geodata-llm-eval-simple](https://github.com/tristangrupp/geodata-llm-eval-simple).
-  The run results here aren't in either repository.
+- Benchmark and harness: [nlebovits/geodata-llm-eval](https://github.com/nlebovits/geodata-llm-eval).
+  It now carries the ablation harness behind the `questions-only` arm, adapters for agents beyond
+  Claude, and strict-task-success reporting.
+- One-shot demo: [tristangrupp/cng-nyc-evals-demo](https://github.com/tristangrupp/cng-nyc-evals-demo).
 - The oracle SQL comes from WRI's internal EUDR pipeline repository, which isn't public. The copy
   under `methods/oracle/sql/` is the version that produced the answer key.
 
 ## Data
 
 Three catalogs on [Source Cooperative](https://source.coop), read remotely over HTTP range
-requests and pinned in `data/fixtures/pins.json`:
+requests and pinned in `data/fixtures/pins.json`. Each ships as GeoParquet, with metadata written
+to the Portolan specification. That metadata is what lets an agent find the right collection and
+read its schema without being handed a path.
 
 | Layer | Source |
 |---|---|
