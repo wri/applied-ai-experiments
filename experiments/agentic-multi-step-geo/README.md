@@ -9,7 +9,7 @@ Brazil. A separate one-shot run turned the same workflow into a published report
 
 ## Results
 
-Forty runs, September 2026. Accuracy is the share of 31 questions graded correct against a SQL
+Forty runs, September 2026. Accuracy is the share of 31 questions graded correct against an SQL
 answer key. Every run in the table carries the same key fingerprint, so the scores compare.
 
 | Cohort | Model | Spec | Mean accuracy | Range | Mean cost |
@@ -70,12 +70,12 @@ properties given a different top contact: 0
 Same 18 properties, same contact for each, same hectares. That's the benchmark's last question,
 q30, answered independently and in a form someone could act on.
 
-## How we verify the answers
+## How verification works
 
 Nobody judges the agent's output by eye, and no model grades it. The grader checks every answer
 against a key computed independently from the same data, before any session runs.
 
-**The answer key comes from production code, not hand-written answers.** A SQL oracle
+**The answer key comes from production code, not hand-written answers.** An SQL oracle
 (`methods/oracle/render.py`) runs the queries behind WRI's own EUDR reporting pipeline, vendored
 here at a pinned commit, against the same pinned catalog versions the agent reads. It writes one
 CSV per question to `data/fixtures/golden/` with a SHA256 manifest, so anyone can regenerate the
@@ -181,7 +181,7 @@ as the per-run archive, and read `benchmark-2026-09/` for current numbers.
 Three catalogs on [Source Cooperative](https://source.coop), read remotely over HTTP range
 requests and pinned in `data/fixtures/pins.json`. Each ships as GeoParquet, with metadata written
 to the Portolan specification. That metadata is what lets an agent find the right collection and
-read its schema without being handed a path.
+read its schema without a path handed to it.
 
 | Layer | Source |
 |---|---|
