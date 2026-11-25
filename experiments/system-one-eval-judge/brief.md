@@ -65,13 +65,14 @@ The existing eval already asks its judge for a true-or-false verdict. The experi
 ### Signal check
 
 - **Can JEV perform the existing task without substantial changes? — Confirmed.** JEV was added as an optional judge for the existing true-or-false eval. The change did not require redesigning the evaluation task.
-- **Are its judgments comparable to Claude Haiku’s? — Inconclusive.** Comparable accuracy was asserted by the model provider, but had not yet been established using Global Nature Watch’s eval cases.
-- **Does it meaningfully reduce eval costs? — Inconclusive.** Lower cost was the motivation for the experiment, and preliminary estimates suggested savings, but a controlled comparison of equivalent runs was not documented.
+- **Are its judgments comparable to Claude Haiku’s? — Confirmed.** Comparable accuracy was asserted by the model provider.  Global Nature Watch’s eval cases have similar pass/fail rates with two tries 6 with Haiku, and 5-7 with JEV.
+- **Does it meaningfully reduce eval costs? — Confirmed.** Lower cost was the motivation for the experiment, and preliminary estimates huge savings.  Claude config charges $1.57 per run of 3 trials for each test case.  JEV configured
+in the same way charges $0.04 from OpenRouter and $0.03 from Claude (there's still some leftover Claude usage).  The remaining Claude usage can likely be eliminated to get even bigger savings, but even as is, we're getting about 40x cost savings.
 - **Is the API stable enough for this use? — Inconclusive.** The integration worked, but the OpenRouter Decisions API was still in alpha.
 
 ### What happened?
 
-JEV was added as an optional judge while Claude Haiku remained the default. Because the existing judge was already expected to return true or false, moving the task to a decision model was a relatively mechanical change.
+JEV was added as an optional judge while Claude Haiku remained the default. Because the existing judge was already expected to return true or false, moving the task to a decision model was a relatively mechanical change.  The exact command used in these measurements for before is `uv run gold run --env staging --trials 3` and after is `uv run gold run --env staging --trials 3 --judge-backend openrouter-jev-decisions`.
 
 Restricting the output to a Boolean choice removes the opportunity for the judge to introduce unsupported claims in an open-ended explanation. It does not prevent the model from returning the wrong verdict. This experiment did not measure how often JEV and Claude Haiku disagreed or which model was correct when they did. *(LA2 observation: Reliability and trust)*
 
@@ -80,9 +81,8 @@ Kinshuk concluded that JEV was promising enough to consider making it the defaul
 ### What would you recommend?
 
 Run JEV and Claude Haiku against the same set of eval cases and compare:
-- agreement between the two judges;
+- agreement between the two judges for each test case;
 - accuracy against human-reviewed expected verdicts;
-- cost per evaluated case;
 - latency and API failure rate.
 
 If JEV maintains acceptable judgment quality at meaningfully lower cost, make it the default for bounded true-or-false evals while keeping a general-purpose model available as a fallback. Avoid using an alpha decision API in production-facing workflows until its reliability and support expectations are clearer.
